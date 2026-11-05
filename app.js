@@ -130,11 +130,15 @@
   var mast=document.getElementById('folder'), bars=[];
   ['.logo','h1','.tg','.il','.il2'].forEach(function(q){var el=mast.querySelector(q);if(!el)return;
     var b=document.createElement('i');b.className='mbar';b.setAttribute('aria-hidden','true');mast.appendChild(b);bars.push([b,el])});
+  // Position bars without touching their transform (GSAP owns that), and only when the width really changes
   function placeBars(){var m=mast.getBoundingClientRect(),sc=m.width/mast.offsetWidth||1;
     bars.forEach(function(p){var el=p[1],r;
       if(el.tagName.toLowerCase()==='svg'){r=el.getBoundingClientRect()}else{var rg=document.createRange();rg.selectNodeContents(el);r=rg.getBoundingClientRect()}
-      p[0].style.cssText='left:'+((r.left-m.left)/sc-6)+'px;top:'+((r.top-m.top)/sc-3)+'px;width:'+(r.width/sc+12)+'px;height:'+(r.height/sc+6)+'px'})}
-  placeBars(); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeBars); addEventListener('resize',placeBars);
+      var st=p[0].style;st.left=((r.left-m.left)/sc-6)+'px';st.top=((r.top-m.top)/sc-3)+'px';st.width=(r.width/sc+12)+'px';st.height=(r.height/sc+6)+'px'})}
+  var lastW=innerWidth;
+  placeBars(); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeBars);
+  addEventListener('resize',function(){if(innerWidth!==lastW){lastW=innerWidth;placeBars()}});
+  ScrollTrigger.config({ignoreMobileResize:true});
   var tl=gsap.timeline({scrollTrigger:{trigger:'#cover .pin',start:'top top',end:'+=150%',pin:true,scrub:0.6}});
   tl.to('#hint',{opacity:0,duration:.08},0)
     .to(bars.map(function(p){return p[0]}),{scaleX:0,transformOrigin:'right center',duration:.3,stagger:.06,ease:'power2.inOut'},.02)

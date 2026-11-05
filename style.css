@@ -289,3 +289,14 @@ html,body{overflow-x:hidden;overflow-x:clip}
 .drawer-x{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:50%;border:1.5px solid #e2e4ea;background:#f5f5f7;font-size:16px;cursor:pointer;color:#111216}
 @media (prefers-reduced-motion:reduce){.drawer{transition:none}}
 @media (prefers-color-scheme:dark){.drawer{background:#1a1b20;color:#eceef2}.drawer-x{background:#23242b;border-color:#2c2e36;color:#eceef2}.jump button{background:#1f7a4d;color:#fff}}
+
+/* the cover is always a white paper file, even in dark mode */
+@media (prefers-color-scheme:dark){
+  .cover .mast{background:#fff;color:#111216}
+  .cover .mast .box{border-color:#111}
+  .cover .mast h1{color:#111216}
+  .cover .mast .tg{color:#555}
+  .cover .mast .il,.cover .mast .il2{color:#6b6e78}
+  .cover .mast .logo rect:first-child{stroke:#111}
+  .cover .stamp{background:rgba(255,255,255,.6);color:#c8243b;border-color:#c8243b}
+}
