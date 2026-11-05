@@ -154,3 +154,39 @@
   document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
   addEventListener('load',function(){ScrollTrigger.refresh()});
 })();
+
+// ---- v7: redaction bars sit on top of every line of text, then wipe off when the story arrives ----
+(function(){
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var d=document, cards=[].slice.call(d.querySelectorAll('.ibody > .story, .ibody > .brk'));
+  var groups=[['.hl span',0.12,'h'],['.dek .rd',0.38,''],['.bl .rd, .brk > p .rd, .story > p .rd',0.62,'']];
+  function build(card){
+    [].slice.call(card.querySelectorAll('.rbar')).forEach(function(b){b.remove()});
+    if(card.classList.contains('revealed'))return;
+    var cr=card.getBoundingClientRect(), ox=cr.left+card.clientLeft, oy=cr.top+card.clientTop;
+    groups.forEach(function(g){
+      [].slice.call(card.querySelectorAll(g[0])).forEach(function(el){
+        [].slice.call(el.getClientRects()).forEach(function(r,i){
+          if(r.width<2)return;
+          var b=d.createElement('i');b.className='rbar'+(g[2]?' '+g[2]:'');b.setAttribute('aria-hidden','true');
+          b.style.left=(r.left-ox-3)+'px';b.style.top=(r.top-oy-1)+'px';b.style.width=(r.width+6)+'px';b.style.height=(r.height+2)+'px';
+          b.style.transitionDelay=(g[1]+i*0.07)+'s';card.appendChild(b);
+        });
+      });
+    });
+  }
+  function reveal(card){if(card.classList.contains('revealed'))return;card.classList.add('revealed');
+    [].slice.call(card.querySelectorAll('.rbar')).forEach(function(b){requestAnimationFrame(function(){b.classList.add('gone')})});
+    setTimeout(function(){[].slice.call(card.querySelectorAll('.rbar')).forEach(function(b){b.remove()})},2200)}
+  function buildAll(){cards.forEach(function(c){if(c.offsetParent!==null)build(c)})}
+  // reveal when the reveal-on-scroll class lands
+  var mo=new MutationObserver(function(ms){ms.forEach(function(m){var c=m.target;if(c.classList.contains('in')&&!c.classList.contains('revealed'))setTimeout(function(){reveal(c)},120)})});
+  cards.forEach(function(c){mo.observe(c,{attributes:true,attributeFilter:['class']})});
+  var lastW=innerWidth;
+  function init(){buildAll();cards.forEach(function(c){if(c.classList.contains('in'))reveal(c)})}
+  if(d.fonts&&d.fonts.ready)d.fonts.ready.then(init);else init();
+  addEventListener('resize',function(){if(innerWidth!==lastW){lastW=innerWidth;buildAll()}});
+  // cards that were hidden (filters / show all) have nothing to cover when they appear
+  d.addEventListener('click',function(e){if(e.target.closest('.fl,#showall,.toggle,a[href^="#issue-"]'))setTimeout(function(){cards.forEach(function(c){if(c.offsetParent!==null&&!c.classList.contains('revealed')&&c.classList.contains('in'))reveal(c)})},200)});
+})();

@@ -69,16 +69,6 @@ em{font-style:italic}
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
 
-  /* redaction: headline, dek and blurb are all blacked out, then the bars wipe away in order */
-  .js .hl span,.js .rd{background:linear-gradient(#111,#111) no-repeat right/100% 100%;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .7s cubic-bezier(.7,0,.2,1)}
-  .js .reveal:not(.in) .hl span,.js .reveal:not(.in) .hl span *,.js .reveal:not(.in) .rd,.js .reveal:not(.in) .rd *{color:transparent!important}
-  .js .hl span{transition-delay:.2s}
-  .js .dek .rd{transition-delay:.45s}
-  .js .bl .rd,.js .story > p .rd,.js .brk > p .rd{transition-delay:.7s}
-  .js .brk .hl span{background-image:linear-gradient(#e5384f,#e5384f)}
-  .js .brk .rd{background-image:linear-gradient(#5a5b63,#5a5b63)}
-  .js .in .hl span,.js .in .rd{background-size:0% 100%}
-  .js .in .hl span *,.js .in .rd *,.js .in .hl span,.js .in .rd{transition:background-size .7s cubic-bezier(.7,0,.2,1),color 0s linear .5s}
   /* checkmarks pop in one by one */
   .js .score .ck{transform:scale(0);transition:transform .45s cubic-bezier(.3,1.8,.5,1)}
   .js .score.in .row:nth-child(1) .ck{transition-delay:.3s}
@@ -180,10 +170,7 @@ em{font-style:italic}
   .sig{color:#eceef2}.burn{color:#ff5a70;border-color:#ff5a70}
   .bar{background:#24503a}
 }
-@media (prefers-color-scheme:dark) and (prefers-reduced-motion:no-preference){
-  .js .hl span,.js .rd{background-image:linear-gradient(#eceef2,#eceef2)}
-  .js .brk .hl span{background-image:linear-gradient(#e5384f,#e5384f)}
-}
+
 
 /* ---------- v3: pinned cover, stacking file cards, called-it stamps ---------- */
 .cover{background:#141416;position:relative}
@@ -300,3 +287,20 @@ html,body{overflow-x:hidden;overflow-x:clip}
   .cover .mast .logo rect:first-child{stroke:#111}
   .cover .stamp{background:rgba(255,255,255,.6);color:#c8243b;border-color:#c8243b}
 }
+
+/* ---------- v7: solid redaction bars drawn ON TOP of each line of text ---------- */
+.rbar{position:absolute;z-index:3;background:#000;border-radius:2px;pointer-events:none;transform-origin:right center;transition:transform .6s cubic-bezier(.7,0,.2,1)}
+.brk .rbar{background:#3a3b42}
+.brk .rbar.h{background:#e5384f}
+.rbar.gone{transform:scaleX(0)}
+@media (prefers-color-scheme:dark){.ibody > .story .rbar{background:#000}}
+
+/* Best reactions: its own scrolling window, newest top story first */
+.rx-window{max-height:min(46vh,380px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#efeae2;border-radius:16px;padding:12px;scroll-snap-type:y proximity;box-shadow:inset 0 -14px 14px -14px rgba(0,0,0,.25)}
+.rx-window .thread{background:transparent;padding:0;border-radius:0;scroll-snap-align:start}
+.rx-window .thread + .thread{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(0,0,0,.18)}
+.rx-window .bub + .bub{margin-top:10px}
+.rx-window .thread{gap:0}
+.rx-window .thread figcaption{margin-bottom:8px}
+.rx-more{font-size:12.5px;color:#6b6e78;margin:8px 2px 0;font-weight:600}
+@media (prefers-color-scheme:dark){.rx-window{background:#0b141a}.rx-window .thread + .thread{border-color:rgba(255,255,255,.15)}}

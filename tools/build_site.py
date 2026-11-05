@@ -166,7 +166,8 @@ for r in reactions:
 reacts = f'''<section class="panel" id="reactions" aria-labelledby="h-rx">
   <h2 id="h-rx">Best reactions</h2>
   <p class="sub">Straight from the group chat.</p>
-  <div class="chatwall">{rx}</div>
+  <div class="rx-window" data-lenis-prevent tabindex="0" aria-label="Group chat reactions, scrollable">{rx}</div>
+  {'<p class="rx-more">Scroll inside the box for more ↓</p>' if len(reactions) > 1 else ''}
 </section>'''
 
 nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactions</a>' + \
