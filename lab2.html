@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off the Record · Scroll lab 2</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+<style>
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:#0e0f12;color:#eceef2}
+.lab-tag{display:inline-block;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;background:#f5c542;color:#111;padding:4px 8px;border-radius:4px}
+.lab-note{max-width:560px;margin:0 auto;padding:22px 18px;font-size:14px;color:#9a9da8;line-height:1.5}
+.lab-note b{color:#eceef2}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+
+/* A. GSAP + Lenis cover */
+#a .pin{height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#a .lab-tag{position:absolute;top:14px;left:14px}
+#a .folder{width:min(88vw,440px);background:#fff;color:#111;border-radius:26px;padding:26px 22px;text-align:center;position:relative}
+#a h1{font-family:PF,Georgia,serif;font-weight:900;font-size:clamp(32px,10vw,56px);white-space:nowrap;margin:0;letter-spacing:-1px;line-height:1}
+#a .box{border-top:3px double #111;border-bottom:1px solid #111;padding:10px 0}
+#a .tg{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;color:#555;margin:8px 0 0}
+#a .stamp{top:40%;right:5%;font-size:14px;opacity:0}
+#a .bars{position:absolute;inset:0;pointer-events:none;z-index:2}
+#a .bars i{position:absolute;left:-10%;height:26px;background:#000;width:120%;opacity:0;box-shadow:0 0 0 1px #2c2e36}
+
+/* B. word-by-word reveal */
+#b{padding:40px 0 30vh}
+#b .lab-tag{margin:0 0 18px}
+#b .big{font-family:PF,Georgia,serif;font-weight:700;font-style:italic;font-size:clamp(26px,7.4vw,40px);line-height:1.22;margin:0}
+#b .w{opacity:.14;transition:none}
+#b .w.k{color:#ff5a70}
+#b .dl{font-size:13px;display:block;margin-bottom:12px}
+
+/* C. counters */
+#c{padding:30px 0 30vh}
+#c .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+#c .tile{background:#1a1b20;border:1px solid #2c2e36;border-radius:18px;padding:18px 14px}
+#c .num{font-family:PF,Georgia,serif;font-weight:900;font-size:clamp(34px,11vw,54px);line-height:1;color:#fff}
+#c .lbl{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;color:#ff5a70;margin-top:8px;text-transform:uppercase}
+#c .src{font-size:12.5px;color:#9a9da8;margin-top:6px}
+
+/* D. horizontal archive */
+#d{position:relative}
+#d .pin{height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+#d .head{padding:0 16px 14px;max-width:560px}
+#d h2{font-family:PF,Georgia,serif;font-weight:900;font-size:30px;margin:10px 0 0}
+#d .strip{display:flex;gap:16px;padding:0 16px;width:max-content;will-change:transform}
+#d .cov{width:min(78vw,340px);flex:none;background:#fff;color:#111;border-radius:22px;padding:18px 16px 16px;position:relative}
+#d .cov .t{font-family:PF,Georgia,serif;font-weight:900;font-size:28px;text-align:center;border-top:3px double #111;border-bottom:1px solid #111;padding:6px 0}
+#d .cov .n{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;color:#6b6e78;text-align:center;margin:8px 0 12px}
+#d .cov .b{background:#141416;color:#fff;border-radius:14px;padding:12px}
+#d .cov .b span{font-size:10.5px;font-weight:800;letter-spacing:1px;background:#e5384f;padding:2px 6px;border-radius:4px}
+#d .cov .b p{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:19px;line-height:1.2;margin:8px 0 0}
+#d .cov .st{position:absolute;right:12px;top:58px;transform:rotate(-9deg);border:2px solid #c8243b;color:#c8243b;font-family:MONO,monospace;font-weight:700;font-size:9px;letter-spacing:1.5px;padding:2px 6px}
+#d .cov.next{background:transparent;border:2px dashed #3a3b42;color:#9a9da8;display:flex;align-items:center;justify-content:center;text-align:center;font-family:MONO,monospace;font-weight:700;letter-spacing:1.5px;font-size:12px}
+.end{height:40vh}
+@media (prefers-reduced-motion:reduce){#b .w{opacity:1}#a .stamp{opacity:1}#d .pin{height:auto;padding:40px 0}#d .strip{overflow-x:auto;width:auto}}
+</style>
+</head>
+<body>
+<p class="lab-note"><b>Scroll lab 2.</b> The four new ideas, built with GSAP ScrollTrigger and Lenis smooth scrolling. Scroll slowly on your phone, then try flicking fast to feel the smoothing.</p>
+
+<section id="a"><div class="pin"><span class="lab-tag">A · SMOOTH ENGINE (GSAP + LENIS)</span>
+  <div class="bars" aria-hidden="true"><i style="top:40%"></i><i style="top:46%"></i><i style="top:52%"></i><i style="top:58%"></i></div>
+  <div class="folder" id="afold"><div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
+  <p class="il" style="font-family:MONO,monospace;font-size:11.5px;letter-spacing:1.5px;color:#6b6e78;margin-top:10px">ISSUE NO. 4 · WEEK OF NOV 16, 2026</p>
+  <div class="stamp" id="astamp">NOT FOR DISTRIBUTION</div></div>
+</div></section>
+
+<section id="b"><div class="wrap"><span class="lab-tag">B · WORD-BY-WORD REVEAL</span>
+  <p class="big" id="words"><span class="dl">AUSTIN, TX —</span>Democrat <b>Gina Hinojosa unseated Greg Abbott</b>, ending three decades of Republican governors, and <b>James Talarico beat Ken Paxton</b> with about <b>55%</b>. Texas goes from a billionaire technocratic candy land and oil barons to a state betting on renewables.</p>
+</div></section>
+
+<section id="c"><div class="wrap"><span class="lab-tag">C · COUNTING NUMBERS</span>
+  <div class="grid">
+    <div class="tile"><div class="num" data-to="2.2" data-pre="$" data-suf="T" data-dec="1">$0T</div><div class="lbl">S&amp;P lost in 40 min</div><div class="src">Nov 5</div></div>
+    <div class="tile"><div class="num" data-to="54" data-suf="–44">0–44</div><div class="lbl">Dem Senate</div><div class="src">7 seats flipped</div></div>
+    <div class="tile"><div class="num" data-to="23" data-suf="°C">0°C</div><div class="lbl">Montreal, Nov 4</div><div class="src">Old record 18.3°C</div></div>
+    <div class="tile"><div class="num" data-to="500" data-pre="$" data-suf="B">$0B</div><div class="lbl">Alphabet, one day</div><div class="src">Two Netflixes</div></div>
+  </div>
+</div></section>
+
+<section id="d"><div class="pin">
+  <div class="head"><span class="lab-tag">D · HORIZONTAL ARCHIVE</span><h2>Back issues</h2></div>
+  <div class="strip" id="strip">
+    <div class="cov"><div class="t">Off the Record</div><div class="n">ISSUE NO. 4 · NOV 16</div><div class="st">NOT FOR DISTRIBUTION</div><div class="b"><span>BREAKING</span><p>8th Largest Economy in the World Sees Regime Change</p></div></div>
+    <div class="cov"><div class="t">Off the Record</div><div class="n">ISSUE NO. 3 · NOV 9</div><div class="st">NOT FOR DISTRIBUTION</div><div class="b"><span>BREAKING</span><p>Nuke the Mountain, Lose the War</p></div></div>
+    <div class="cov"><div class="t">Off the Record</div><div class="n">ISSUE NO. 2 · NOV 2</div><div class="st">NOT FOR DISTRIBUTION</div><div class="b"><span>BREAKING</span><p>Trump Accused of Rape? Again?</p></div></div>
+    <div class="cov"><div class="t">Off the Record</div><div class="n">ISSUE NO. 1 · OCT 26</div><div class="st">NOT FOR DISTRIBUTION</div><div class="b"><span>BREAKING</span><p>Oh Sweet! Finally, Modular Nuclear!</p></div></div>
+    <div class="cov next">ISSUE NO. 5<br>COMING NOV 23</div>
+  </div>
+</div></section>
+<div class="end"></div>
+<p class="lab-note"><a href="./">← Back to Off the Record</a> · <a href="lab.html">Scroll lab 1</a></p>
+
+<script src="vendor/lenis.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // split the paragraph into words (screen readers still get the full sentence)
+  var p=document.getElementById('words');
+  p.setAttribute('aria-label',p.textContent.replace(/\s+/g,' ').trim());
+  [].slice.call(p.childNodes).forEach(function(n){
+    if(n.nodeType===1&&n.classList.contains('dl'))return;
+    var isK=n.nodeType===1, txt=n.textContent;
+    var frag=document.createDocumentFragment();
+    txt.split(/(\s+)/).forEach(function(t){ if(!t)return; if(/^\s+$/.test(t)){frag.appendChild(document.createTextNode(t));return}
+      var s=document.createElement('span');s.className='w'+(isK?' k':'');s.setAttribute('aria-hidden','true');s.textContent=t;frag.appendChild(s)});
+    p.replaceChild(frag,n);
+  });
+  if(reduce||!window.gsap){document.querySelectorAll('.num').forEach(function(n){var d=n.dataset;n.textContent=(d.pre||'')+d.to+(d.suf||'')});return}
+
+  gsap.registerPlugin(ScrollTrigger);
+  // Lenis smooth scrolling, driven by GSAP's ticker so they stay in sync
+  var lenis=new Lenis({lerp:0.09,smoothWheel:true});
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(function(t){lenis.raf(t*1000)}); gsap.ticker.lagSmoothing(0);
+
+  // A. pinned cover, scrubbed: bars sweep, stamp slams, folder tilts away
+  var ta=gsap.timeline({scrollTrigger:{trigger:'#a .pin',start:'top top',end:'+=140%',pin:true,scrub:0.6}});
+  ta.to('#a .bars i',{opacity:1,xPercent:0,duration:.25,stagger:.05,ease:'power2.out',startAt:{xPercent:-100,opacity:1}})
+    .fromTo('#astamp',{opacity:1,scale:2.6,rotate:-9},{scale:1,rotate:-9,duration:.25,ease:'back.out(3)'},.1)
+    .to('#a .bars i',{xPercent:100,duration:.3,stagger:.05,ease:'power2.in'},.45)
+    .to('#afold',{yPercent:-60,scale:.7,rotate:-6,opacity:.1,duration:.45,ease:'power2.in'},.55);
+
+  // B. words light up in step with the scroll
+  gsap.to('#words .w',{opacity:1,stagger:.08,ease:'none',scrollTrigger:{trigger:'#words',start:'top 80%',end:'bottom 45%',scrub:true}});
+  gsap.to('#words .w.k',{color:'#ffffff',stagger:.08,ease:'none',scrollTrigger:{trigger:'#words',start:'top 60%',end:'bottom 35%',scrub:true}});
+
+  // C. numbers count up once they come into view
+  document.querySelectorAll('.num').forEach(function(n){var d=n.dataset,o={v:0},dec=+(d.dec||0);
+    gsap.to(o,{v:+d.to,duration:1.6,ease:'power3.out',scrollTrigger:{trigger:n,start:'top 85%',once:true},
+      onUpdate:function(){n.textContent=(d.pre||'')+o.v.toFixed(dec)+(d.suf||'')}})});
+
+  // D. vertical scroll moves the back-issue covers sideways
+  var strip=document.getElementById('strip');
+  gsap.to(strip,{x:function(){return -(strip.scrollWidth-innerWidth)},ease:'none',
+    scrollTrigger:{trigger:'#d .pin',start:'top top',end:function(){return '+='+(strip.scrollWidth-innerWidth)},pin:true,scrub:0.5,invalidateOnRefresh:true}});
+})();
+</script>
+</body>
+</html>
