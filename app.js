@@ -30,12 +30,35 @@
       if(window.otrLenis)window.otrLenis.scrollTo(y,{duration:.8});else scrollTo({top:y,behavior:'smooth'})}
   })});
 
-  // Compact archive (off by default, remembered per reader)
-  var cb=$('#compact');
-  function setCompact(on){d.body.classList.toggle('compact-on',on);cb.checked=on;store.set('otr-compact',on?'1':'0')}
-  setCompact(store.get('otr-compact')==='1');
-  cb.addEventListener('change',function(){setCompact(cb.checked)});
-  $$('.expand').forEach(function(b){b.addEventListener('click',function(){var a=b.closest('.issue');a.classList.add('open');$$('.reveal',a).forEach(function(e){e.classList.add('in')})})});
+  // Show all issues (off by default: latest issue + back-issue strip)
+  var sa=$('#showall');
+  function setAll(on){d.body.classList.toggle('show-all',on);if(sa)sa.checked=on;
+    $$('.issue:not(.latest) .reveal').forEach(function(e){e.classList.add('in')});
+    if(window.ScrollTrigger)setTimeout(function(){ScrollTrigger.refresh()},50)}
+  if(sa)sa.addEventListener('change',function(){setAll(sa.checked)});
+  // Links to an older issue (covers, Called it list) open everything first, then scroll there
+  d.addEventListener('click',function(e){
+    var a=e.target.closest('a[href^="#issue-"]'); if(!a)return;
+    var t=d.getElementById(a.getAttribute('href').slice(1)); if(!t)return;
+    e.preventDefault(); closeDrawer();
+    if(!t.classList.contains('latest')&&!d.body.classList.contains('show-all'))setAll(true);
+    setTimeout(function(){var y=t.getBoundingClientRect().top+scrollY-60;
+      if(window.otrLenis)window.otrLenis.scrollTo(y,{duration:1});else scrollTo({top:y,behavior:'smooth'});
+      history.replaceState(null,'',a.getAttribute('href'))},120);
+  },true);
+
+  // Called it drawer (slides in from the side)
+  var drawer=$('#calls'), bg=$('#drawer-bg'), cbtn=$('.calls-btn'), lastFocus=null;
+  function openDrawer(){if(!drawer)return;lastFocus=d.activeElement;drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');bg.hidden=false;
+    requestAnimationFrame(function(){bg.classList.add('on')});if(cbtn)cbtn.setAttribute('aria-expanded','true');
+    if(window.otrLenis)window.otrLenis.stop();$('.drawer-x',drawer).focus()}
+  function closeDrawer(){if(!drawer||!drawer.classList.contains('open'))return;drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');bg.classList.remove('on');
+    setTimeout(function(){bg.hidden=true},250);if(cbtn)cbtn.setAttribute('aria-expanded','false');if(window.otrLenis)window.otrLenis.start();if(lastFocus)lastFocus.focus()}
+  if(cbtn)cbtn.addEventListener('click',function(){drawer.classList.contains('open')?closeDrawer():openDrawer()});
+  if(bg)bg.addEventListener('click',closeDrawer);
+  if(drawer)$('.drawer-x',drawer).addEventListener('click',closeDrawer);
+  d.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer()});
+  window.otrCloseDrawer=closeDrawer;
 
   // Share one story
   $$('.share').forEach(function(b){b.addEventListener('click',function(){
@@ -87,7 +110,7 @@
   addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){frame();tick=false})}},{passive:true});
   addEventListener('resize',function(){placeCards();frame()});
   // re-measure when compact mode or filters change card heights
-  d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#compact,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
+  d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
   if(d.fonts&&d.fonts.ready)d.fonts.ready.then(placeCards);
   placeCards(); frame();
 })();
@@ -103,12 +126,20 @@
     gsap.ticker.add(function(t){lenis.raf(t*1000)}); gsap.ticker.lagSmoothing(0);
     window.otrLenis=lenis;
   }
-  // Cover: masthead starts redacted; stamp slams, bars sweep off, then the file tilts away
-  var tl=gsap.timeline({scrollTrigger:{trigger:'#cover .pin',start:'top top',end:'+=130%',pin:true,scrub:0.6}});
-  tl.to('#hint',{opacity:0,duration:.1},0)
-    .fromTo('#cstamp',{opacity:1,scale:2.6,rotate:-9},{scale:1,rotate:-9,duration:.22,ease:'back.out(3)'},.04)
-    .to('#cover .bars i',{xPercent:110,duration:.28,stagger:.04,ease:'power2.in'},.3)
-    .to('#folder',{yPercent:-55,scale:.72,rotate:-5,opacity:.12,duration:.4,ease:'power2.in'},.62);
+  // Cover: everything on the masthead starts blacked out; the bars wipe off, THEN the stamp slams, then the file leaves
+  var mast=document.getElementById('folder'), bars=[];
+  ['.logo','h1','.tg','.il','.il2'].forEach(function(q){var el=mast.querySelector(q);if(!el)return;
+    var b=document.createElement('i');b.className='mbar';b.setAttribute('aria-hidden','true');mast.appendChild(b);bars.push([b,el])});
+  function placeBars(){var m=mast.getBoundingClientRect(),sc=m.width/mast.offsetWidth||1;
+    bars.forEach(function(p){var el=p[1],r;
+      if(el.tagName.toLowerCase()==='svg'){r=el.getBoundingClientRect()}else{var rg=document.createRange();rg.selectNodeContents(el);r=rg.getBoundingClientRect()}
+      p[0].style.cssText='left:'+((r.left-m.left)/sc-6)+'px;top:'+((r.top-m.top)/sc-3)+'px;width:'+(r.width/sc+12)+'px;height:'+(r.height/sc+6)+'px'})}
+  placeBars(); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeBars); addEventListener('resize',placeBars);
+  var tl=gsap.timeline({scrollTrigger:{trigger:'#cover .pin',start:'top top',end:'+=150%',pin:true,scrub:0.6}});
+  tl.to('#hint',{opacity:0,duration:.08},0)
+    .to(bars.map(function(p){return p[0]}),{scaleX:0,transformOrigin:'right center',duration:.3,stagger:.06,ease:'power2.inOut'},.02)
+    .fromTo('#cstamp',{opacity:0,scale:2.6,rotate:-9},{opacity:1,scale:1,rotate:-9,duration:.18,ease:'back.out(3)',immediateRender:false},.52)
+    .to('#folder',{yPercent:-55,scale:.72,rotate:-5,opacity:.12,duration:.3,ease:'power2.in'},.78);
   // Every issue: vertical scroll slides the covers sideways
   var strip=document.getElementById('strip');
   if(strip){
@@ -116,6 +147,6 @@
       scrollTrigger:{trigger:'#back .pin',start:'top top',end:function(){return '+='+Math.max(1,strip.scrollWidth-strip.parentNode.clientWidth)},pin:true,scrub:0.5,invalidateOnRefresh:true}});
   }
   // keep pinned sections in sync when compact mode/filters change the page height
-  document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#compact,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
+  document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
   addEventListener('load',function(){ScrollTrigger.refresh()});
 })();

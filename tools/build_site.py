@@ -122,7 +122,7 @@ def breaking_title(n):
 
 import datetime
 covers = ''
-for i in issues:
+for i in issues[1:]:
     covers += (f'<a class="cov" href="#issue-{i["n"]}"><span class="t">Off the Record</span>'
                f'<span class="n">ISSUE NO. {i["n"]} · {i["week"].upper().replace(", 2026", "")}</span>'
                f'<span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span>'
@@ -134,7 +134,7 @@ except Exception:
     nxt_s = 'NEXT WEEK'
 covers += f'<div class="cov next" aria-hidden="true">ISSUE NO. {issues[0]["n"] + 1}<br>COMING {nxt_s}</div>'
 back = f'''<section class="back" id="back" aria-labelledby="h-back">
-  <div class="pin"><div class="bhead"><h2 id="h-back">Every issue</h2><p>Tap a cover to jump to it.</p></div>
+  <div class="pin"><div class="bhead"><h2 id="h-back">Back issues</h2><p>Tap a cover to read it.</p></div>
   <div class="strip" id="strip">{covers}</div></div>
 </section>'''
 arts.insert(1, back)
@@ -145,11 +145,13 @@ pct = round(100 * hits / total) if total else 0
 call_rows = ''.join(
     f'<li><span class="ck" aria-hidden="true">✓</span><span>{html.escape(lab)}</span>'
     f'<a href="#issue-{n}">Issue {n}</a></li>' for n, lab, ok in calls_all)
-tracker = f'''<section class="panel" id="calls" aria-labelledby="h-calls">
+tracker = f'''<div class="drawer-bg" id="drawer-bg" hidden></div>
+<aside class="drawer" id="calls" aria-labelledby="h-calls" aria-hidden="true">
+  <button type="button" class="drawer-x" aria-label="Close">✕</button>
   <h2 id="h-calls">Called it</h2>
   <p class="sub">Every prediction that came true, newest first.</p>
   <ul class="calls">{call_rows}</ul>
-</section>'''
+</aside>'''
 
 # Best reactions
 rx = ''
@@ -167,8 +169,8 @@ reacts = f'''<section class="panel" id="reactions" aria-labelledby="h-rx">
   <div class="chatwall">{rx}</div>
 </section>'''
 
-nav = ''.join(f'<a href="#issue-{i["n"]}">Issue {i["n"]}</a>' for i in issues) + \
-      '<a href="#back">All issues</a><a href="#calls">Called it</a><a href="#reactions">Reactions</a>'
+nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactions</a>' + \
+      '<button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
                                ('domestic', 'Domestic'), ('markets', 'Markets'), ('calls', "Last Week's Call")])
@@ -206,28 +208,27 @@ page = f'''<!doctype html>
       <p class="il">A weekly newsletter by Camren · Montreal</p>
       <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
-      <div class="bars" aria-hidden="true"><i style="top:30%"></i><i style="top:44%"></i><i style="top:57%"></i><i style="top:68%"></i><i style="top:79%"></i></div>
     </header>
     <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
   </div>
 </section>
 <div class="col">
 <nav class="jump" aria-label="Jump to a section">{nav}</nav>
+{reacts}
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>
-  <label class="toggle"><input type="checkbox" id="compact"> <span>Compact archive</span><small>Show older issues as headlines only</small></label>
+  <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>
 </div>
 <p class="sr-only" id="announce" aria-live="polite"></p>
 <main>
 {chr(10).join(arts)}
-{tracker}
-{reacts}
 </main>
 <footer class="signoff">
   <p class="sig">— C.</p>
   <p class="burn">BURN AFTER READING</p>
 </footer>
 </div>
+{tracker}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="vendor/lenis.min.js" defer></script>
 <script src="vendor/gsap.min.js" defer></script>

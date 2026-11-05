@@ -17,7 +17,7 @@
 <meta name="theme-color" content="#eceef2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e0f12" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="media/icon.png">
-<link rel="stylesheet" href="style.css?v=d7b7c033">
+<link rel="stylesheet" href="style.css?v=8a2416e4">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -30,16 +30,20 @@
       <p class="il">A weekly newsletter by Camren · Montreal</p>
       <p class="il2">Latest: Issue No. 4 · Week of Nov 16, 2026</p>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
-      <div class="bars" aria-hidden="true"><i style="top:30%"></i><i style="top:44%"></i><i style="top:57%"></i><i style="top:68%"></i><i style="top:79%"></i></div>
     </header>
     <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
   </div>
 </section>
 <div class="col">
-<nav class="jump" aria-label="Jump to a section"><a href="#issue-4">Issue 4</a><a href="#issue-3">Issue 3</a><a href="#issue-2">Issue 2</a><a href="#issue-1">Issue 1</a><a href="#back">All issues</a><a href="#calls">Called it</a><a href="#reactions">Reactions</a></nav>
+<nav class="jump" aria-label="Jump to a section"><a href="#issue-4">Latest</a><a href="#reactions">Reactions</a><button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a></nav>
+<section class="panel" id="reactions" aria-labelledby="h-rx">
+  <h2 id="h-rx">Best reactions</h2>
+  <p class="sub">Straight from the group chat.</p>
+  <div class="chatwall"><figure class="thread"><figcaption>After <a href="#issue-4">Issue 4</a></figcaption><div class="bub l"><span class="nm">Blaise</span>sorry cam i can’t help but notice you forgot to include an article about bryce hall getting into a fight</div><div class="bub r"><span class="nm">Camren</span>I fear thermonuclear war drums and Canada’s entire GdP worth of losses in the s&amp;p overshadowed that this week</div></figure></div>
+</section>
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section"><button type="button" class="fl" data-f="all" aria-pressed="true">All</button><button type="button" class="fl" data-f="breaking" aria-pressed="false">Breaking</button><button type="button" class="fl" data-f="foreign" aria-pressed="false">Foreign Affairs</button><button type="button" class="fl" data-f="domestic" aria-pressed="false">Domestic</button><button type="button" class="fl" data-f="markets" aria-pressed="false">Markets</button><button type="button" class="fl" data-f="calls" aria-pressed="false">Last Week's Call</button></div>
-  <label class="toggle"><input type="checkbox" id="compact"> <span>Compact archive</span><small>Show older issues as headlines only</small></label>
+  <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>
 </div>
 <p class="sr-only" id="announce" aria-live="polite"></p>
 <main>
@@ -90,8 +94,8 @@
   <button class="expand" type="button">Show the full issue</button>
 </article>
 <section class="back" id="back" aria-labelledby="h-back">
-  <div class="pin"><div class="bhead"><h2 id="h-back">Every issue</h2><p>Tap a cover to jump to it.</p></div>
-  <div class="strip" id="strip"><a class="cov" href="#issue-4"><span class="t">Off the Record</span><span class="n">ISSUE NO. 4 · NOV 16</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">8th Largest Economy in the World Sees Regime Change for the First Time in Decades</span></span></a><a class="cov" href="#issue-3"><span class="t">Off the Record</span><span class="n">ISSUE NO. 3 · NOV 9</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Nuke the Mountain, Lose the War</span></span></a><a class="cov" href="#issue-2"><span class="t">Off the Record</span><span class="n">ISSUE NO. 2 · NOV 2</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Trump Accused of Rape? Again? And It&#x27;s Not His Wife? Woooow.</span></span></a><a class="cov" href="#issue-1"><span class="t">Off the Record</span><span class="n">ISSUE NO. 1 · OCT 26</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Oh Sweet! Finally, Modular Nuclear!</span></span></a><div class="cov next" aria-hidden="true">ISSUE NO. 5<br>COMING NOV 23</div></div></div>
+  <div class="pin"><div class="bhead"><h2 id="h-back">Back issues</h2><p>Tap a cover to read it.</p></div>
+  <div class="strip" id="strip"><a class="cov" href="#issue-3"><span class="t">Off the Record</span><span class="n">ISSUE NO. 3 · NOV 9</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Nuke the Mountain, Lose the War</span></span></a><a class="cov" href="#issue-2"><span class="t">Off the Record</span><span class="n">ISSUE NO. 2 · NOV 2</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Trump Accused of Rape? Again? And It&#x27;s Not His Wife? Woooow.</span></span></a><a class="cov" href="#issue-1"><span class="t">Off the Record</span><span class="n">ISSUE NO. 1 · OCT 26</span><span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span><span class="b"><span class="lab2">BREAKING</span><span class="h">Oh Sweet! Finally, Modular Nuclear!</span></span></a><div class="cov next" aria-hidden="true">ISSUE NO. 5<br>COMING NOV 23</div></div></div>
 </section>
 <article class="issue" id="issue-3" aria-labelledby="h-issue-3">
   <header class="ihead"><h2 id="h-issue-3">Issue No. 3</h2><span class="idate">Week of Nov 9, 2026</span></header>
@@ -199,26 +203,23 @@
   </div>
   <button class="expand" type="button">Show the full issue</button>
 </article>
-<section class="panel" id="calls" aria-labelledby="h-calls">
-  <h2 id="h-calls">Called it</h2>
-  <p class="sub">Every prediction that came true, newest first.</p>
-  <ul class="calls"><li><span class="ck" aria-hidden="true">✓</span><span>Talarico takes the dub</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Kushner&#x27;s phone hacked</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>S&amp;P 500 crash</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>War restart</span><a href="#issue-3">Issue 3</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Debt crash</span><a href="#issue-3">Issue 3</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Cyber attacks</span><a href="#issue-3">Issue 3</a></li></ul>
-</section>
-<section class="panel" id="reactions" aria-labelledby="h-rx">
-  <h2 id="h-rx">Best reactions</h2>
-  <p class="sub">Straight from the group chat.</p>
-  <div class="chatwall"><figure class="thread"><figcaption>After <a href="#issue-4">Issue 4</a></figcaption><div class="bub l"><span class="nm">Blaise</span>sorry cam i can’t help but notice you forgot to include an article about bryce hall getting into a fight</div><div class="bub r"><span class="nm">Camren</span>I fear thermonuclear war drums and Canada’s entire GdP worth of losses in the s&amp;p overshadowed that this week</div></figure></div>
-</section>
 </main>
 <footer class="signoff">
   <p class="sig">— C.</p>
   <p class="burn">BURN AFTER READING</p>
 </footer>
 </div>
+<div class="drawer-bg" id="drawer-bg" hidden></div>
+<aside class="drawer" id="calls" aria-labelledby="h-calls" aria-hidden="true">
+  <button type="button" class="drawer-x" aria-label="Close">✕</button>
+  <h2 id="h-calls">Called it</h2>
+  <p class="sub">Every prediction that came true, newest first.</p>
+  <ul class="calls"><li><span class="ck" aria-hidden="true">✓</span><span>Talarico takes the dub</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Kushner&#x27;s phone hacked</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>S&amp;P 500 crash</span><a href="#issue-4">Issue 4</a></li><li><span class="ck" aria-hidden="true">✓</span><span>War restart</span><a href="#issue-3">Issue 3</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Debt crash</span><a href="#issue-3">Issue 3</a></li><li><span class="ck" aria-hidden="true">✓</span><span>Cyber attacks</span><a href="#issue-3">Issue 3</a></li></ul>
+</aside>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="vendor/lenis.min.js?v=5a44a112" defer></script>
 <script src="vendor/gsap.min.js?v=ff86cb55" defer></script>
 <script src="vendor/ScrollTrigger.min.js?v=2e3b8c36" defer></script>
-<script src="app.js?v=41d77601" defer></script>
+<script src="app.js?v=7e55d09d" defer></script>
 </body>
 </html>
