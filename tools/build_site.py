@@ -30,7 +30,7 @@ def src_html(lst):
     if not lst:
         return ''
     li = ''.join(f'<li><a href="{html.escape(u)}" target="_blank" rel="noopener">{html.escape(t)}</a></li>' for t, u in lst)
-    return f'<details class="sources"><summary>Sources</summary><ul>{li}</ul></details>'
+    return f'<details class="sources"><summary>Sources · {len(lst)}</summary><ul>{li}</ul></details>'
 
 calls_all = []
 STORYCOUNT = {}
@@ -146,9 +146,8 @@ call_rows = ''.join(
     f'<li><span class="ck" aria-hidden="true">✓</span><span>{html.escape(lab)}</span>'
     f'<a href="#issue-{n}">Issue {n}</a></li>' for n, lab, ok in calls_all)
 tracker = f'''<section class="panel" id="calls" aria-labelledby="h-calls">
-  <h2 id="h-calls">My calls</h2>
-  <p class="rec"><strong>{hits} / {total}</strong> called since Issue 1</p>
-  <div class="bar" role="img" aria-label="{hits} of {total} calls right"><i style="width:{pct}%"></i></div>
+  <h2 id="h-calls">Called it</h2>
+  <p class="sub">Every prediction that came true, newest first.</p>
   <ul class="calls">{call_rows}</ul>
 </section>'''
 
@@ -169,7 +168,7 @@ reacts = f'''<section class="panel" id="reactions" aria-labelledby="h-rx">
 </section>'''
 
 nav = ''.join(f'<a href="#issue-{i["n"]}">Issue {i["n"]}</a>' for i in issues) + \
-      '<a href="#back">All issues</a><a href="#calls">My calls</a><a href="#reactions">Reactions</a>'
+      '<a href="#back">All issues</a><a href="#calls">Called it</a><a href="#reactions">Reactions</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
                                ('domestic', 'Domestic'), ('markets', 'Markets'), ('calls', "Last Week's Call")])
@@ -206,7 +205,6 @@ page = f'''<!doctype html>
       <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
       <p class="il">A weekly newsletter by Camren · Montreal</p>
       <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
-      <a class="record" href="#calls">Calls: <strong>{hits}/{total}</strong> ✓</a>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
       <div class="bars" aria-hidden="true"><i style="top:30%"></i><i style="top:44%"></i><i style="top:57%"></i><i style="top:68%"></i><i style="top:79%"></i></div>
     </header>
@@ -237,5 +235,10 @@ page = f'''<!doctype html>
 <script src="app.js" defer></script>
 </body>
 </html>'''
+import hashlib
+def ver(f):
+    return hashlib.md5(open(os.path.join(ROOT, f), 'rb').read()).hexdigest()[:8]
+for f in ['style.css', 'app.js', 'vendor/lenis.min.js', 'vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js']:
+    page = page.replace(f'"{f}"', f'"{f}?v={ver(f)}"')
 open(os.path.join(ROOT, 'index.html'), 'w').write(page)
 print('built', len(arts), 'issues,', total, 'calls')

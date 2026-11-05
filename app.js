@@ -24,6 +24,10 @@
     });
     $$('.issue').forEach(function(a){var any=$$('.ibody > [data-f]:not(.is-hidden)',a).length;a.classList.toggle('is-hidden',f!=='all'&&!any)});
     $('#announce').textContent=f==='all'?'Showing every section':'Showing '+b.textContent+' only';
+    if(window.ScrollTrigger)ScrollTrigger.refresh();
+    var first=f==='all'?null:$('.ibody > [data-f="'+f+'"]:not(.is-hidden)');
+    if(first){var y=first.getBoundingClientRect().top+scrollY-120;
+      if(window.otrLenis)window.otrLenis.scrollTo(y,{duration:.8});else scrollTo({top:y,behavior:'smooth'})}
   })});
 
   // Compact archive (off by default, remembered per reader)

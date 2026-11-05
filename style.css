@@ -252,3 +252,23 @@ em{font-style:italic}
 
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
+
+/* ---------- v5 fixes ---------- */
+html,body{overflow-x:hidden;overflow-x:clip}
+.score,.ibody > .score{overflow:hidden}
+.back .pin{overflow:hidden}
+.cov,.cov:visited{text-decoration:none;color:#111216}
+.cov *{text-decoration:none}
+.cov .b{color:#fff}
+.thread figcaption a{text-decoration:none}
+.calls li a,.jump a,.dl-pdf a{text-decoration:none}
+.sources summary{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:#33353c;border:1.5px solid #e2e4ea;border-radius:999px;padding:4px 10px;background:#f5f5f7}
+.sources summary::before{content:"";width:12px;height:12px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1 1M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1-1' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1 1M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1-1' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.sources[open] summary::before{content:""}
+.sources[open] summary{background:#111216;color:#fff;border-color:#111216}
+.sources ul{background:#f5f5f7;border-radius:12px;padding:10px 12px 10px 28px;margin:8px 0 0}
+.sources a{text-decoration:none;font-weight:600}
+.brk .sources summary{background:#23242b;border-color:#3a3b42;color:#e8e8ec}
+.brk .sources ul{background:#23242b}
+.st-tools{align-items:center}
+@media (prefers-color-scheme:dark){.sources summary{background:#23242b;border-color:#2c2e36;color:#eceef2}.sources ul{background:#1a1b20}}
