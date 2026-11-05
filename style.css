@@ -63,10 +63,7 @@ em{font-style:italic}
 
 /* ---------- Motion (only with JS, and never for reduced-motion users) ---------- */
 @media (prefers-reduced-motion:no-preference){
-  .js .stamp{animation:slam .55s cubic-bezier(.2,1.6,.4,1) .5s both}
   @keyframes slam{0%{opacity:0;transform:rotate(-9deg) scale(2.6)}70%{opacity:1;transform:rotate(-9deg) scale(.95)}85%{transform:rotate(-9deg) scale(1.03) translateX(2px)}100%{opacity:1;transform:rotate(-9deg) scale(1)}}
-  .js .mast h1,.js .mast .tg,.js .mast .logo{animation:rise .7s ease-out both}
-  .js .mast .tg{animation-delay:.15s}
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
@@ -186,4 +183,45 @@ em{font-style:italic}
 @media (prefers-color-scheme:dark) and (prefers-reduced-motion:no-preference){
   .js .hl span,.js .rd{background-image:linear-gradient(#eceef2,#eceef2)}
   .js .brk .hl span{background-image:linear-gradient(#e5384f,#e5384f)}
+}
+
+/* ---------- v3: pinned cover, stacking file cards, called-it stamps ---------- */
+.cover{background:#141416;height:170vh;position:relative}
+.cover .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cover .mast{width:min(90vw,460px);margin:0;will-change:transform}
+.cover .mast .il2{font-family:MONO,monospace;font-weight:700;font-size:11.5px;letter-spacing:1.5px;color:#6b6e78;margin:10px 0 0;text-transform:uppercase}
+.cover .stamp{top:42%;right:4%;font-size:14px}
+.cover .hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#9a9da8;margin:0}
+.js .cover .stamp{opacity:0}
+.col{padding-top:14px}
+
+/* section headings stay for screen readers; the coloured file tab shows the section */
+.ibody > h3.sec{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+.ftab{display:inline-block;font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:1.5px;color:#fff;background:var(--tab);padding:5px 11px 4px;border-radius:8px 8px 0 0;margin:-14px 0 8px -2px}
+.ibody > .story,.ibody > .brk{position:sticky;background:#fff;border:1px solid #e2e4ea;border-radius:18px;padding:14px 14px 12px;margin:0 0 18px;box-shadow:0 -8px 24px -10px rgba(0,0,0,.28)}
+.ibody > .brk{background:#141416;border-color:#141416}
+.ibody > .brk .ftab{background:#e5384f}
+.ibody > .story + .story,.sec + .story{border-top:1px solid #e2e4ea}
+.ibody > .score,.ibody > [data-f="calls"]{position:relative;z-index:5;margin-top:4px}
+.ibody > .score{box-shadow:0 -8px 24px -10px rgba(0,0,0,.28)}
+.ibody > .story,.ibody > .brk{z-index:1}
+
+/* called-it stamp */
+.row{position:relative}
+.row b{padding-right:104px}
+.ci{position:absolute;right:0;top:9px;font-family:MONO,monospace;font-weight:700;font-size:12px;letter-spacing:2px;color:#1f7a4d;border:2.5px solid #1f7a4d;padding:2px 8px;border-radius:4px;background:rgba(242,250,245,.9);transform:rotate(-8deg) scale(var(--s,1));opacity:var(--o,1);pointer-events:none}
+.js .ci{--o:0}
+.row div{padding-right:4px}
+
+@media (prefers-reduced-motion:reduce){
+  .cover{height:auto}.cover .pin{position:relative;height:auto;padding:48px 0}
+  .js .cover .stamp{opacity:1}.cover .hint{display:none}
+  .ibody > .story,.ibody > .brk{position:relative;top:auto!important}
+  .js .ci{--o:1;--s:1}
+}
+@media (prefers-color-scheme:dark){
+  .cover{background:#0a0a0c}
+  .ibody > .story{background:#23242b;border-color:#2c2e36}
+  .ibody > .brk{background:#0e0f12;border-color:#2c2e36}
+  .ci{background:rgba(19,36,27,.92);color:#4fc08a;border-color:#4fc08a}
 }

@@ -33,6 +33,7 @@ def src_html(lst):
     return f'<details class="sources"><summary>Sources</summary><ul>{li}</ul></details>'
 
 calls_all = []
+STORYCOUNT = {}
 
 def issue_block(n, week, latest):
     raw = open(os.path.join(ROOT, 'src', f'issue{n}.html')).read()
@@ -60,6 +61,10 @@ def issue_block(n, week, latest):
             sid = f'i{n}-{slug(title)}'
             el['id'] = sid
             el['data-f'] = f
+            STORYCOUNT[n] = STORYCOUNT.get(n, 0) + 1
+            label = 'BREAKING' if f == 'breaking' else sec.upper()
+            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6'}.get(f, '#6b6e78')
+            el.insert(0, BeautifulSoup(f'<span class="ftab" style="--tab:{color}" aria-hidden="true">FILE {STORYCOUNT[n]:02d}{'' if f=='breaking' else ' · '+html.escape(label)}</span>', 'html.parser'))
             el['class'] = cls + ['reveal']
             h.name = 'h3' if 'brk' in cls else 'h4'
             h['class'] = ['hl']
@@ -82,6 +87,7 @@ def issue_block(n, week, latest):
             el['data-f'] = 'calls'
             el['class'] = cls + ['reveal']
             for r in el.select('.row'):
+                r.append(BeautifulSoup('<span class="ci" aria-hidden="true">CALLED IT</span>', 'html.parser'))
                 lab = r.find('b').get_text(strip=True)
                 ok = '✓' in r.find(class_='ck').get_text() or True
                 calls_all.append((n, lab, ok))
@@ -169,14 +175,20 @@ page = f'''<!doctype html>
 </head>
 <body>
 <a class="skip" href="#issue-{L}">Skip to the latest issue</a>
+<section class="cover" id="cover" aria-label="Off the Record">
+  <div class="pin">
+    <header class="mast" id="folder">
+      {LOGO}
+      <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
+      <p class="il">A weekly newsletter by Camren · Montreal</p>
+      <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
+      <a class="record" href="#calls">Calls: <strong>{hits}/{total}</strong> ✓</a>
+      <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
+    </header>
+    <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
+  </div>
+</section>
 <div class="col">
-<header class="mast">
-  {LOGO}
-  <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
-  <p class="il">A weekly newsletter by Camren · Montreal</p>
-  <a class="record" href="#calls">Calls: <strong>{hits}/{total}</strong> ✓</a>
-  <div class="stamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
-</header>
 <nav class="jump" aria-label="Jump to a section">{nav}</nav>
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>

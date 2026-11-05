@@ -59,3 +59,37 @@
     });
   });
 })();
+
+// ---- v3: pinned cover, stacking cards, called-it stamps (scroll-driven) ----
+(function(){
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var d=document, cover=d.getElementById('cover'), folder=d.getElementById('folder'), stamp=d.getElementById('cstamp'), hint=d.getElementById('hint');
+  var cards=[].slice.call(d.querySelectorAll('.ibody > .story, .ibody > .brk'));
+  var rows=[].slice.call(d.querySelectorAll('.score .row'));
+  var clamp=function(x){return Math.max(0,Math.min(1,x))}, ease=function(t){return 1-Math.pow(1-t,3)};
+  // Stick each card so its whole text has scrolled into view before the next one slides over it
+  function placeCards(){
+    var vh=innerHeight, groups={};
+    cards.forEach(function(c){var k=c.parentNode;groups[k.parentNode.id]=(groups[k.parentNode.id]||0)+1;var i=groups[k.parentNode.id];
+      c.style.top=Math.min(64+i*6, vh-c.offsetHeight-12)+'px';});
+  }
+  function frame(){
+    var vh=innerHeight;
+    if(cover){var r=cover.getBoundingClientRect(), p=clamp(-r.top/Math.max(1,r.height-vh));
+      var s1=clamp(p/0.22), sc=s1<1?2.6-1.6*ease(s1):1;
+      stamp.style.opacity=s1>0?1:0; stamp.style.transform='rotate(-9deg) scale('+sc+')';
+      var s2=clamp((p-0.4)/0.6);
+      folder.style.transform='translateY('+(-s2*26)+'vh) scale('+(1-s2*0.3)+') rotate('+(-s2*5)+'deg)';
+      folder.style.opacity=String(1-s2*0.85); hint.style.opacity=String(1-clamp(p/0.12));}
+    rows.forEach(function(row){var b=row.getBoundingClientRect();var t=clamp((vh*0.8-b.top)/(vh*0.2));
+      var e=t<1?2.4-1.4*ease(t):1;var st=row.querySelector('.ci');if(st){st.style.setProperty('--s',e);st.style.setProperty('--o',t>0?1:0)}});
+  }
+  var tick=false;
+  addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){frame();tick=false})}},{passive:true});
+  addEventListener('resize',function(){placeCards();frame()});
+  // re-measure when compact mode or filters change card heights
+  d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#compact,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
+  if(d.fonts&&d.fonts.ready)d.fonts.ready.then(placeCards);
+  placeCards(); frame();
+})();
