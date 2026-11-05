@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Off the Record · Scroll lab</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+<style>
+body{background:#0e0f12;color:#eceef2}
+.lab-tag{position:absolute;left:14px;top:14px;z-index:3;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;background:#f5c542;color:#111;padding:4px 8px;border-radius:4px}
+.lab-note{max-width:560px;margin:0 auto;padding:22px 18px;font-size:14px;color:#9a9da8;line-height:1.5}
+.lab-note b{color:#eceef2}
+section.lab{position:relative}
+
+/* 1. Pinned cover */
+#cover{height:220vh}
+#cover .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#cover .folder{width:min(88vw,460px);background:#fff;color:#111;border-radius:26px;padding:26px 22px;text-align:center;position:relative;will-change:transform}
+#cover h1{font-family:PF,Georgia,serif;font-weight:900;font-size:clamp(32px,10vw,58px);white-space:nowrap;margin:0;letter-spacing:-1px;line-height:1}
+#cover .tg{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;color:#555;margin:8px 0 0}
+#cover .box{border-top:3px double #111;border-bottom:1px solid #111;padding:10px 0}
+#cover .stamp{top:40%;right:6%;font-size:15px;opacity:0}
+#cover .issue-no{font-family:MONO,monospace;font-weight:700;letter-spacing:2px;color:#6b6e78;font-size:12px;margin-top:12px}
+#cover .hint{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-family:MONO,monospace;font-size:11px;letter-spacing:2px;color:#9a9da8}
+
+/* 2. Scrollytelling: sticky graphic + steps */
+#story{max-width:560px;margin:0 auto;padding:0 14px}
+#story .graphic{position:sticky;top:0;height:56vh;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;background:linear-gradient(#0e0f12 85%,rgba(14,15,18,0))}
+#story .big{font-family:PF,Georgia,serif;font-weight:900;font-size:clamp(72px,26vw,140px);line-height:1;color:#fff;transition:opacity .35s,transform .35s}
+#story .cap{font-family:MONO,monospace;font-weight:700;font-size:12px;letter-spacing:2px;color:#ff5a70;margin-top:8px;text-align:center}
+#story .track{display:flex;gap:6px;margin-top:16px}
+#story .track i{width:34px;height:4px;border-radius:2px;background:#2c2e36;transition:background .3s}
+#story .track i.on{background:#e5384f}
+#story .step{min-height:70vh;display:flex;align-items:center;position:relative;z-index:2}
+#story .step p{background:#1a1b20;border:1px solid #2c2e36;border-radius:16px;padding:16px;font-size:16px;line-height:1.45;margin:0;opacity:.35;transition:opacity .3s}
+#story .step.act p{opacity:1}
+#story .step strong{color:#fff}
+
+/* 3. Parallax ghost titles */
+#ghost{overflow:hidden;padding:40px 0 60px}
+#ghost .gt{position:absolute;left:-4%;white-space:nowrap;font-family:PF,Georgia,serif;font-weight:900;font-size:clamp(90px,30vw,190px);color:transparent;-webkit-text-stroke:1.5px rgba(217,119,6,.35);pointer-events:none;will-change:transform;z-index:0}
+#ghost .gt.g2{-webkit-text-stroke-color:rgba(229,56,79,.35)}
+#ghost .cards{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 14px}
+#ghost .card{background:#fff;color:#111;border-radius:20px;padding:16px;margin:0 0 44vh}
+#ghost .card h4{margin:6px 0 0;font-size:19px}
+
+/* 4. Stacking file cards */
+#stack{max-width:560px;margin:0 auto;padding:20px 14px 30vh}
+#stack .file{position:sticky;background:#fff;color:#111;border-radius:20px;padding:18px 16px 22px;margin-bottom:30vh;box-shadow:0 -10px 30px rgba(0,0,0,.45);min-height:42vh}
+#stack .file:nth-child(1){top:60px}#stack .file:nth-child(2){top:76px}#stack .file:nth-child(3){top:92px}#stack .file:nth-child(4){top:108px}
+#stack .tab{display:inline-block;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;color:#fff;padding:5px 12px 4px;border-radius:8px 8px 0 0;margin:-18px 0 10px -4px}
+#stack h4{font-size:20px;margin:6px 0 6px}
+#stack p{color:#5f626b;font-size:14.5px;line-height:1.45;margin:0}
+
+/* 5. "Called it" stamps */
+#called{max-width:560px;margin:0 auto;padding:30px 14px 50vh}
+#called .row2{position:relative;background:#f2faf5;color:#111;border:1.5px solid #cfe6d9;border-radius:16px;padding:16px;margin-bottom:22vh;overflow:visible}
+#called .row2 b{display:block;font-size:17px}
+#called .row2 span{font-size:14px;color:#3f4d45}
+#called .ci{position:absolute;right:10px;top:-14px;font-family:MONO,monospace;font-weight:700;font-size:16px;letter-spacing:2px;color:#1f7a4d;border:3px solid #1f7a4d;padding:4px 10px;border-radius:4px;background:rgba(242,250,245,.85);transform:rotate(-8deg) scale(var(--s,2.4));opacity:var(--o,0)}
+
+/* reading progress */
+.progress{position:fixed;left:0;top:0;height:4px;width:100%;background:#e5384f;transform-origin:0 50%;transform:scaleX(0);z-index:50}
+
+@media (prefers-reduced-motion:reduce){
+  #cover{height:auto}#cover .pin{position:relative;height:auto;padding:60px 0}
+  #cover .stamp{opacity:1}
+  #ghost .gt{display:none}
+  #called .ci{--s:1;--o:1}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog" aria-hidden="true"></div>
+<p class="lab-note"><b>Scroll lab.</b> Five scroll effects tried on Issue 4. Scroll slowly on your phone. Each one is labelled. Nothing here is on the main site yet.</p>
+
+<section class="lab" id="cover"><span class="lab-tag">1 · PINNED COVER</span>
+  <div class="pin">
+    <div class="folder" id="folder">
+      <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
+      <p class="issue-no">ISSUE NO. 4 · WEEK OF NOV 16, 2026</p>
+      <div class="stamp" id="cstamp">NOT FOR DISTRIBUTION</div>
+    </div>
+    <p class="hint" id="hint">SCROLL TO OPEN THE FILE ↓</p>
+  </div>
+</section>
+
+<section class="lab" id="story"><span class="lab-tag">2 · SCROLLYTELLING</span>
+  <div class="graphic" aria-hidden="true">
+    <div class="big" id="big">1988</div>
+    <div class="cap" id="cap">LAST DEMOCRATIC SENATE WIN IN TEXAS</div>
+    <div class="track"><i class="on"></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="step" data-big="1988" data-cap="LAST DEMOCRATIC SENATE WIN IN TEXAS"><p>Before Tuesday, Texas hadn't sent a Democrat to the Senate since <strong>1988</strong>.</p></div>
+  <div class="step" data-big="30 yrs" data-cap="OF REPUBLICAN GOVERNORS"><p>Republicans had held the governor's office for <strong>three decades</strong>. Then <strong>Gina Hinojosa unseated Greg Abbott</strong>.</p></div>
+  <div class="step" data-big="55%" data-cap="TALARICO'S SHARE OF THE VOTE"><p><strong>James Talarico beat Ken Paxton</strong> with about <strong>55%</strong>, a former teacher taking down the state's attorney general.</p></div>
+  <div class="step" data-big="#8" data-cap="TEXAS'S RANK AS A WORLD ECONOMY"><p>The 8th largest economy in the world just changed hands. <em>Goodbye billionaire candy land, hello renewables.</em></p></div>
+</section>
+
+<section class="lab" id="ghost"><span class="lab-tag">3 · PARALLAX TITLES</span>
+  <div class="gt" data-speed="0.45" style="top:8%">FOREIGN AFFAIRS</div>
+  <div class="gt g2" data-speed="-0.35" style="top:55%">DOMESTIC</div>
+  <div class="cards">
+    <div class="card"><span class="tag o">Opinion</span><h4>STFU Liberal… Wait, We Lost Texas, Kansas and South Carolina???</h4></div>
+    <div class="card"><span class="tag o">Opinion</span><h4>ENSO ENSO ENSO: I Told You So</h4></div>
+  </div>
+</section>
+
+<section class="lab" id="stack"><span class="lab-tag">4 · STACKING FILES</span>
+  <div class="file"><span class="tab" style="background:#141416">FILE 01 · BREAKING</span><h4>8th Largest Economy in the World Sees Regime Change for the First Time in Decades</h4><p>How Texas's changing guard will completely change its economy.</p></div>
+  <div class="file"><span class="tab" style="background:#d97706">FILE 02 · FOREIGN AFFAIRS</span><h4>STFU Liberal… Wait, We Lost Texas, Kansas and South Carolina???</h4><p>Democrats won the midterms. Now the real fight is inside the party.</p></div>
+  <div class="file"><span class="tab" style="background:#e5384f">FILE 03 · DOMESTIC</span><h4>ENSO ENSO ENSO: I Told You So</h4><p>El Niño is already making our weather go haywire. Prepare for freezing rain.</p></div>
+  <div class="file"><span class="tab" style="background:#8e3fa6">FILE 04 · MARKETS</span><h4>Your 401(k)s Are Citadel's Exit Liquidity</h4><p>Who's left holding the bag before the bust? Check your retirement account.</p></div>
+</section>
+
+<section class="lab" id="called"><span class="lab-tag">5 · CALLED-IT STAMPS</span>
+  <div class="row2"><b>Talarico takes the dub</b><span>He beat Paxton with about 55%.</span><span class="ci" aria-hidden="true">CALLED IT</span></div>
+  <div class="row2"><b>Kushner's phone hacked</b><span>Called it in Issue 1's cybersecurity piece.</span><span class="ci" aria-hidden="true">CALLED IT</span></div>
+  <div class="row2"><b>S&amp;P 500 crash</b><span>$2.2 trillion erased in about 40 minutes.</span><span class="ci" aria-hidden="true">CALLED IT</span></div>
+</section>
+
+<p class="lab-note"><a href="./">← Back to Off the Record</a></p>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(q){return document.querySelector(q)}, $$=function(q){return [].slice.call(document.querySelectorAll(q))};
+  var clamp=function(x){return Math.max(0,Math.min(1,x))};
+  var prog=$('#prog'), folder=$('#folder'), cstamp=$('#cstamp'), hint=$('#hint'), cover=$('#cover');
+  var steps=$$('#story .step'), big=$('#big'), cap=$('#cap'), ticks=$$('#story .track i');
+  var ghosts=$$('#ghost .gt'), ghostSec=$('#ghost');
+  var stamps=$$('#called .row2');
+  var cur=-1;
+  function frame(){
+    var vh=innerHeight, y=scrollY, doc=document.documentElement.scrollHeight-vh;
+    prog.style.transform='scaleX('+(doc>0?y/doc:0)+')';
+    if(reduce){return}
+    // 1. pinned cover: stamp slams early, then the folder shrinks and tilts away
+    var r=cover.getBoundingClientRect(), p=clamp(-r.top/(r.height-vh));
+    var s1=clamp(p/0.25); var sc=s1<1?2.6-1.6*(1-Math.pow(1-s1,3)):1;
+    cstamp.style.opacity=s1>0?1:0; cstamp.style.transform='rotate(-9deg) scale('+sc+')';
+    var s2=clamp((p-0.45)/0.55);
+    folder.style.transform='translateY('+(-s2*30)+'vh) scale('+(1-s2*0.35)+') rotate('+(-s2*6)+'deg)';
+    folder.style.opacity=1-s2*0.8; hint.style.opacity=1-clamp(p/0.15);
+    // 3. parallax ghost titles
+    var g=ghostSec.getBoundingClientRect();
+    if(g.bottom>0&&g.top<vh){ghosts.forEach(function(el){el.style.transform='translateX('+((g.top)*parseFloat(el.dataset.speed))+'px)'})}
+    // 5. called-it stamps slam as each row reaches the middle of the screen
+    stamps.forEach(function(row){var b=row.getBoundingClientRect();var t=clamp((vh*0.75-b.top)/(vh*0.25));var e=t<1?2.4-1.4*(1-Math.pow(1-t,3)):1;var st=row.querySelector('.ci');st.style.setProperty('--s',e);st.style.setProperty('--o',t>0?1:0)});
+  }
+  // 2. scrollytelling steps
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){var i=steps.indexOf(e.target);if(i===cur)return;cur=i;
+      steps.forEach(function(s,k){s.classList.toggle('act',k===i)});ticks.forEach(function(t,k){t.classList.toggle('on',k<=i)});
+      if(reduce){big.textContent=e.target.dataset.big;cap.textContent=e.target.dataset.cap;return}
+      big.style.opacity=0;big.style.transform='translateY(14px)';
+      setTimeout(function(){big.textContent=e.target.dataset.big;cap.textContent=e.target.dataset.cap;big.style.opacity=1;big.style.transform='none'},180);}})},{rootMargin:'-45% 0px -45% 0px'});
+    steps.forEach(function(s){io.observe(s)});
+  }
+  var ticking=false;
+  addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){frame();ticking=false})}},{passive:true});
+  addEventListener('resize',frame); frame();
+})();
+</script>
+</body>
+</html>
