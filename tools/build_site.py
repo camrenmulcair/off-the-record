@@ -183,7 +183,7 @@ page = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Off the Record · What your feed won't tell you</title>
-<meta name="description" content="Off the Record: a weekly newsletter by Camren. Every issue, newest first.">
+<meta name="description" content="Off the Record: a weekly newsletter. Every issue, newest first.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Off the Record · Issue No. {L}">
@@ -206,7 +206,7 @@ page = f'''<!doctype html>
     <header class="mast" id="folder">
       {LOGO}
       <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
-      <p class="il">A weekly newsletter by Camren · Montreal</p>
+      <p class="il">A weekly newsletter · Montreal</p>
       <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
     </header>
