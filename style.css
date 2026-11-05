@@ -72,11 +72,16 @@ em{font-style:italic}
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
 
-  /* redaction bar wipes off each headline */
-  .js .hl span{position:relative;background:linear-gradient(#111,#111) no-repeat right/100% 100%;color:transparent;transition:background-size .7s cubic-bezier(.7,0,.2,1) .25s,color .01s linear .55s;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  /* redaction: headline, dek and blurb are all blacked out, then the bars wipe away in order */
+  .js .hl span,.js .rd{background:linear-gradient(#111,#111) no-repeat right/100% 100%;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .7s cubic-bezier(.7,0,.2,1)}
+  .js .reveal:not(.in) .hl span,.js .reveal:not(.in) .hl span *,.js .reveal:not(.in) .rd,.js .reveal:not(.in) .rd *{color:transparent!important}
+  .js .hl span{transition-delay:.2s}
+  .js .dek .rd{transition-delay:.45s}
+  .js .bl .rd,.js .story > p .rd,.js .brk > p .rd{transition-delay:.7s}
   .js .brk .hl span{background-image:linear-gradient(#e5384f,#e5384f)}
-  .js .in .hl span{background-size:0% 100%;color:inherit}
-
+  .js .brk .rd{background-image:linear-gradient(#5a5b63,#5a5b63)}
+  .js .in .hl span,.js .in .rd{background-size:0% 100%}
+  .js .in .hl span *,.js .in .rd *,.js .in .hl span,.js .in .rd{transition:background-size .7s cubic-bezier(.7,0,.2,1),color 0s linear .5s}
   /* checkmarks pop in one by one */
   .js .score .ck{transform:scale(0);transition:transform .45s cubic-bezier(.3,1.8,.5,1)}
   .js .score.in .row:nth-child(1) .ck{transition-delay:.3s}
@@ -179,6 +184,6 @@ em{font-style:italic}
   .bar{background:#24503a}
 }
 @media (prefers-color-scheme:dark) and (prefers-reduced-motion:no-preference){
-  .js .hl span{background-image:linear-gradient(#eceef2,#eceef2)}
+  .js .hl span,.js .rd{background-image:linear-gradient(#eceef2,#eceef2)}
   .js .brk .hl span{background-image:linear-gradient(#e5384f,#e5384f)}
 }

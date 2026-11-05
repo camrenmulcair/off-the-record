@@ -71,6 +71,11 @@ def issue_block(n, week, latest):
                 f'<button class="share" type="button" data-id="{sid}" data-title="{html.escape(title)}" '
                 f'aria-label="Share this story: {html.escape(title)}">{SHARE_SVG}<span>Share</span></button></div>',
                 'html.parser')
+            # wrap every text block so the redaction bar covers the whole story
+            for t in el.select('.dek, .bl') + [x for x in el.find_all('p', recursive=False) if not x.get('class')]:
+                inner_t = t.decode_contents()
+                t.clear()
+                t.append(BeautifulSoup(f'<span class="rd">{inner_t}</span>', 'html.parser'))
             el.append(tools)
             continue
         if 'score' in cls:
