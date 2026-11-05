@@ -115,6 +115,30 @@ def issue_block(n, week, latest):
 
 arts = [issue_block(i['n'], i['week'], k == 0) for k, i in enumerate(issues)]
 
+def breaking_title(n):
+    soup = BeautifulSoup(open(os.path.join(ROOT, 'src', f'issue{n}.html')).read(), 'html.parser')
+    h = soup.select_one('.brk h3')
+    return h.get_text(' ', strip=True) if h else ''
+
+import datetime
+covers = ''
+for i in issues:
+    covers += (f'<a class="cov" href="#issue-{i["n"]}"><span class="t">Off the Record</span>'
+               f'<span class="n">ISSUE NO. {i["n"]} · {i["week"].upper().replace(", 2026", "")}</span>'
+               f'<span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span>'
+               f'<span class="b"><span class="lab2">BREAKING</span><span class="h">{html.escape(breaking_title(i["n"]))}</span></span></a>')
+try:
+    nxt = datetime.datetime.strptime(issues[0]['week'], '%b %d, %Y') + datetime.timedelta(days=7)
+    nxt_s = nxt.strftime('%b %-d').upper()
+except Exception:
+    nxt_s = 'NEXT WEEK'
+covers += f'<div class="cov next" aria-hidden="true">ISSUE NO. {issues[0]["n"] + 1}<br>COMING {nxt_s}</div>'
+back = f'''<section class="back" id="back" aria-labelledby="h-back">
+  <div class="pin"><div class="bhead"><h2 id="h-back">Every issue</h2><p>Tap a cover to jump to it.</p></div>
+  <div class="strip" id="strip">{covers}</div></div>
+</section>'''
+arts.insert(1, back)
+
 # Prediction tracker
 hits = sum(1 for c in calls_all if c[2]); total = len(calls_all)
 pct = round(100 * hits / total) if total else 0
@@ -145,7 +169,7 @@ reacts = f'''<section class="panel" id="reactions" aria-labelledby="h-rx">
 </section>'''
 
 nav = ''.join(f'<a href="#issue-{i["n"]}">Issue {i["n"]}</a>' for i in issues) + \
-      '<a href="#calls">My calls</a><a href="#reactions">Reactions</a>'
+      '<a href="#back">All issues</a><a href="#calls">My calls</a><a href="#reactions">Reactions</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
                                ('domestic', 'Domestic'), ('markets', 'Markets'), ('calls', "Last Week's Call")])
@@ -184,6 +208,7 @@ page = f'''<!doctype html>
       <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
       <a class="record" href="#calls">Calls: <strong>{hits}/{total}</strong> ✓</a>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
+      <div class="bars" aria-hidden="true"><i style="top:30%"></i><i style="top:44%"></i><i style="top:57%"></i><i style="top:68%"></i><i style="top:79%"></i></div>
     </header>
     <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
   </div>
@@ -206,6 +231,9 @@ page = f'''<!doctype html>
 </footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="vendor/lenis.min.js" defer></script>
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="app.js" defer></script>
 </body>
 </html>'''

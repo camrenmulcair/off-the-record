@@ -186,13 +186,13 @@ em{font-style:italic}
 }
 
 /* ---------- v3: pinned cover, stacking file cards, called-it stamps ---------- */
-.cover{background:#141416;height:170vh;position:relative}
-.cover .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cover{background:#141416;position:relative}
+.cover .pin{position:relative;height:100vh;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .cover .mast{width:min(90vw,460px);margin:0;will-change:transform}
 .cover .mast .il2{font-family:MONO,monospace;font-weight:700;font-size:11.5px;letter-spacing:1.5px;color:#6b6e78;margin:10px 0 0;text-transform:uppercase}
 .cover .stamp{top:42%;right:4%;font-size:14px}
 .cover .hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#9a9da8;margin:0}
-.js .cover .stamp{opacity:0}
+
 .col{padding-top:14px}
 
 /* section headings stay for screen readers; the coloured file tab shows the section */
@@ -225,3 +225,30 @@ em{font-style:italic}
   .ibody > .brk{background:#0e0f12;border-color:#2c2e36}
   .ci{background:rgba(19,36,27,.92);color:#4fc08a;border-color:#4fc08a}
 }
+
+/* ---------- v4: redacted masthead bars + sideways issue strip ---------- */
+.cover .bars{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .js .cover .stamp{opacity:0}
+  .js .cover .bars{display:block;position:absolute;inset:0;overflow:hidden;border-radius:26px;pointer-events:none;z-index:3}
+  .js .cover .bars i{position:absolute;left:-6%;width:112%;height:24px;background:#000}
+}
+.back{background:#141416;margin:0 -14px 18px;border-radius:24px;overflow:hidden;color:#eceef2}
+.back .pin{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:24px 0}
+.back .bhead{padding:0 18px 14px}
+.back h2{font-family:PF,Georgia,serif;font-weight:900;font-size:30px;margin:0}
+.back .bhead p{margin:4px 0 0;color:#9a9da8;font-size:14px}
+.strip{display:flex;gap:16px;padding:0 18px;width:max-content;will-change:transform}
+.cov{display:block;width:min(76vw,330px);flex:none;background:#fff;color:#111;border-radius:22px;padding:18px 16px 16px;position:relative;text-decoration:none}
+.cov .t{display:block;font-family:PF,Georgia,serif;font-weight:900;font-size:27px;text-align:center;border-top:3px double #111;border-bottom:1px solid #111;padding:6px 0}
+.cov .n{display:block;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;color:#6b6e78;text-align:center;margin:8px 0 12px}
+.cov .b{display:block;background:#141416;color:#fff;border-radius:14px;padding:12px;min-height:118px}
+.cov .lab2{font-size:10.5px;font-weight:800;letter-spacing:1px;background:#e5384f;padding:2px 6px;border-radius:4px}
+.cov .h{display:block;font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:19px;line-height:1.2;margin-top:8px}
+.cov .st{position:absolute;right:12px;top:56px;transform:rotate(-9deg);border:2px solid #c8243b;color:#c8243b;font-family:MONO,monospace;font-weight:700;font-size:9px;letter-spacing:1.5px;padding:2px 6px;background:rgba(255,255,255,.7)}
+.cov.next{background:transparent;border:2px dashed #3a3b42;color:#9a9da8;display:flex;align-items:center;justify-content:center;text-align:center;font-family:MONO,monospace;font-weight:700;letter-spacing:1.5px;font-size:12px}
+@media (prefers-reduced-motion:reduce){.back .pin{min-height:0}.strip{width:auto;overflow-x:auto;padding-bottom:10px}}
+@media (prefers-color-scheme:dark){.back{background:#0a0a0c}}
+
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}

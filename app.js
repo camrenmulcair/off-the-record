@@ -76,12 +76,6 @@
   }
   function frame(){
     var vh=innerHeight;
-    if(cover){var r=cover.getBoundingClientRect(), p=clamp(-r.top/Math.max(1,r.height-vh));
-      var s1=clamp(p/0.22), sc=s1<1?2.6-1.6*ease(s1):1;
-      stamp.style.opacity=s1>0?1:0; stamp.style.transform='rotate(-9deg) scale('+sc+')';
-      var s2=clamp((p-0.4)/0.6);
-      folder.style.transform='translateY('+(-s2*26)+'vh) scale('+(1-s2*0.3)+') rotate('+(-s2*5)+'deg)';
-      folder.style.opacity=String(1-s2*0.85); hint.style.opacity=String(1-clamp(p/0.12));}
     rows.forEach(function(row){var b=row.getBoundingClientRect();var t=clamp((vh*0.8-b.top)/(vh*0.2));
       var e=t<1?2.4-1.4*ease(t):1;var st=row.querySelector('.ci');if(st){st.style.setProperty('--s',e);st.style.setProperty('--o',t>0?1:0)}});
   }
@@ -92,4 +86,32 @@
   d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#compact,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
   if(d.fonts&&d.fonts.ready)d.fonts.ready.then(placeCards);
   placeCards(); frame();
+})();
+
+// ---- v4: Lenis smooth scrolling + GSAP cover and sideways issue strip ----
+(function(){
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce||!window.gsap||!window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  if(window.Lenis){
+    var lenis=new Lenis({lerp:0.09,smoothWheel:true,anchors:{offset:-56}});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(function(t){lenis.raf(t*1000)}); gsap.ticker.lagSmoothing(0);
+    window.otrLenis=lenis;
+  }
+  // Cover: masthead starts redacted; stamp slams, bars sweep off, then the file tilts away
+  var tl=gsap.timeline({scrollTrigger:{trigger:'#cover .pin',start:'top top',end:'+=130%',pin:true,scrub:0.6}});
+  tl.to('#hint',{opacity:0,duration:.1},0)
+    .fromTo('#cstamp',{opacity:1,scale:2.6,rotate:-9},{scale:1,rotate:-9,duration:.22,ease:'back.out(3)'},.04)
+    .to('#cover .bars i',{xPercent:110,duration:.28,stagger:.04,ease:'power2.in'},.3)
+    .to('#folder',{yPercent:-55,scale:.72,rotate:-5,opacity:.12,duration:.4,ease:'power2.in'},.62);
+  // Every issue: vertical scroll slides the covers sideways
+  var strip=document.getElementById('strip');
+  if(strip){
+    gsap.to(strip,{x:function(){return -Math.max(0,strip.scrollWidth-strip.parentNode.clientWidth)},ease:'none',
+      scrollTrigger:{trigger:'#back .pin',start:'top top',end:function(){return '+='+Math.max(1,strip.scrollWidth-strip.parentNode.clientWidth)},pin:true,scrub:0.5,invalidateOnRefresh:true}});
+  }
+  // keep pinned sections in sync when compact mode/filters change the page height
+  document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#compact,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
+  addEventListener('load',function(){ScrollTrigger.refresh()});
 })();
