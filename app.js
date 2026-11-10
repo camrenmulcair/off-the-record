@@ -190,13 +190,13 @@
   // cards that were hidden (filters / show all) have nothing to cover when they appear
   d.addEventListener('click',function(e){if(e.target.closest('.fl,#showall,.toggle,a[href^="#issue-"]'))setTimeout(function(){cards.forEach(function(c){if(c.offsetParent!==null&&!c.classList.contains('revealed')&&c.classList.contains('in'))reveal(c)})},200)});
 })();
-
-// ---- Bread and Circuses: writer/kind chips + match clock ----
+// ---- Bread and Circuses: writer/kind chips + match clock (from reference/bread-and-circuses.html) ----
 (function(){
   var d=document, $$=function(q,c){return [].slice.call((c||d).querySelectorAll(q))};
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var row=d.querySelector('.bcf');
   $$('.fl').forEach(function(b){b.addEventListener('click',function(){
-    if(!row)return; var on=b.dataset.f==='circus'; row.hidden=!on;
+    if(!row)return; row.hidden=b.dataset.f!=='circus';
     $$('.bcc').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.w==='all'?'true':'false')});
   })});
   $$('.bcc').forEach(function(c){c.addEventListener('click',function(){
@@ -208,13 +208,14 @@
     $$('.issue').forEach(function(a){a.classList.toggle('is-hidden',!$$('.ibody > .bc:not(.is-hidden)',a).length)});
     if(window.ScrollTrigger)ScrollTrigger.refresh();
   })});
-  // match clock counts up once the curtain opens
-  $$('.bc .clk').forEach(function(el){
-    var card=el.closest('.bc'), t0=null;
-    setInterval(function(){
-      if(!card.classList.contains('in'))return; if(t0===null)t0=Date.now();
-      var s=Math.floor((Date.now()-t0)/1000);
-      el.textContent=String(Math.floor(s/60)%100).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-    },1000);
+  // match clock: runs to 90:00 once the curtain has opened
+  function runClock(k){ if(k._t)clearInterval(k._t); var s=0; k.textContent='00:00';
+    k._t=setInterval(function(){ s+=7; if(s>=5400){s=5400;clearInterval(k._t)} var m=Math.floor(s/60),ss=s%60; k.textContent=(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss; },40); }
+  $$('.bc [data-clock]').forEach(function(k){
+    var card=k.closest('.bc');
+    function go(){ setTimeout(function(){runClock(k)}, reduce?0:2400) }
+    if(card.classList.contains('in')){go();return}
+    var mo=new MutationObserver(function(){ if(card.classList.contains('in')){mo.disconnect();go()} });
+    mo.observe(card,{attributes:true,attributeFilter:['class']});
   });
 })();

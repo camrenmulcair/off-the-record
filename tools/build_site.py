@@ -35,29 +35,39 @@ def src_html(lst):
 
 WRITERS = []
 
-def decorate_bc(el, title):
+def decorate_bc(el, title, n):
     kind = el.get('data-kind', 'sports')
     w = el.get('data-writer', 'Guest')
     if w not in WRITERS:
         WRITERS.append(w)
     W = html.escape(w)
-    dek = el.select_one('.dek')
-    tick = html.escape(title.upper() + ' · ' + (dek.get_text(' ', strip=True).upper() if dek else '') + ' · ')
-    cur = (f'<div class="cur" aria-hidden="true"><i class="dr l"></i><i class="dr r"></i><i class="val"></i>'
-           f'<span class="cw"><b>Bread and Circuses</b><small>{"SPORTS" if kind=="sports" else "MEDIA"}</small></span></div>')
+    K = 'SPORTS' if kind == 'sports' else 'MEDIA'
+    el['class'] = el.get('class', []) + ['sp' if kind == 'sports' else 'md']
+    under = ('<div class="valance" aria-hidden="true"></div><div class="drape l" aria-hidden="true"></div><div class="drape r" aria-hidden="true"></div>'
+             f'<div class="ctitle" aria-hidden="true"><b>Bread and Circuses</b><span>{K}</span></div>')
     if kind == 'sports':
-        top = (f'<div class="sb" aria-hidden="true"><div class="sb1">BREAD AND CIRCUSES : SPORTS <span class="live"><i></i>LIVE</span></div>'
-               f'<div class="sb2"><span class="nm">{W.upper()}</span><span class="clk">00:00</span></div></div>')
-        deco = (f'<i class="beam a" aria-hidden="true"></i><i class="beam b" aria-hidden="true"></i>'
-                f'<div class="chy" aria-hidden="true"><span class="np">{W} · Guest correspondent</span>'
-                f'<span class="tk"><span>{tick}{tick}</span></span></div>')
+        under += '<div class="turf" aria-hidden="true"></div><div class="beam a" aria-hidden="true"></div><div class="beam b" aria-hidden="true"></div>'
+        top = (f'<div class="board" aria-hidden="true"><div class="top"><span>BREAD AND CIRCUSES : SPORTS</span><span><span class="dot">●</span> LIVE</span></div>'
+               f'<div class="main"><span class="nm">{W}</span><span class="clk" data-clock>00:00</span></div></div>')
+        t = f'BREAD AND CIRCUSES · SPORTS · ISSUE NO. {n} · GUEST WRITER: {W.upper()} · READ THE FULL PIECE ABOVE · BREAD AND CIRCUSES · SPORTS ·'
+        bottom = (f'<div class="foot-space"></div><div class="l3" aria-hidden="true"><span class="nm">{W} · Guest correspondent</span>'
+                  f'<span class="tk"><span>{t}</span></span></div>')
     else:
-        top = (f'<div class="mq" aria-hidden="true"><span class="st">STARRING</span><span class="mn">{W}</span></div>')
-        deco = ('<i class="fb f1" aria-hidden="true"></i><i class="fb f2" aria-hidden="true"></i><i class="fb f3" aria-hidden="true"></i>'
-                '<i class="fb f4" aria-hidden="true"></i><i class="pz" aria-hidden="true"></i>')
-    tab = el.select_one('.ftab')
-    tab.insert_after(BeautifulSoup(top, 'html.parser'))
-    el.append(BeautifulSoup(deco + cur, 'html.parser'))
+        under += '<div class="halftone" aria-hidden="true"></div>' + ''.join(
+            f'<span class="flash" aria-hidden="true" style="{s}"></span>' for s in [
+                'left:-30px;top:20px;animation-delay:2.3s', 'right:-20px;top:60px;animation-delay:2.55s',
+                'left:40%;top:-40px;animation-delay:2.8s', 'right:30%;bottom:-20px;animation-delay:3s',
+                'left:-20px;bottom:40px;animation-delay:3.25s'])
+        top = f'<div class="marquee" aria-hidden="true"><i></i><i></i><i></i><b><small>STARRING</small>{W}</b><i></i><i></i><i></i></div>'
+        cam = lambda flip, lens: ('<svg viewBox="0 0 40 50"><circle cx="20" cy="10" r="7" fill="#141416"/><rect x="10" y="18" width="20" height="32" rx="6" fill="#141416"/>'
+                                  + ('<rect x="18" y="4" width="18" height="12" rx="3" fill="#333"/><circle cx="30" cy="10" r="4" fill="%s"/>' if not flip else
+                                     '<rect x="2" y="6" width="18" height="12" rx="3" fill="#333"/><circle cx="8" cy="12" r="4" fill="%s"/>') % lens + '</svg>')
+        bottom = ('<div class="foot-space"></div><div class="press" aria-hidden="true">'
+                  + cam(False, '#fff') + cam(True, '#fff') + cam(False, '#fff') + cam(True, '#ff2d8a') + '</div>')
+    el.insert(0, BeautifulSoup(under, 'html.parser'))
+    el.select_one('.ftab').insert_after(BeautifulSoup(top, 'html.parser'))
+    tools = el.select_one('.st-tools')
+    tools.insert_after(BeautifulSoup(bottom, 'html.parser'))
 
 calls_all = []
 STORYCOUNT = {}
@@ -110,7 +120,7 @@ def issue_block(n, week, latest):
                 t.append(BeautifulSoup(f'<span class="rd">{inner_t}</span>', 'html.parser'))
             el.append(tools)
             if 'bc' in cls:
-                decorate_bc(el, title)
+                decorate_bc(el, title, n)
             continue
         if 'score' in cls:
             el['data-f'] = 'calls'
