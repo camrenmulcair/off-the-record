@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Bread and Circuses · combined</title>
+<style>
+@font-face{font-family:PF;font-weight:900;font-display:swap;src:url(fonts/playfair-display-latin-900-normal.woff2) format("woff2")}
+@font-face{font-family:PF;font-weight:700;font-style:italic;font-display:swap;src:url(fonts/playfair-display-latin-700-italic.woff2) format("woff2")}
+@font-face{font-family:MONO;font-weight:700;font-display:swap;src:url(fonts/ibm-plex-mono-latin-700-normal.woff2) format("woff2")}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;color:#111216;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.45}
+.col{max-width:560px;margin:0 auto;padding:18px 14px 60px}
+.intro,.ver{background:#fff;border-radius:24px;padding:18px 18px 14px;margin-bottom:22px}
+.intro h1{font-family:PF,Georgia,serif;font-weight:900;font-size:34px;letter-spacing:-1px;line-height:1;margin:0 0 6px}
+.intro .tg{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;color:#555;margin:0 0 10px}
+.intro p,.ver p.lead{font-size:15px;color:#5f626b;margin:6px 0}
+.ver h2{font-family:PF,Georgia,serif;font-weight:900;font-size:26px;letter-spacing:-.4px;margin:0 0 4px}
+.ver h2 small{font-family:MONO,monospace;font-size:11px;letter-spacing:2px;color:#0f8b8d;display:block;margin-bottom:4px}
+.tools{display:flex;justify-content:space-between;align-items:center;margin:14px 0 12px;border-top:1px solid #e2e4ea;padding-top:12px}
+.replay{font:inherit;font-size:13px;font-weight:700;border:1.5px solid #c9ccd4;background:#f5f5f7;border-radius:999px;padding:6px 12px;cursor:pointer}
+.lab{font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:1.5px;color:#9a9da8;text-transform:uppercase;margin:0}
+
+/* ---- story card (matches the site's file card) ---- */
+.card{position:relative;background:#fff;border:1px solid #e2e4ea;border-radius:18px;padding:0 14px 12px;margin:0 0 18px;box-shadow:0 -8px 24px -10px rgba(0,0,0,.28);overflow:hidden}
+.ftab{display:inline-block;font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:1.5px;color:#fff;background:#0f8b8d;padding:5px 11px 4px;border-radius:0 0 8px 8px;margin:22px 0 8px -2px}
+.src{display:flex;gap:6px;align-items:center;margin-top:4px}
+.tag{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#a3202f}.tag.a{background:#f3e6f7;color:#6e2a85}.tag.g{background:#e3f4f4;color:#0b6366}
+.card h4{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14.5px;color:#5f626b;margin:6px 0 0;line-height:1.45}
+.dl{font-family:MONO,monospace;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}
+.k{font-weight:700;color:#111216}
+.st-tools{display:flex;align-items:center;gap:10px;margin-top:10px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:#33353c;border:1.5px solid #e2e4ea;border-radius:999px;padding:4px 10px;background:#f5f5f7}
+.pill.r{margin-left:auto;color:#6b6e78;background:none}
+.card > *{position:relative;z-index:1}
+
+/* ---- the curtain (shared) ---- */
+.drape{position:absolute;top:0;bottom:0;width:52%;z-index:8;
+  background:repeating-linear-gradient(90deg,#6d0d1b 0 9px,#a3162a 9px 20px,#8a1222 20px 28px);
+  box-shadow:inset 0 0 50px rgba(0,0,0,.55);transition:transform 1.4s cubic-bezier(.7,0,.2,1) .9s}
+.drape.l{left:0;transform-origin:left center;border-right:3px solid #d4af37}
+.drape.r{right:0;transform-origin:right center;border-left:3px solid #d4af37}
+.in .drape{transform:scaleX(.05)}
+.valance{position:absolute;left:0;right:0;top:0;height:22px;z-index:9;background:#7a0f1e;border-top:3px solid #d4af37;
+  -webkit-mask:radial-gradient(circle at 50% 100%,transparent 9px,#000 10px) 0 -8px/26px 100% repeat-x;mask:radial-gradient(circle at 50% 100%,transparent 9px,#000 10px) 0 -8px/26px 100% repeat-x}
+/* the words on the closed curtain */
+.ctitle{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:10;text-align:center;color:#d4af37;pointer-events:none;transition:opacity .5s .5s;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+.ctitle b{display:block;font-family:PF,Georgia,serif;font-weight:900;font-size:28px;letter-spacing:-.5px;line-height:1.05}
+.ctitle span{display:block;font-family:MONO,monospace;font-weight:700;font-size:13px;letter-spacing:4px;margin-top:8px;color:#ffe9a8}
+.in .ctitle{opacity:0}
+.card:not(.in){min-height:220px}
+
+/* ---- MEDIA: starring marquee + paparazzi ---- */
+.marquee{display:flex;align-items:center;gap:8px;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#d4af37;background:#141416;border-radius:10px;padding:8px 12px;margin-top:10px}
+.marquee i{width:7px;height:7px;border-radius:50%;background:#ffe27a;box-shadow:0 0 6px #ffe27a;animation:bulb 1s steps(2) infinite}
+.marquee i:nth-child(odd){animation-delay:.5s}
+@keyframes bulb{to{opacity:.25}}
+.marquee b{flex:1;color:#fff;text-align:center;font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:17px;letter-spacing:0}
+.marquee b small{font-style:normal;font-family:MONO,monospace;font-size:10.5px;letter-spacing:2px;color:#d4af37;margin-right:8px;vertical-align:middle}
+.flash{position:absolute;width:140px;height:140px;border-radius:50%;z-index:3;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#fff 0,rgba(255,255,255,.85) 20%,rgba(255,45,138,.25) 45%,transparent 70%)}
+.in .flash{animation:pop .5s ease-out both}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.4)}}
+.press{position:absolute;left:0;right:0;bottom:-4px;height:54px;z-index:4;display:flex;justify-content:space-around;align-items:flex-end;pointer-events:none;transform:translateY(60px);transition:transform .7s cubic-bezier(.3,1.4,.5,1) 2.5s}
+.in .press{transform:translateY(0)}
+.press svg{width:38px;height:48px}
+.foot-space{height:46px}
+.md .halftone{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s 2.3s;
+  background:radial-gradient(rgba(255,45,138,.22) 1.2px,transparent 1.4px) 0 0/7px 7px,linear-gradient(#fff 40%,#fff0f6)}
+.md.in .halftone{opacity:1}
+
+/* ---- SPORTS: scoreboard on top, chyron at the bottom ---- */
+.board{background:#0b0b0c;color:#ffb000;font-family:MONO,monospace;font-weight:700;border-radius:10px;padding:8px 12px 9px;margin-top:10px;
+  background-image:radial-gradient(rgba(255,176,0,.12) 1px,transparent 1.2px);background-size:5px 5px;box-shadow:inset 0 0 0 2px #222;
+  transform:translateY(-12px);opacity:0;transition:.6s 2.3s}
+.in .board{transform:none;opacity:1}
+.board .top{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:2px;color:#ffd27a;opacity:.85}
+.board .top .dot{color:#ff3b3b;animation:bulb .8s steps(2) infinite}
+.board .main{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+.board .nm{font-size:24px;letter-spacing:3px;text-transform:uppercase;text-shadow:0 0 8px rgba(255,176,0,.7)}
+.board .clk{font-size:18px;letter-spacing:3px;text-shadow:0 0 8px rgba(255,176,0,.7)}
+.sp h4{text-transform:uppercase;font-weight:900;letter-spacing:-.3px;font-size:20px;line-height:1.08}
+.beam{position:absolute;top:-10px;width:70%;height:65%;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s 2.3s;
+  background:linear-gradient(170deg,rgba(255,250,200,.55),rgba(255,250,200,0) 70%)}
+.beam.a{left:-20%;transform:skewX(18deg)}.beam.b{right:-20%;transform:skewX(-18deg);background:linear-gradient(190deg,rgba(255,250,200,.55),rgba(255,250,200,0) 70%)}
+.in .beam{opacity:1}
+.turf{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s 2.3s;background:linear-gradient(#fff 55%,#e8f5ea)}
+.turf:after{content:"";position:absolute;left:12%;right:12%;bottom:30px;height:80px;border:2px solid rgba(46,139,61,.5);border-radius:50%}
+.in .turf{opacity:1}
+.l3{position:absolute;left:0;right:12%;bottom:12px;z-index:4;transform:translateX(-105%);transition:transform .7s cubic-bezier(.2,.9,.3,1) 2.6s}
+.in .l3{transform:none}
+.l3 .nm{display:block;padding:5px 14px;font-weight:800;font-size:14.5px;letter-spacing:-.2px;background:#ffd400;color:#111;clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
+.l3 .tk{display:block;padding:4px 14px;font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:2px;white-space:nowrap;overflow:hidden;background:#111;color:#ffd400}
+.l3 .tk span{display:inline-block;padding-left:100%;animation:tick 10s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+.sp .foot-space{height:72px}
+.board{z-index:3}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.card:not(.in){min-height:0}}
+@media (prefers-color-scheme:dark){
+  body{background:#0e0f12;color:#eceef2}
+  .intro,.ver,.card{background:#1a1b20}
+  .intro p,.ver p.lead,.bl,.dek,.lab{color:#a8abb5}
+  .card{border-color:#2c2e36}.tools{border-color:#2c2e36}
+  .card h4,.k{color:#f2f3f6}
+  .pill,.replay{background:#23242b;border-color:#2c2e36;color:#eceef2}
+  .turf{background:linear-gradient(#1a1b20 55%,#13241b)}
+  .md .halftone{background:radial-gradient(rgba(255,45,138,.22) 1.2px,transparent 1.4px) 0 0/7px 7px,linear-gradient(#1a1b20 40%,#3a1326)}
+  .press svg [fill="#141416"]{fill:#d6d8de}.press svg [stroke="#141416"]{stroke:#d6d8de}
+  .in .beam{opacity:.45}
+}
+</style>
+</head>
+<body>
+<div class="col">
+
+<section class="intro">
+  <h1>Bread and Circuses</h1>
+  <p class="tg">Combined design: the curtain for both, scoreboard + chyron for sports, marquee for media</p>
+  <p>Scroll down. The closed curtain names the section and the beat, then draws back. Press <b>Replay</b> to watch it again.</p>
+</section>
+
+<section class="ver" id="sp">
+  <h2><small>SPORTS PIECE</small>Curtain → scoreboard on top, chyron at the bottom</h2>
+  <p class="lead">The closed drapes read "Bread and Circuses · Sports". They draw back, floodlights sweep in, the scoreboard drops in with the guest's name in amber LEDs and a running match clock, and the yellow-on-black chyron slides in along the bottom with a looping ticker.</p>
+  <div class="tools"><p class="lab">Scroll-in demo</p><button class="replay" type="button">↻ Replay</button></div>
+
+  <div class="card sp" data-anim>
+    <div class="valance"></div><div class="drape l"></div><div class="drape r"></div>
+    <div class="ctitle"><b>Bread and Circuses</b><span>SPORTS</span></div>
+    <div class="turf"></div><div class="beam a"></div><div class="beam b"></div>
+    <span class="ftab">FILE 05 · BREAD AND CIRCUSES</span>
+    <div class="board">
+      <div class="top"><span>BREAD AND CIRCUSES : SPORTS</span><span><span class="dot">●</span> LIVE</span></div>
+      <div class="main"><span class="nm">Blaise</span><span class="clk" data-clock>00:00</span></div>
+    </div>
+    <div class="src"><span class="tag g">Guest</span><span class="tag o">Opinion</span></div>
+    <h4>Sports headline goes here, written by the guest</h4>
+    <p class="dek">One bold line from the guest: the dek, same as every other story.</p>
+    <p class="bl"><span class="dl">MONTREAL —</span> Three to five sentences from the guest writer. <strong class="k">Key facts and names in bold</strong>, same house rules as the rest of the issue. <em>Their take goes in italics at the end, exactly like yours does.</em></p>
+    <div class="st-tools"><span class="pill">Sources · 2</span><span class="pill r">Share</span></div>
+    <div class="foot-space"></div>
+    <div class="l3"><span class="nm">Blaise · Guest correspondent</span><span class="tk"><span>BREAD AND CIRCUSES · SPORTS · ISSUE NO. 5 · GUEST WRITER: BLAISE · READ THE FULL PIECE ABOVE · BREAD AND CIRCUSES · SPORTS ·</span></span></div>
+  </div>
+</section>
+
+<section class="ver" id="md">
+  <h2><small>MEDIA PIECE</small>Curtain → "Starring" marquee, paparazzi</h2>
+  <p class="lead">The closed drapes read "Bread and Circuses · Media". They draw back on a lit-bulb marquee that says "Starring: Yuri", flashbulbs pop across the card, a faint pink halftone settles behind the story, and the photographers rise along the bottom edge.</p>
+  <div class="tools"><p class="lab">Scroll-in demo</p><button class="replay" type="button">↻ Replay</button></div>
+
+  <div class="card md" data-anim>
+    <div class="valance"></div><div class="drape l"></div><div class="drape r"></div>
+    <div class="ctitle"><b>Bread and Circuses</b><span>MEDIA</span></div>
+    <div class="halftone"></div>
+    <span class="flash" style="left:-30px;top:20px;animation-delay:2.3s"></span>
+    <span class="flash" style="right:-20px;top:60px;animation-delay:2.55s"></span>
+    <span class="flash" style="left:40%;top:-40px;animation-delay:2.8s"></span>
+    <span class="flash" style="right:30%;bottom:-20px;animation-delay:3s"></span>
+    <span class="flash" style="left:-20px;bottom:40px;animation-delay:3.25s"></span>
+    <span class="ftab">FILE 06 · BREAD AND CIRCUSES</span>
+    <div class="marquee"><i></i><i></i><i></i><b><small>STARRING</small>Yuri</b><i></i><i></i><i></i></div>
+    <div class="src"><span class="tag g">Guest</span><span class="tag a">Analysis</span></div>
+    <h4>Media headline goes here, written by the guest</h4>
+    <p class="dek">One bold line from the guest: the dek, same as every other story.</p>
+    <p class="bl"><span class="dl">LOS ANGELES —</span> Three to five sentences from the guest writer. <strong class="k">Key facts and names in bold</strong>, same house rules as the rest of the issue. <em>Their take goes in italics at the end.</em></p>
+    <div class="st-tools"><span class="pill">Sources · 1</span><span class="pill r">Share</span></div>
+    <div class="foot-space"></div>
+    <div class="press">
+      <svg viewBox="0 0 40 50"><circle cx="20" cy="10" r="7" fill="#141416"/><rect x="10" y="18" width="20" height="32" rx="6" fill="#141416"/><rect x="18" y="4" width="18" height="12" rx="3" fill="#333"/><circle cx="30" cy="10" r="4" fill="#fff"/></svg>
+      <svg viewBox="0 0 40 50"><circle cx="20" cy="10" r="7" fill="#141416"/><rect x="10" y="18" width="20" height="32" rx="6" fill="#141416"/><rect x="2" y="6" width="18" height="12" rx="3" fill="#333"/><circle cx="8" cy="12" r="4" fill="#fff"/></svg>
+      <svg viewBox="0 0 40 50"><circle cx="20" cy="10" r="7" fill="#141416"/><rect x="10" y="18" width="20" height="32" rx="6" fill="#141416"/><rect x="18" y="4" width="18" height="12" rx="3" fill="#333"/><circle cx="30" cy="10" r="4" fill="#fff"/></svg>
+      <svg viewBox="0 0 40 50"><circle cx="20" cy="10" r="7" fill="#141416"/><rect x="10" y="18" width="20" height="32" rx="6" fill="#141416"/><rect x="2" y="6" width="18" height="12" rx="3" fill="#333"/><circle cx="8" cy="12" r="4" fill="#ff2d8a"/></svg>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>
+(function(){
+  var d=document, $$=function(q,el){return [].slice.call((el||d).querySelectorAll(q))};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, cards=$$('[data-anim]');
+  function runClock(k){ if(k._t)clearInterval(k._t); var s=0; k.textContent='00:00';
+    k._t=setInterval(function(){ s+=7; if(s>=5400){s=5400;clearInterval(k._t)} var m=Math.floor(s/60),ss=s%60; k.textContent=(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss; },40); }
+  function arm(c){ c.classList.add('in'); var k=c.querySelector('[data-clock]'); if(k) setTimeout(function(){runClock(k)}, reduce?0:2400); }
+  if(reduce||!('IntersectionObserver' in window)){cards.forEach(arm)}
+  else{var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){arm(x.target);io.unobserve(x.target)}})},{threshold:.35});cards.forEach(function(c){io.observe(c)})}
+  $$('.replay').forEach(function(b){b.addEventListener('click',function(){
+    $$('[data-anim]',b.closest('.ver')).forEach(function(c){c.classList.remove('in');
+      $$('.flash',c).forEach(function(f){f.style.animation='none';f.offsetHeight;f.style.animation=''});
+      c.offsetHeight; setTimeout(function(){arm(c)},60)});
+  })});
+})();
+</script>
+</body>
+</html>
