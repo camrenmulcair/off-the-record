@@ -13,7 +13,7 @@ sources = J('sources.json')
 reactions = J('reactions.json')
 
 SEC_FILTER = {'Breaking': 'breaking', 'Foreign Affairs': 'foreign', 'Domestic': 'domestic',
-              'Markets': 'markets', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
+              'Markets': 'markets', 'Bread and Circuses': 'sports', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
 
 def slug(t):
     return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')[:40].strip('-')
@@ -63,7 +63,7 @@ def issue_block(n, week, latest):
             el['data-f'] = f
             STORYCOUNT[n] = STORYCOUNT.get(n, 0) + 1
             label = 'BREAKING' if f == 'breaking' else sec.upper()
-            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6'}.get(f, '#6b6e78')
+            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6', 'sports': '#b8860b'}.get(f, '#6b6e78')
             el.insert(0, BeautifulSoup(f'<span class="ftab" style="--tab:{color}" aria-hidden="true">FILE {STORYCOUNT[n]:02d}{'' if f=='breaking' else ' · '+html.escape(label)}</span>', 'html.parser'))
             el['class'] = cls + ['reveal']
             h.name = 'h3' if 'brk' in cls else 'h4'
@@ -174,7 +174,7 @@ nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactio
       '<button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
-                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('calls', "Last Week's Call")])
+                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('sports', 'Bread and Circuses'), ('calls', "Last Week's Call")])
 LOGO = '<svg class="logo" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg>'
 L = issues[0]['n']
 page = f'''<!doctype html>

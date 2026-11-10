@@ -304,3 +304,8 @@ html,body{overflow-x:hidden;overflow-x:clip}
 .rx-window .thread figcaption{margin-bottom:8px}
 .rx-more{font-size:12.5px;color:#6b6e78;margin:8px 2px 0;font-weight:600}
 @media (prefers-color-scheme:dark){.rx-window{background:#0b141a}.rx-window .thread + .thread{border-color:rgba(255,255,255,.15)}}
+
+.dl{font-family:MONO,monospace;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+@media (prefers-color-scheme:dark){.chat{background:#0b141a}.chat .lb{color:#8696a0}}

@@ -1,0 +1,120 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:PF;font-weight:900;src:url(../fonts/playfair-display-latin-900-normal.woff2)}
+@font-face{font-family:PF;font-weight:700;font-style:italic;src:url(../fonts/playfair-display-latin-700-italic.woff2)}
+@font-face{font-family:MONO;font-weight:700;src:url(../fonts/ibm-plex-mono-latin-700-normal.woff2)}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;padding:18px;width:480px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#111216}
+.page{background:#fff;border-radius:26px;padding:22px 20px 14px}
+.m2{position:relative;text-align:center;margin-bottom:16px}
+.m2 .lg{display:flex;justify-content:center;margin-bottom:8px}
+.m2 .box{border-top:3px double #111;border-bottom:1px solid #111;padding:8px 0 9px}
+.m2 .t{font-family:PF;font-weight:900;font-size:42px;letter-spacing:-1px;line-height:1}
+.m2 .tg{font-family:PF;font-style:italic;font-weight:700;font-size:15px;color:#555;margin-top:5px}
+.m2 .il{font-size:12.5px;font-weight:700;color:#8a8a8e;letter-spacing:1px;margin-top:8px}
+.stamp{position:absolute;right:-6px;top:30px;transform:rotate(-9deg);border:2.5px solid #c8243b;color:#c8243b;font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:2px;padding:3px 8px;background:rgba(255,255,255,.55);mix-blend-mode:multiply;border-radius:3px}
+.brk{background:#141416;border-radius:16px;padding:12px 14px 14px;color:#fff;margin-bottom:16px}
+.brk .lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.2px;background:#e5384f;color:#fff;padding:3px 8px;border-radius:5px}
+.brk .tag{margin-left:6px;background:#3b1a20;color:#ff9aa8}
+.sec{font-size:24px;font-weight:700;margin:4px 0 2px}
+.story{padding:11px 0;border-top:1px solid #e2e4ea}
+.sec+.story{border-top:0}
+.src{display:flex;gap:6px;align-items:center}
+.tag,.pick{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#b0283c}
+.tag.a{background:#f3e6f7;color:#6e2a85}
+.pick{background:#fff4d1;color:#7a5400}
+.story h3{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14px;color:#6b6e78;margin:6px 0 0;line-height:1.4}
+.brk .dek{color:#e8e8ec}.brk .bl{color:#a9a9b0}
+.score{border:1.5px solid #cfe6d9;background:#f2faf5;border-radius:16px;padding:4px 14px;margin:6px 0 4px}
+.row{display:flex;gap:10px;padding:10px 0;border-top:1px solid #dcefe3}.row:first-child{border-top:0}
+.ck{flex:none;width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.row b{display:block;font-size:15.5px}.row span{font-size:13.5px;color:#4b5a51;line-height:1.4;display:block;margin-top:2px}
+.foot{font-size:12px;color:#8a8a8e;text-align:center;padding:12px 0 2px;border-top:1px solid #e2e4ea;margin-top:10px}
+.k{font-weight:700;color:#111216}.brk .k{color:#fff}.row .k{color:#17241c}.bl em,.row em{font-style:italic}
+.brk h3{font-family:PF;font-style:italic;font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.2px;margin:10px 0 0}
+.brk .dek{margin-top:9px}
+.dl{font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+.bub{max-width:82%;padding:7px 10px;border-radius:10px;font-size:14.5px;line-height:1.3;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.l{background:#fff;align-self:flex-start}.bub.l .nm{display:block;font-size:12.5px;font-weight:700;color:#b5532f;margin-bottom:2px}
+.bub.r{background:#d9fdd3;align-self:flex-end}
+.sig{font-family:PF;font-style:italic;font-weight:700;font-size:28px;text-align:right;margin-top:14px}
+.burn{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#c8243b;text-align:center;border-top:1px dashed #c8243b;padding:8px 0 2px;margin-top:6px}
+</style></head><body>
+<div class="page">
+
+<div class="m2">
+  <div class="lg"><svg width="44" height="44" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="MONO" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg></div>
+  <div class="box"><div class="t">Off the Record</div><div class="tg">What your feed won't tell you</div></div>
+  <div class="il">ISSUE NO. 5 · WEEK OF NOV 23, 2026</div>
+  <div class="stamp">NOT FOR DISTRIBUTION</div>
+</div>
+
+<div class="brk">
+  <span class="lab">BREAKING</span><span class="tag" style="background:#2f1d38;color:#d9a8ec">Analysis</span>
+  <h3>Hegseth and Rubio Reach for the Nuremberg Playbook</h3>
+  <p class="dek">Two cabinet secretaries, one defence: it was the boss's call.</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> At his first press conference in six months, Defense Secretary Pete Hegseth said the Iran, Maduro, Yemen and boat-strike operations were each <strong class="k">“a lawful operation ordered by the commander-in-chief, then ordered by myself.”</strong> Hours later, Marco Rubio told reporters in Paris: <strong class="k">“Ultimately our job is to execute on the president’s orders.”</strong> It came a day after Republican Rep. <strong class="k">Thomas Massie</strong> filed <strong class="k">articles of impeachment</strong> against Hegseth. The first House procedural vote is due today, and Trump says he stands by his man. Critics supplied the Nuremberg comparison. <em>“I was just following orders” is a fascist regime's favourite argument. The Department of War (former Fox News house) and the most powerful secretary of state since Kissinger are leaning on it.</em></p>
+</div>
+
+<div class="sec" style="color:#d97706">Foreign Affairs</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Trump May Be Out Faster Than the Voters Can Do It. Enter Vance, Technocrat-in-Chief</h3>
+  <p class="dek">MAGA is cracking, and the successor is already warming up.</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> After the midterm shellacking, Trump's approval is in the <strong class="k">low 30s</strong>, and the Guardian reports the MAGA coalition is fracturing, giving Republicans <strong class="k">“a permission structure”</strong> to move away from him. <strong class="k">JD Vance</strong> responded with an essay on X blaming Trump's <strong class="k">unpopular Iran war</strong> for the defeat. <em>I'm hearing rumblings of a coup inside MAGA. Expect the antichrist, I mean JD Vance, to take up the mantle and fulfil his purpose as a technocratic, end-times-bringing puppet.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="pick">&#9733; Editor's Pick</span><span class="tag a">Analysis</span></div>
+  <h3>US Intelligence Knew. Why Tell Everyone Now?</h3>
+  <p class="dek">A honey pot, a chip buyer and $4.8B of Nvidia GPUs.</p>
+  <p class="bl"><span class="dl">SANTA CLARA, CA —</span> Nvidia's board is investigating after CEO <strong class="k">Jensen Huang</strong> admitted an affair with <strong class="k">Alice Huang</strong>, a chip buyer and executive at Singapore-based <strong class="k">Megaspeed</strong> whom <strong class="k">US intelligence determined was gathering information for Beijing</strong> (NYT, via AP). Megaspeed bought <strong class="k">$4.8B</strong> of Nvidia chips in two years. The board says it has <strong class="k">“no reason to believe”</strong> secrets were compromised, and China calls it a smear campaign. <em>A honey pot? US intel never seems to wanna share, so why now? How long did they know? I suspect Washington is using the story to get a look inside China's closed manufacturing industry.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag a">Analysis</span></div>
+  <h3>The Deadliest War Since WWII Isn't on Your Feed</h3>
+  <p class="dek">Six million dead, and the world scrolls on.</p>
+  <p class="bl"><span class="dl">KINSHASA —</span> Decades of conflict in the Democratic Republic of Congo, including the ongoing <strong class="k">M23 rebellion</strong> in mineral-rich North Kivu, have left an estimated <strong class="k">6 million dead</strong>. The Great African War and its offshoots rarely trend. <em>Largest conflict in the world, no one cares, and it's to your benefit.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag a">Analysis</span></div>
+  <h3>From Allies to Enemies: The Next African War Has Already Started</h3>
+  <p class="dek">Eritrean troops are reportedly inside Tigray, and Ethiopia wants the sea.</p>
+  <p class="bl"><span class="dl">ASMARA —</span> The two fought side by side in the <strong class="k">2020–22 Tigray war</strong> that killed <strong class="k">hundreds of thousands</strong>. Since a rebel alliance attacked on <strong class="k">Sept 23</strong>, Eritrean forces are alleged to have pushed up to <strong class="k">60 km</strong> into Tigray. Ethiopia is demanding Red Sea access, and Eritrea fears it means the port of <strong class="k">Assab</strong>. Ethiopian online influencers are already pushing “now or never.” <em>More wars in Africa you haven't heard of, and the numbers are about to climb.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Your Fridge Is Now a Front Line</h3>
+  <p class="dek">Hackers cooked Europe's freezers. I did say more cyber attacks.</p>
+  <p class="bl"><span class="dl">LONDON —</span> Supermarket fridges and freezers across <strong class="k">seven European countries</strong> climbed to as high as <strong class="k">50°C</strong> after a suspected attack on the companies that run their controllers. Kyiv got a <strong class="k">fake nuclear alert</strong> through a hacked emergency app on Nov 1, French blood banks were hit, and Vanderbilt University is in a ransomware incident. The UK's cyber chief says we're in the <strong class="k">“foothills”</strong> of a new hacking landscape. <em>Everything with a Wi-Fi chip is a target, and the old stuff nobody patches is first in line.</em></p>
+</div>
+
+<div class="sec" style="color:#b8860b;margin-top:12px">Bread and Circuses</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Bread and Circuses: Jacobs' Broken Finger Does What the NFL Won't</h3>
+  <p class="dek">By Blaise. Coincidence or foreshadowing?</p>
+  <p class="bl"><span class="dl">GREEN BAY, WI —</span> Packers running back <strong class="k">Josh Jacobs</strong> was cleared in <strong class="k">Week 7</strong> while the NFL's conduct investigation into domestic-violence <strong class="k">allegations</strong> was still open, and a suspension is still possible. Then he fractured the <strong class="k">ring finger on his right hand</strong> against the Patriots after <strong class="k">four carries</strong>. He needs <strong class="k">surgery this week</strong> and could miss up to <strong class="k">three weeks</strong>, or land on injured reserve. <em>The injury has nothing to do with the allegations, but the timing is hard to ignore. Coincidence or foreshadowing?</em></p>
+</div>
+
+<div class="sec" style="color:#1f7a4d;margin-top:12px">Last Week's Call</div>
+<div class="score">
+  <div class="row"><div class="ck">&#10003;</div><div><b>Mississippi goes blue</b><span>Democrat Scott Colom leads Sen. Cindy Hyde-Smith, the ballot-counting deadline has passed, and Mississippi has no automatic recount. The AP hasn't formally called it. If it holds, he's the <strong class="k">first Black senator from Mississippi since Reconstruction</strong>. <em>I said it would go blue eventually. It's essentially over.</em></span></div></div>
+  <div class="row"><div class="ck">&#10003;</div><div><b>More cyber attacks</b><span>Frozen-food freezers cooked across Europe, a <strong class="k">fake nuclear alert in Kyiv</strong>, hacked blood banks and Vanderbilt held to ransom. <em>And it's only the foothills.</em></span></div></div>
+</div>
+
+<div class="chat">
+  <div class="lb">HEARD IN THE GROUP CHAT</div>
+  <div class="bub l"><span class="nm">Blaise</span>sorry cam i can’t help but notice you forgot to include an article about bryce hall getting into a fight</div>
+  <div class="bub r">I fear thermonuclear war drums and Canada’s entire GdP worth of losses in the s&amp;p overshadowed that this week</div>
+</div>
+
+<div class="sig">— C.</div>
+<div class="burn">BURN AFTER READING · ISSUE NO. 5</div>
+</div>
+</body>
+</html>
