@@ -13,7 +13,7 @@ sources = J('sources.json')
 reactions = J('reactions.json')
 
 SEC_FILTER = {'Breaking': 'breaking', 'Foreign Affairs': 'foreign', 'Domestic': 'domestic',
-              'Markets': 'markets', 'Bread and Circuses': 'sports', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
+              'Markets': 'markets', 'Bread and Circuses': 'circus', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
 
 def slug(t):
     return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')[:40].strip('-')
@@ -31,6 +31,33 @@ def src_html(lst):
         return ''
     li = ''.join(f'<li><a href="{html.escape(u)}" target="_blank" rel="noopener">{html.escape(t)}</a></li>' for t, u in lst)
     return f'<details class="sources"><summary>Sources · {len(lst)}</summary><ul>{li}</ul></details>'
+
+
+WRITERS = []
+
+def decorate_bc(el, title):
+    kind = el.get('data-kind', 'sports')
+    w = el.get('data-writer', 'Guest')
+    if w not in WRITERS:
+        WRITERS.append(w)
+    W = html.escape(w)
+    dek = el.select_one('.dek')
+    tick = html.escape(title.upper() + ' · ' + (dek.get_text(' ', strip=True).upper() if dek else '') + ' · ')
+    cur = (f'<div class="cur" aria-hidden="true"><i class="dr l"></i><i class="dr r"></i><i class="val"></i>'
+           f'<span class="cw"><b>Bread and Circuses</b><small>{"SPORTS" if kind=="sports" else "MEDIA"}</small></span></div>')
+    if kind == 'sports':
+        top = (f'<div class="sb" aria-hidden="true"><div class="sb1">BREAD AND CIRCUSES : SPORTS <span class="live"><i></i>LIVE</span></div>'
+               f'<div class="sb2"><span class="nm">{W.upper()}</span><span class="clk">00:00</span></div></div>')
+        deco = (f'<i class="beam a" aria-hidden="true"></i><i class="beam b" aria-hidden="true"></i>'
+                f'<div class="chy" aria-hidden="true"><span class="np">{W} · Guest correspondent</span>'
+                f'<span class="tk"><span>{tick}{tick}</span></span></div>')
+    else:
+        top = (f'<div class="mq" aria-hidden="true"><span class="st">STARRING</span><span class="mn">{W}</span></div>')
+        deco = ('<i class="fb f1" aria-hidden="true"></i><i class="fb f2" aria-hidden="true"></i><i class="fb f3" aria-hidden="true"></i>'
+                '<i class="fb f4" aria-hidden="true"></i><i class="pz" aria-hidden="true"></i>')
+    tab = el.select_one('.ftab')
+    tab.insert_after(BeautifulSoup(top, 'html.parser'))
+    el.append(BeautifulSoup(deco + cur, 'html.parser'))
 
 calls_all = []
 STORYCOUNT = {}
@@ -63,7 +90,7 @@ def issue_block(n, week, latest):
             el['data-f'] = f
             STORYCOUNT[n] = STORYCOUNT.get(n, 0) + 1
             label = 'BREAKING' if f == 'breaking' else sec.upper()
-            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6', 'sports': '#b8860b'}.get(f, '#6b6e78')
+            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6', 'circus': '#0f8b8d'}.get(f, '#6b6e78')
             el.insert(0, BeautifulSoup(f'<span class="ftab" style="--tab:{color}" aria-hidden="true">FILE {STORYCOUNT[n]:02d}{'' if f=='breaking' else ' · '+html.escape(label)}</span>', 'html.parser'))
             el['class'] = cls + ['reveal']
             h.name = 'h3' if 'brk' in cls else 'h4'
@@ -82,6 +109,8 @@ def issue_block(n, week, latest):
                 t.clear()
                 t.append(BeautifulSoup(f'<span class="rd">{inner_t}</span>', 'html.parser'))
             el.append(tools)
+            if 'bc' in cls:
+                decorate_bc(el, title)
             continue
         if 'score' in cls:
             el['data-f'] = 'calls'
@@ -174,7 +203,11 @@ nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactio
       '<button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
-                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('sports', 'Bread and Circuses'), ('calls', "Last Week's Call")])
+                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('circus', 'Bread &amp; Circuses'), ('calls', "Last Week's Call")])
+bcchips = ''.join([f'<button type="button" class="bcc" data-w="all" aria-pressed="true">Everyone</button>'] +
+                  [f'<button type="button" class="bcc" data-w="{html.escape(w)}" aria-pressed="false">{html.escape(w)}</button>' for w in WRITERS] +
+                  ['<button type="button" class="bcc" data-k="sports" aria-pressed="false">Sports only</button>',
+                   '<button type="button" class="bcc" data-k="media" aria-pressed="false">Media only</button>'])
 LOGO = '<svg class="logo" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg>'
 L = issues[0]['n']
 page = f'''<!doctype html>
@@ -218,6 +251,7 @@ page = f'''<!doctype html>
 {reacts}
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>
+  <div class="bcf" role="group" aria-label="Bread and Circuses writers" hidden>{bcchips}</div>
   <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>
 </div>
 <p class="sr-only" id="announce" aria-live="polite"></p>

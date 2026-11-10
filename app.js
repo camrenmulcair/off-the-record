@@ -190,3 +190,31 @@
   // cards that were hidden (filters / show all) have nothing to cover when they appear
   d.addEventListener('click',function(e){if(e.target.closest('.fl,#showall,.toggle,a[href^="#issue-"]'))setTimeout(function(){cards.forEach(function(c){if(c.offsetParent!==null&&!c.classList.contains('revealed')&&c.classList.contains('in'))reveal(c)})},200)});
 })();
+
+// ---- Bread and Circuses: writer/kind chips + match clock ----
+(function(){
+  var d=document, $$=function(q,c){return [].slice.call((c||d).querySelectorAll(q))};
+  var row=d.querySelector('.bcf');
+  $$('.fl').forEach(function(b){b.addEventListener('click',function(){
+    if(!row)return; var on=b.dataset.f==='circus'; row.hidden=!on;
+    $$('.bcc').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.w==='all'?'true':'false')});
+  })});
+  $$('.bcc').forEach(function(c){c.addEventListener('click',function(){
+    $$('.bcc').forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false')});
+    $$('.ibody > .bc').forEach(function(card){
+      var ok=c.dataset.w==='all'||(c.dataset.w&&card.dataset.writer===c.dataset.w)||(c.dataset.k&&card.dataset.kind===c.dataset.k);
+      card.classList.toggle('is-hidden',!ok); if(ok)card.classList.add('in');
+    });
+    $$('.issue').forEach(function(a){a.classList.toggle('is-hidden',!$$('.ibody > .bc:not(.is-hidden)',a).length)});
+    if(window.ScrollTrigger)ScrollTrigger.refresh();
+  })});
+  // match clock counts up once the curtain opens
+  $$('.bc .clk').forEach(function(el){
+    var card=el.closest('.bc'), t0=null;
+    setInterval(function(){
+      if(!card.classList.contains('in'))return; if(t0===null)t0=Date.now();
+      var s=Math.floor((Date.now()-t0)/1000);
+      el.textContent=String(Math.floor(s/60)%100).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+    },1000);
+  });
+})();
