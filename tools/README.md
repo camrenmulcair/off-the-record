@@ -1,7 +1,7 @@
 # Weekly build
 
 1. Write the new issue as `src/issueN.html` (copy the previous one as the template).
-2. Add `{"n": N, "week": "..."}` to the top of `issues.json`.
+2. Add `{"n": N, "week": "Nov 12, 2026"}` (the send date; issues go out Tuesdays and Thursdays) to the top of `issues.json`.
 3. Add the issue's sources to `sources.json` under `"N"`: key = the start of each story's headline, value = `[["Outlet: title", "url"], ...]`; `"__calls"` holds the scorecard sources.
 4. If there's a new group-chat reaction, add it to the top of `reactions.json` (`{"after": N, "msgs": [{"from": "...", "text": "..."}, {"from": "Camren", "me": true, "text": "..."}]}`), copied word for word.
 5. `node tools/render.js N` → `issues/off-the-record-issue-N.pdf` (+ HD PNG in /home/claude).

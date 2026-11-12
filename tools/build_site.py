@@ -1,7 +1,7 @@
 """Rebuild index.html from src/issueN.html + issues.json + sources.json + reactions.json.
 Usage: python3 tools/build_site.py
 """
-import json, os, re, html
+import datetime, json, os, re, html
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 
@@ -140,7 +140,7 @@ def issue_block(n, week, latest):
     content = str(soup).replace('</div></body></html>', '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')
     return f'''<article class="issue{' latest' if latest else ''}" id="issue-{n}" aria-labelledby="h-issue-{n}">
-  <header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">Week of {week}</span></header>
+  <header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">{datetime.datetime.strptime(week, "%b %d, %Y").strftime("%A")}, {week}</span></header>
   <div class="iactions">
     <button class="listen" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> Listen</button>
     <a class="reply" href="{wa}" target="_blank" rel="noopener">Reply on WhatsApp</a>
@@ -167,10 +167,12 @@ for i in issues[1:]:
                f'<span class="st" aria-hidden="true">NOT FOR DISTRIBUTION</span>'
                f'<span class="b"><span class="lab2">BREAKING</span><span class="h">{html.escape(breaking_title(i["n"]))}</span></span></a>')
 try:
-    nxt = datetime.datetime.strptime(issues[0]['week'], '%b %d, %Y') + datetime.timedelta(days=7)
+    nxt = datetime.datetime.strptime(issues[0]['week'], '%b %d, %Y') + datetime.timedelta(days=1)
+    while nxt.weekday() not in (1, 3):  # issues go out Tuesdays and Thursdays
+        nxt += datetime.timedelta(days=1)
     nxt_s = nxt.strftime('%b %-d').upper()
 except Exception:
-    nxt_s = 'NEXT WEEK'
+    nxt_s = 'SOON'
 covers += f'<div class="cov next" aria-hidden="true">ISSUE NO. {issues[0]["n"] + 1}<br>COMING {nxt_s}</div>'
 back = f'''<section class="back" id="back" aria-labelledby="h-back">
   <div class="pin"><div class="bhead"><h2 id="h-back">Back issues</h2><p>Tap a cover to read it.</p></div>
@@ -250,7 +252,7 @@ page = f'''<!doctype html>
       {LOGO}
       <div class="box"><h1>Off the Record</h1><p class="tg">What your feed won't tell you</p></div>
       <p class="il">A weekly newsletter · Montreal</p>
-      <p class="il2">Latest: Issue No. {L} · Week of {issues[0]['week']}</p>
+      <p class="il2">Latest: Issue No. {L} · {issues[0]['week']}</p>
       <div class="stamp" id="cstamp" aria-hidden="true">NOT FOR DISTRIBUTION</div>
     </header>
     <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
