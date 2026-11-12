@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:PF;font-weight:900;src:url(../fonts/playfair-display-latin-900-normal.woff2)}
+@font-face{font-family:PF;font-weight:700;font-style:italic;src:url(../fonts/playfair-display-latin-700-italic.woff2)}
+@font-face{font-family:MONO;font-weight:700;src:url(../fonts/ibm-plex-mono-latin-700-normal.woff2)}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;padding:18px;width:480px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#111216}
+.page{background:#fff;border-radius:26px;padding:22px 20px 14px}
+.m2{position:relative;text-align:center;margin-bottom:16px}
+.m2 .lg{display:flex;justify-content:center;margin-bottom:8px}
+.m2 .box{border-top:3px double #111;border-bottom:1px solid #111;padding:8px 0 9px}
+.m2 .t{font-family:PF;font-weight:900;font-size:42px;letter-spacing:-1px;line-height:1}
+.m2 .tg{font-family:PF;font-style:italic;font-weight:700;font-size:15px;color:#555;margin-top:5px}
+.m2 .il{font-size:12.5px;font-weight:700;color:#8a8a8e;letter-spacing:1px;margin-top:8px}
+.stamp{position:absolute;right:-6px;top:30px;transform:rotate(-9deg);border:2.5px solid #c8243b;color:#c8243b;font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:2px;padding:3px 8px;background:rgba(255,255,255,.55);mix-blend-mode:multiply;border-radius:3px}
+.brk{background:#141416;border-radius:16px;padding:12px 14px 14px;color:#fff;margin-bottom:16px}
+.brk .lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.2px;background:#e5384f;color:#fff;padding:3px 8px;border-radius:5px}
+.brk .tag{margin-left:6px;background:#3b1a20;color:#ff9aa8}
+.sec{font-size:24px;font-weight:700;margin:4px 0 2px}
+.story{padding:11px 0;border-top:1px solid #e2e4ea}
+.sec+.story{border-top:0}
+.src{display:flex;gap:6px;align-items:center}
+.tag,.pick{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#b0283c}
+.tag.a{background:#f3e6f7;color:#6e2a85}
+.pick{background:#fff4d1;color:#7a5400}
+.story h3{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14px;color:#6b6e78;margin:6px 0 0;line-height:1.4}
+.brk .dek{color:#e8e8ec}.brk .bl{color:#a9a9b0}
+.score{border:1.5px solid #cfe6d9;background:#f2faf5;border-radius:16px;padding:4px 14px;margin:6px 0 4px}
+.row{display:flex;gap:10px;padding:10px 0;border-top:1px solid #dcefe3}.row:first-child{border-top:0}
+.ck{flex:none;width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.row b{display:block;font-size:15.5px}.row span{font-size:13.5px;color:#4b5a51;line-height:1.4;display:block;margin-top:2px}
+.foot{font-size:12px;color:#8a8a8e;text-align:center;padding:12px 0 2px;border-top:1px solid #e2e4ea;margin-top:10px}
+.k{font-weight:700;color:#111216}.brk .k{color:#fff}.row .k{color:#17241c}.bl em,.row em{font-style:italic}
+.brk h3{font-family:PF;font-style:italic;font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.2px;margin:10px 0 0}
+.brk .dek{margin-top:9px}
+.dl{font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+.bub{max-width:82%;padding:7px 10px;border-radius:10px;font-size:14.5px;line-height:1.3;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.l{background:#fff;align-self:flex-start}.bub.l .nm{display:block;font-size:12.5px;font-weight:700;color:#b5532f;margin-bottom:2px}
+.bub.r{background:#d9fdd3;align-self:flex-end}
+.sig{font-family:PF;font-style:italic;font-weight:700;font-size:28px;text-align:right;margin-top:14px}
+.burn{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#c8243b;text-align:center;border-top:1px dashed #c8243b;padding:8px 0 2px;margin-top:6px}
+.tag.g{background:#e3f4f4;color:#0b6366}
+.tag.c{background:#e3f3ea;color:#1f7a4d}.brk .tag.c{background:#163a28;color:#7fe0ad}
+.gw{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#0f8b8d;margin:5px 0 0}
+</style></head><body>
+<div class="page">
+
+<div class="m2">
+  <div class="lg"><svg width="44" height="44" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="MONO" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg></div>
+  <div class="box"><div class="t">Off the Record</div><div class="tg">What your feed won't tell you</div></div>
+  <div class="il">ISSUE NO. 6 · WEEK OF NOV 30, 2026</div>
+  <div class="stamp">NOT FOR DISTRIBUTION</div>
+</div>
+
+<div class="brk">
+  <span class="lab">BREAKING</span><span class="tag">Opinion</span><span class="tag c">Called it</span>
+  <h3>The Leather Jacket Comes Off. The Affairs Are the Cover Story.</h3>
+  <p class="dek">Nobody in Washington cares about affairs. They care about the exit.</p>
+  <p class="bl"><span class="dl">SANTA CLARA, CA —</span> <strong class="k">Jensen Huang resigned Thursday</strong>, one day after a <strong class="k">second affair</strong> surfaced, and Nvidia fell under <strong class="k">$160</strong>. <em>This is the cleanest way to let air out of Nvidia without crashing the whole market. Read it as a pressure valve: domestic propaganda released on schedule. My read is that Huang was working the other side of the spy story, China found out and was about to go public, so they got ahead of it and dumped the stock in a rough midterm week. Smart money knew Nvidia was too big, and this rollout was months in the making. Your 401k is the liquidity. Watch for the media telling you it was about an internal investigation. Called it.</em></p>
+</div>
+
+<div class="sec" style="color:#d97706">Foreign Affairs</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Democrats: Brilliant at Winning, Allergic to Power</h3>
+  <p class="dek">They haven't even taken the House back, and they've already failed their first test.</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> The House voted <strong class="k">211–204</strong> to send the Hegseth impeachment articles back to committee, killing them for now. <strong class="k">11 Democrats</strong> didn't show up, <strong class="k">Nancy Pelosi</strong> among them. Four blamed <strong class="k">traffic</strong>. With them in the room, the motion fails and the House votes on impeaching the Defense Secretary this week. <em>Voters handed them a wave and they couldn't make it to the chamber. Give Democrats power and they'll find a way to hand it right back. January is their second chance. Don't hold your breath.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag a">Analysis</span></div>
+  <h3>The Deep South Cracks: Colom Takes Mississippi</h3>
+  <p class="dek">The AP has called it. Mississippi went blue. Eventually.</p>
+  <p class="bl"><span class="dl">JACKSON, MS —</span> Democrat <strong class="k">Scott Colom</strong> beat Sen. <strong class="k">Cindy Hyde-Smith</strong> <strong class="k">49.2% to 48.7%</strong>, a margin of a few thousand votes. It's the first time Mississippi has sent a Democrat to the Senate in <strong class="k">more than 40 years</strong>, and the party's <strong class="k">eighth Senate flip</strong> of the cycle, powered by a surge in Black turnout. <em>If Mississippi can flip, no seat in the South is safe.</em></p>
+</div>
+
+<div class="sec" style="color:#8e3fa6;margin-top:12px">Markets</div>
+<div class="story">
+<div class="src"><span class="pick">&#9733; Editor's Pick</span><span class="tag o">Opinion</span></div>
+  <h3>Hit Aramco, Hit Everyone: The World's Oil Bill Comes Due</h3>
+  <p class="dek">Iran's proxies are aiming at the world's biggest crude exporter.</p>
+  <p class="bl"><span class="dl">RIYADH —</span> Yemen's Iran-backed <strong class="k">Houthis</strong> claimed strikes on the <strong class="k">Aramco Tower</strong> in Riyadh, an Aramco facility at <strong class="k">Abqaiq</strong>, pumping stations on the <strong class="k">East-West pipeline</strong> and Riyadh's airport. Saudi Arabia confirmed a fire on the pipeline. Brent is sitting around <strong class="k">$92</strong>. <em>The oil markets will feel it, and the global market won't be far behind. I worry most for Japan and South Korea, who import nearly all their oil and can't absorb a long shock.</em></p>
+</div>
+
+<div class="sec" style="color:#0f8b8d;margin-top:12px">Bread and Circuses</div>
+<div class="story bc" data-kind="media" data-writer="Willy">
+<div class="src"><span class="tag g">Guest</span><span class="tag a">Analysis</span></div>
+  <h3>DC's Doomsday: Gunn and Safran Out, Marvel Man In</h3>
+  <p class="dek">A new owner, a new boss, and a DC Universe in limbo.</p>
+  <p class="gw">Guest writer: Willy</p>
+  <p class="bl"><span class="dl">BURBANK, CA —</span> On Monday, it was announced that <strong class="k">James Gunn and Peter Safran</strong> are <strong class="k">OUT</strong> as the heads of DC Studios following <strong class="k">Paramount Skydance’s</strong> recent acquisition of <strong class="k">Warner Bros. Discovery</strong>. Taking their place is former Marvel Studios producer <strong class="k">Jeremy Latcham</strong>, who previously worked on films such as <i>Iron Man</i>, <i>The Avengers</i>, and <i>Guardians of the Galaxy</i>. <em>Their departure leaves the future of the DC Universe uncertain, as several projects currently in development could face significant changes or potentially never see the light of day.</em></p>
+</div>
+
+<div class="sec" style="color:#1f7a4d;margin-top:12px">Last Week's Call</div>
+<div class="score">
+  <div class="row"><div class="ck">&#10003;</div><div><b>Jensen is an asset</b><span>A <strong class="k">second affair</strong> surfaced and Huang <strong class="k">resigned</strong> within a day. <em>Told you.</em></span></div></div>
+  <div class="row"><div class="ck">&#10003;</div><div><b>They hit Aramco</b><span>Iran-backed <strong class="k">Houthis</strong> claimed strikes on the <strong class="k">Aramco Tower</strong> and Abqaiq. <em>I said they would.</em></span></div></div>
+</div>
+
+<div class="chat">
+  <div class="lb">HEARD IN THE GROUP CHAT</div>
+  <div class="bub r">I feel like 6 milllion dead in Africa to war kinda overshadows</div>
+  <div class="bub l"><span class="nm">Willy</span>Ummm actually I think James Gunn leaving DC is bigger than that</div>
+</div>
+
+<div class="sig">— C.</div>
+<div class="burn">BURN AFTER READING · ISSUE NO. 6</div>
+</div>
+</body>
+</html>

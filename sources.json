@@ -306,5 +306,71 @@
     "https://www.theguardian.com/news/ng-interactive/2026/nov/08/hot-fridges-a-fake-nuclear-alert-and-a-6bn-heist-are-we-in-the-foothills-of-a-hacking-epidemic"
    ]
   ]
+ },
+ "6": {
+  "The Leather Jacket": [
+   [
+    "Reuters: Nvidia CEO Jensen Huang resigns",
+    "https://www.reuters.com/business/retail-consumer/nvidia-ceo-jensen-huang-step-down-big-blow-ai-boom-2026-11-12/"
+   ],
+   [
+    "NVIDIA: NVIDIA Announces CEO Transition",
+    "https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition"
+   ],
+   [
+    "The Hill: Nvidia stock tanks after report of second Jensen Huang affair",
+    "https://thehill.com/business/6214833-nvidia-ceo-jesen-huang-affair/"
+   ]
+  ],
+  "Democrats: Brilliant": [
+   [
+    "Al Jazeera: Did Democrats save Pete Hegseth from impeachment?",
+    "https://www.aljazeera.com/news/2026/11/11/did-democrats-save-pete-hegseth-from-impeachment"
+   ],
+   [
+    "TIME: House Republicans block Hegseth impeachment",
+    "https://time.com/article/2026/11/10/hegseth-impeachment-procedural-vote-house/"
+   ]
+  ],
+  "The Deep South": [
+   [
+    "NPR: Democrat Scott Colom wins Mississippi Senate race",
+    "https://www.npr.org/2026/11/11/g-s1-151688/mississippi-senate-race-scott-colom"
+   ],
+   [
+    "CBS News: Colom flips Mississippi seat",
+    "https://www.cbsnews.com/news/mississippi-2026-senate-scott-colom-cindy-hyde-smith/"
+   ]
+  ],
+  "Hit Aramco": [
+   [
+    "AGBI: Renewed threats to Gulf energy supplies push oil prices higher",
+    "https://www.agbi.com/oil-and-gas/2026/11/renewed-threats-to-gulf-energy-supplies-push-oil-prices-up/"
+   ],
+   [
+    "investingLive: Houthi strike on Riyadh airport, Aramco hits claimed",
+    "https://investinglive.com/commodities/houthi-strike-on-riyadh-airport-kills-13-group-claims-aramco-hits-saudi-iran-talking-now/"
+   ]
+  ],
+  "DC's Doomsday": [
+   [
+    "Variety: James Gunn, Peter Safran out at DC Studios",
+    "https://variety.com/2026/film/news/james-gunn-peter-safran-fired-dc-jeremy-latcham-1236943091/"
+   ],
+   [
+    "Fortune: Skydance replaces DC Studios bosses with a Marvel veteran",
+    "https://fortune.com/2026/11/11/skydance-dc-studios-james-gunn-peter-safran-out-jeremy-latcham/"
+   ]
+  ],
+  "__calls": [
+   [
+    "WSJ: Jensen Huang has been ousted as Nvidia CEO",
+    "https://www.wsj.com/business/nvidia-is-preparing-to-oust-nvidia-ceo-jensen-huang-30f421ad"
+   ],
+   [
+    "investingLive: Houthis hit Riyadh's Aramco Tower",
+    "https://investinglive.com/news/investinglive-asia-pacific-market-news-asia-shrugs-off-nvidia-scandal-oil-steadies/"
+   ]
+  ]
  }
 }
