@@ -392,3 +392,9 @@ html:not(.js) .bc .drape,html:not(.js) .bc .ctitle{display:none}
 @media (prefers-color-scheme:dark){.more summary{background:#123b3c;color:#8fe0e2}}
 :root[data-theme="dark"] .more summary{background:#123b3c;color:#8fe0e2}
 .story > .more,.bc > .more{position:relative;z-index:1}
+
+/* Issue 7: stack closes as one pile; tail scrolls in after it */
+.ibody{position:relative}
+.ibody.itail{z-index:6;padding-top:6px}
+.story .disc{margin:10px 0 4px}
+.tnotes{display:none}

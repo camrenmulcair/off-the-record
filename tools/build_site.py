@@ -137,7 +137,13 @@ def issue_block(n, week, latest):
         # placeholder boxes (e.g. "Coming next week") belong to the calls section
         if el.name == 'div' and 'Coming next week' in el.get_text():
             el['data-f'] = 'calls'
-    content = str(soup).replace('</div></body></html>', '')
+    # split: the sticky stack of stories, then the tail (scorecard, chat...) so the stack
+    # closes as one pile before the tail scrolls in
+    tops = [x for x in soup.children if getattr(x, 'name', None)]
+    last = max([i for i, x in enumerate(tops) if set(x.get('class', [])) & {'story', 'brk'}], default=len(tops) - 1)
+    stack = ''.join(str(x) for x in tops[:last + 1])
+    tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
+    content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')
     return f'''<article class="issue{' latest' if latest else ''}" id="issue-{n}" aria-labelledby="h-issue-{n}">
   <header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">{datetime.datetime.strptime(week, "%b %d, %Y").strftime("%A")}, {week}</span></header>

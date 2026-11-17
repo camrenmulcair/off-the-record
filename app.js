@@ -150,6 +150,17 @@
     gsap.to(strip,{x:function(){return -Math.max(0,strip.scrollWidth-strip.parentNode.clientWidth)},ease:'none',
       scrollTrigger:{trigger:'#back .pin',start:'top top',end:function(){return '+='+Math.max(1,strip.scrollWidth-strip.parentNode.clientWidth)},pin:true,scrub:0.5,invalidateOnRefresh:true}});
   }
+  // Back issues: a sideways swipe or trackpad scroll moves the strip too
+  var backEl=document.getElementById('back');
+  if(backEl&&strip){
+    var go=function(dy){if(window.otrLenis)window.otrLenis.scrollTo(window.otrLenis.targetScroll+dy);else window.scrollBy(0,dy)};
+    backEl.addEventListener('wheel',function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();e.stopPropagation();go(e.deltaX)}},{passive:false});
+    var sx=0,sy=0,lx=0,horiz=null;
+    backEl.addEventListener('touchstart',function(e){var t=e.touches[0];sx=lx=t.clientX;sy=t.clientY;horiz=null},{passive:true});
+    backEl.addEventListener('touchmove',function(e){var t=e.touches[0];
+      if(horiz===null&&(Math.abs(t.clientX-sx)>8||Math.abs(t.clientY-sy)>8))horiz=Math.abs(t.clientX-sx)>Math.abs(t.clientY-sy);
+      if(horiz){e.preventDefault();window.scrollBy(0,(lx-t.clientX)*1.4);lx=t.clientX}},{passive:false});
+  }
   // keep pinned sections in sync when compact mode/filters change the page height
   document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
   addEventListener('load',function(){ScrollTrigger.refresh()});
