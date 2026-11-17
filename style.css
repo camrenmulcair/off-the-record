@@ -378,3 +378,11 @@ html:not(.js) .bc .drape,html:not(.js) .bc .ctitle{display:none}
   .bc .press svg [fill="#141416"]{fill:#d6d8de}
   .bc.in .beam{opacity:.45}
 }
+
+/* Disclaimer box (from Issue 7) */
+.disc{background:#f2f3f5;border:1.5px solid #d5d7dd;border-radius:14px;padding:10px 13px 12px;margin:0 0 18px}
+.disc .lb{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#fff;background:#4b4e57;padding:2px 7px;border-radius:4px}
+.disc p{font-size:13.5px;line-height:1.4;color:#4b4e57;margin:7px 0 0}
+.disc strong{color:#111216}
+@media (prefers-color-scheme:dark){.disc{background:#23242b;border-color:#2c2e36}.disc p{color:#b4b7c0}.disc strong{color:#f2f3f6}}
+:root[data-theme="dark"] .disc{background:#23242b;border-color:#2c2e36}:root[data-theme="dark"] .disc p{color:#b4b7c0}:root[data-theme="dark"] .disc strong{color:#f2f3f6}
