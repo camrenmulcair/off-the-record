@@ -386,3 +386,9 @@ html:not(.js) .bc .drape,html:not(.js) .bc .ctitle{display:none}
 .disc strong{color:#111216}
 @media (prefers-color-scheme:dark){.disc{background:#23242b;border-color:#2c2e36}.disc p{color:#b4b7c0}.disc strong{color:#f2f3f6}}
 :root[data-theme="dark"] .disc{background:#23242b;border-color:#2c2e36}:root[data-theme="dark"] .disc p{color:#b4b7c0}:root[data-theme="dark"] .disc strong{color:#f2f3f6}
+
+/* Read more dropdown for long pieces (from Issue 7) */
+.more{margin-top:6px}.more summary{font-family:inherit;list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;letter-spacing:.3px;color:#0b6366;background:#e3f4f4;border-radius:999px;padding:4px 11px}.more summary::-webkit-details-marker{display:none}.more summary::after{content:"\25BE";font-size:11px}.more[open] summary::after{content:"\25B4"}.more .mc,.more[open] .mo{display:none}.more[open] .mc{display:inline}.more[open] summary{margin-bottom:2px}
+@media (prefers-color-scheme:dark){.more summary{background:#123b3c;color:#8fe0e2}}
+:root[data-theme="dark"] .more summary{background:#123b3c;color:#8fe0e2}
+.story > .more,.bc > .more{position:relative;z-index:1}
