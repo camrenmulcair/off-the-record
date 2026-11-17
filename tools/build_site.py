@@ -142,6 +142,10 @@ def issue_block(n, week, latest):
     tops = [x for x in soup.children if getattr(x, 'name', None)]
     last = max([i for i, x in enumerate(tops) if set(x.get('class', [])) & {'story', 'brk'}], default=len(tops) - 1)
     stack = ''.join(str(x) for x in tops[:last + 1])
+    # the folder cover slides over the pile at the end of the stories, then everything leaves together
+    stack += (f'<div class="closer" aria-hidden="true"><span class="ctab">OFF THE RECORD</span>'
+              f'<span class="cno">ISSUE NO. {n}</span><span class="cfile">END OF FILE</span>'
+              f'<span class="cstamp2">FILE CLOSED</span><span class="cnext">Scorecard and group chat below &darr;</span></div>')
     tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
     content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')

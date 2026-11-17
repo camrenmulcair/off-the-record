@@ -101,8 +101,10 @@
     cards.forEach(function(c){var k=c.parentNode;groups[k.parentNode.id]=(groups[k.parentNode.id]||0)+1;var i=groups[k.parentNode.id];
       c.style.top=Math.min(64+i*6, vh-c.offsetHeight-12)+'px';});
   }
+  var closers=[].slice.call(d.querySelectorAll('.ibody > .closer'));
   function frame(){
     var vh=innerHeight;
+    closers.forEach(function(c){var b=c.getBoundingClientRect(),s=c.querySelector('.cstamp2');var t=clamp((vh*0.45-b.top)/(vh*0.2));var e=t<1?2.6-1.6*ease(t):1;s.style.setProperty('--s',e);s.style.setProperty('--o',t>0?1:0)});
     rows.forEach(function(row){var b=row.getBoundingClientRect();var t=clamp((vh*0.8-b.top)/(vh*0.2));
       var e=t<1?2.4-1.4*ease(t):1;var st=row.querySelector('.ci');if(st){st.style.setProperty('--s',e);st.style.setProperty('--o',t>0?1:0)}});
   }
@@ -154,12 +156,12 @@
   var backEl=document.getElementById('back');
   if(backEl&&strip){
     var go=function(dy){if(window.otrLenis)window.otrLenis.scrollTo(window.otrLenis.targetScroll+dy);else window.scrollBy(0,dy)};
-    backEl.addEventListener('wheel',function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();e.stopPropagation();go(e.deltaX)}},{passive:false});
+    backEl.addEventListener('wheel',function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();e.stopPropagation();go(e.deltaX*2.5)}},{passive:false});
     var sx=0,sy=0,lx=0,horiz=null;
     backEl.addEventListener('touchstart',function(e){var t=e.touches[0];sx=lx=t.clientX;sy=t.clientY;horiz=null},{passive:true});
     backEl.addEventListener('touchmove',function(e){var t=e.touches[0];
       if(horiz===null&&(Math.abs(t.clientX-sx)>8||Math.abs(t.clientY-sy)>8))horiz=Math.abs(t.clientX-sx)>Math.abs(t.clientY-sy);
-      if(horiz){e.preventDefault();window.scrollBy(0,(lx-t.clientX)*1.4);lx=t.clientX}},{passive:false});
+      if(horiz){e.preventDefault();go((lx-t.clientX)*3);lx=t.clientX}},{passive:false});
   }
   // keep pinned sections in sync when compact mode/filters change the page height
   document.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){ScrollTrigger.refresh()},80)});
