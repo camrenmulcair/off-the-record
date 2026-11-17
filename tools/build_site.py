@@ -76,7 +76,7 @@ def issue_block(n, week, latest):
     raw = open(os.path.join(ROOT, 'src', f'issue{n}.html')).read()
     body = raw.split('<div class="page">', 1)[1]
     soup = BeautifulSoup(body, 'html.parser')
-    for x in soup.select('.m2, .foot, .sig, .burn'):
+    for x in soup.select('.m2, .foot, .sig, .burn, .chat'):  # group-chat quotes live in Best reactions on the site
         x.decompose()
     sec = 'Breaking'
     # walk top-level children in order
