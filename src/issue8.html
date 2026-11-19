@@ -1,0 +1,156 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:PF;font-weight:900;src:url(../fonts/playfair-display-latin-900-normal.woff2)}
+@font-face{font-family:PF;font-weight:700;font-style:italic;src:url(../fonts/playfair-display-latin-700-italic.woff2)}
+@font-face{font-family:MONO;font-weight:700;src:url(../fonts/ibm-plex-mono-latin-700-normal.woff2)}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;padding:18px;width:480px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#111216}
+.page{background:#fff;border-radius:26px;padding:22px 20px 14px}
+.m2{position:relative;text-align:center;margin-bottom:16px}
+.m2 .lg{display:flex;justify-content:center;margin-bottom:8px}
+.m2 .box{border-top:3px double #111;border-bottom:1px solid #111;padding:8px 0 9px}
+.m2 .t{font-family:PF;font-weight:900;font-size:42px;letter-spacing:-1px;line-height:1}
+.m2 .tg{font-family:PF;font-style:italic;font-weight:700;font-size:15px;color:#555;margin-top:5px}
+.m2 .il{font-size:12.5px;font-weight:700;color:#8a8a8e;letter-spacing:1px;margin-top:8px}
+.stamp{position:absolute;right:-6px;top:30px;transform:rotate(-9deg);border:2.5px solid #c8243b;color:#c8243b;font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:2px;padding:3px 8px;background:rgba(255,255,255,.55);mix-blend-mode:multiply;border-radius:3px}
+.brk{background:#141416;border-radius:16px;padding:12px 14px 14px;color:#fff;margin-bottom:16px}
+.brk .lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.2px;background:#e5384f;color:#fff;padding:3px 8px;border-radius:5px}
+.brk .tag{margin-left:6px;background:#3b1a20;color:#ff9aa8}
+.sec{font-size:24px;font-weight:700;margin:4px 0 2px}
+.story{padding:11px 0;border-top:1px solid #e2e4ea}
+.sec+.story{border-top:0}
+.src{display:flex;gap:6px;align-items:center}
+.tag,.pick{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#b0283c}
+.tag.a{background:#f3e6f7;color:#6e2a85}
+.pick{background:#fff4d1;color:#7a5400}
+.story h3{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14px;color:#6b6e78;margin:6px 0 0;line-height:1.4}
+.brk .dek{color:#e8e8ec}.brk .bl{color:#a9a9b0}
+.score{border:1.5px solid #cfe6d9;background:#f2faf5;border-radius:16px;padding:4px 14px;margin:6px 0 4px}
+.row{display:flex;gap:10px;padding:10px 0;border-top:1px solid #dcefe3}.row:first-child{border-top:0}
+.ck{flex:none;width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.row b{display:block;font-size:15.5px}.row span{font-size:13.5px;color:#4b5a51;line-height:1.4;display:block;margin-top:2px}
+.foot{font-size:12px;color:#8a8a8e;text-align:center;padding:12px 0 2px;border-top:1px solid #e2e4ea;margin-top:10px}
+.k{font-weight:700;color:#111216}.brk .k{color:#fff}.row .k{color:#17241c}.bl em,.row em{font-style:italic}
+.brk h3{font-family:PF;font-style:italic;font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.2px;margin:10px 0 0}
+.brk .dek{margin-top:9px}
+.dl{font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+.bub{max-width:82%;padding:7px 10px;border-radius:10px;font-size:14.5px;line-height:1.3;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.l{background:#fff;align-self:flex-start}.bub.l .nm{display:block;font-size:12.5px;font-weight:700;color:#b5532f;margin-bottom:2px}
+.bub.r{background:#d9fdd3;align-self:flex-end}
+.sig{font-family:PF;font-style:italic;font-weight:700;font-size:28px;text-align:right;margin-top:14px}
+.burn{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#c8243b;text-align:center;border-top:1px dashed #c8243b;padding:8px 0 2px;margin-top:6px}
+.tag.g{background:#e3f4f4;color:#0b6366}
+.tag.c{background:#e3f3ea;color:#1f7a4d}.brk .tag.c{background:#163a28;color:#7fe0ad}
+.gw{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#0f8b8d;margin:5px 0 0}
+.more{margin-top:6px}.more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;letter-spacing:.3px;color:#0b6366;background:#e3f4f4;border-radius:999px;padding:4px 11px}.more summary::-webkit-details-marker{display:none}.more summary::after{content:"\25BE";font-size:11px}.more[open] summary::after{content:"\25B4"}.more .mc,.more[open] .mo{display:none}.more[open] .mc{display:inline}.more[open] summary{margin-bottom:2px}
+.disc{background:#f2f3f5;border:1.5px solid #d5d7dd;border-radius:14px;padding:10px 13px 12px;margin:10px 0 2px}
+.disc .lb{display:inline-block;font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#fff;background:#4b4e57;padding:2px 7px;border-radius:4px}
+.disc p{font-size:13.5px;line-height:1.4;color:#4b4e57;margin:7px 0 0}
+.disc strong{color:#111216}
+.hcm{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#e5384f;margin:7px 0 -1px}.brk .hcm{color:#39ff6a;margin-top:10px}
+.tag.cy{font-family:MONO;background:#0b0f0c;color:#39ff6a;letter-spacing:1px}.brk .tag.cy{background:#0b0f0c;color:#39ff6a;box-shadow:inset 0 0 0 1px #2a8a45}
+.tag.fi{background:#fff0e0;color:#c2410c}
+.tag.s{background:#ececef;color:#4b4e57}
+.tag.gnt{background:#e3f0fc;color:#145fa0}
+.gw.gnw{color:#1a7fd4}
+</style></head><body>
+<div class="page">
+
+<div class="m2">
+  <div class="lg"><svg width="44" height="44" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="MONO" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg></div>
+  <div class="box"><div class="t">Off the Record</div><div class="tg">What your feed won't tell you</div></div>
+  <div class="il">ISSUE NO. 8 · THU, NOV 19, 2026</div>
+  <div class="stamp">NOT FOR DISTRIBUTION</div>
+</div>
+
+<div class="brk">
+  <span class="lab">BREAKING</span><span class="tag cy">Cyber attack</span><span class="tag">Opinion</span>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>The Agency That Hears Everything Can't Hear Itself. NSA Still Down 3 Days Later, Mid-War.</h3>
+  <p class="dek">"Just an update," they say.</p>
+  <p class="bl"><span class="dl">FORT MEADE, MD —</span> <strong class="k">NSANet</strong>, the agency's classified internal network, went down on <strong class="k">Tuesday</strong>, and the outage is <strong class="k">still ongoing</strong> three days later. Staff at the Fort Meade headquarters, home to <strong class="k">more than 20,000 people</strong>, were sent home, and the <strong class="k">Georgia hub</strong> that supports Middle East operations couldn't use the network to reach colleagues in the region <strong class="k">in the middle of the war with Iran</strong>. Officials rule out a cyberattack and point to <strong class="k">security patches</strong> for flaws found with the help of AI. <em>Three days of "maintenance" at the world's biggest spy agency, during a war? This was a cyber attack, and the official story is cover.</em></p>
+</div>
+
+<div class="sec" style="color:#e5384f">Domestic</div>
+<div class="story">
+<div class="src"><span class="pick">&#9733; Editor's Pick</span><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>Hydro-Québec Discovers Two-Factor Authentication, 2026</h3>
+  <p class="dek">2,500 accounts broken into, 1.7 million customers handed the homework.</p>
+  <p class="bl"><span class="dl">MONTREAL —</span> On <strong class="k">Oct. 20</strong>, attackers got into <strong class="k">more than 2,500</strong> Hydro-Québec online customer accounts using emails and passwords stolen from other sites. Hydro says its <strong class="k">internal systems weren't compromised</strong> and no full bank account or social insurance numbers leaked. Now <strong class="k">1.7 million of its 2.8 million</strong> customers have to reset their passwords, and a <strong class="k">security code by email</strong> has been required to log in since <strong class="k">Nov. 5</strong>. <em>A utility this big only just turned on two-factor login. Welcome to 2026, Hydro.</em></p>
+</div>
+
+<div class="sec" style="color:#d97706;margin-top:12px">Foreign Affairs</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>EU Commission Confirms AI-Powered Hack: Bureaucrats Locked Out of Their Own Payslips for 10 Days</h3>
+  <p class="dek">The people who wrote the rules on AI just got breached by it.</p>
+  <p class="bl"><span class="dl">BRUSSELS —</span> The European Commission confirmed on <strong class="k">Thursday</strong> that it was targeted using <strong class="k">ARTEX</strong>, a <strong class="k">publicly available AI hacking tool</strong>. <strong class="k">Sysper</strong>, the HR system staff use for payslips, leave and timesheets, and the medical reimbursement system were knocked offline for about <strong class="k">10 days</strong>. The Commission says there was <strong class="k">no ransom demand</strong>, won't say who did it, and is still checking whether staff names, pay grades and home addresses were taken. <em>Anyone can download the tool that just breached the EU's executive. That's the scary part.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>iCloud Goes Dark the Same Week Hackers Hunt iPhones. Apple Swears It Was Just an Update. Sure, Jan.</h3>
+  <p class="dek">Apple Pay, iCloud and the App Store, all down on the same afternoon.</p>
+  <p class="bl"><span class="dl">CUPERTINO, CA —</span> On <strong class="k">Tuesday</strong>, <strong class="k">iCloud, Apple Pay, the App Store and Apple Music</strong> stopped working, with nearly <strong class="k">2,300</strong> Apple Pay reports on Downdetector at the peak. It was the <strong class="k">second Apple Account sign-in failure in seven days</strong>. Apple blames an <strong class="k">internal update</strong>, not hackers. The same week, poisoned <strong class="k">Optimizely</strong> scripts on <strong class="k">178 websites</strong> were serving exploit kits built to take over iPhones. <em>Hackers spend the week going after iPhones, then Apple's whole cloud falls over and we're told it's a coincidence. I think Apple got hit, and the "update" story is cover.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag fi">Fire</span><span class="tag o">Opinion</span></div>
+  <h3>Langley Lights Up and Calls It HVAC: The CIA's Hottest Leak of the Year</h3>
+  <p class="dek">Fire crews at CIA headquarters on the same day the NSA went dark.</p>
+  <p class="bl"><span class="dl">LANGLEY, VA —</span> <strong class="k">Fairfax County</strong> fire crews rushed to <strong class="k">CIA headquarters</strong> on <strong class="k">Tuesday evening</strong> after smoke was reported in the building. Officials say the smoke came from the <strong class="k">HVAC system</strong>. <em>Call it what you want. Smoke, fire trucks and an emergency response at Langley is a fire, and it happened the same day the NSA lost its network.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag c">Called it</span><span class="tag o">Opinion</span></div>
+  <h3>Beautiful, Chinese, Totally Not a Spy, Says Trump</h3>
+  <p class="dek">"I don't know that she was a spy at all."</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> Asked about <strong class="k">Alice Huang</strong>, the woman US intelligence suspected of ties to China's Ministry of State Security, Trump said people assume a <strong class="k">"beautiful woman"</strong> from China is a spy, and that he <strong class="k">doesn't know that she was one</strong>. He says former Nvidia CEO <strong class="k">Jensen Huang</strong> told him he had no idea either. The Justice Department <strong class="k">hasn't concluded</strong> she was a spy, and the FBI is still investigating. <em>Trump said the truth when he wasn't supposed to. Who could've foreseen this? Me. I said she wasn't a honeypot.</em></p>
+</div>
+
+<div class="sec" style="color:#0f8b8d;margin-top:12px">Bread and Circuses</div>
+<div class="story bc" data-kind="sports" data-writer="Will">
+<div class="src"><span class="tag g">Guest</span><span class="tag cy">Cyber attack</span><span class="tag s">Satire</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>Crossover Episode: Cyber Month Comes for the Box Score. Ctrl+Alt+Delete 83</h3>
+  <p class="dek">The hackers hit the EU, Apple and the NSA. Then they went after the stat sheet.</p>
+  <p class="gw">Guest writer: Will</p>
+  <p class="bl"><span class="dl">MIAMI —</span> On <strong class="k">March 10</strong>, <strong class="k">Bam Adebayo</strong> dropped <strong class="k">83 points</strong> on the Wizards, second only to Wilt's 100, with NBA records of <strong class="k">36 free throws made on 43 attempts</strong>. The haters have called it stat-padding ever since. Word in the group chat is that the NBA got hacked too, and someone is erasing every stat from the game, one free throw at a time. <em>Nothing is confirmed, but if I were a hacker with the whole NBA database in front of me, I'd delete those 43 free throws too.</em></p>
+</div>
+
+<div class="sec" style="color:#1a7fd4;margin-top:12px">Good News</div>
+<div class="story gn" data-writer="Milosz">
+<div class="src"><span class="tag gnt">Guest</span><span class="tag o">Opinion</span></div>
+  <h3>Canada Is the First Country to Shop for Carbon Removal</h3>
+  <p class="dek">Ottawa will buy credits from 19 Canadian projects that pull CO&#8322; out of the air.</p>
+  <p class="gw gnw">Guest writer: Milosz</p>
+  <p class="bl"><span class="dl">OTTAWA —</span> Treasury Board President <strong class="k">Shafqat Ali</strong> announced on <strong class="k">Thursday</strong> that federal departments can now buy <strong class="k">permanent carbon dioxide removal credits</strong> from <strong class="k">19 projects across Canada</strong>. Ottawa says it's the <strong class="k">first national government in the world</strong> to set up competitive standing offers for these credits. The projects pull CO&#8322; out of the atmosphere and store it underground or in long-lasting products, and the credits will cover emissions that are hard to cut, like <strong class="k">National Defence's air and marine fleets</strong>. It builds on a promise to buy <strong class="k">at least $10 million</strong> in removal credits <strong class="k">by 2030</strong>. <em>For once, Canada is first at something that matters. Good.</em></p>
+</div>
+
+<div class="sec" style="color:#1f7a4d;margin-top:12px">Last Week's Call</div>
+<div class="score">
+  <div class="row"><div class="ck">&#10003;</div><div><b>Alice Huang wasn't a honeypot</b><span>Trump now says <strong class="k">"I don't know that she was a spy at all,"</strong> and the Justice Department <strong class="k">hasn't concluded</strong> she was one. <em>Even the President agrees with me now.</em></span></div></div>
+</div>
+
+<div class="chat">
+  <div class="lb">HEARD IN THE GROUP CHAT</div>
+  <div class="bub l"><span class="nm">Will</span>The NBA was also reportedly hacked</div>
+  <div class="bub l"><span class="nm">Natan</span>How will this effect LeBron’s legacy</div>
+  <div class="bub l"><span class="nm">Malcolm</span>I stg if this fucks w our fantasy imma be pissed</div>
+</div>
+
+<ul class="tnotes" hidden>
+  <li data-tag="NEW">Good News: a new guest section, starting with Milosz</li>
+  <li data-tag="NEW">Happy Cyber Month: every hack gets its own label</li>
+  <li data-tag="THANKS">Will's back with a Bread and Circuses crossover. Send us your Good News!</li>
+</ul>
+<div class="sig">— C.</div>
+<div class="burn">BURN AFTER READING · ISSUE NO. 8</div>
+</div>
+</body>
+</html>

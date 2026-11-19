@@ -422,3 +422,44 @@ html:not(.js) .bc .drape,html:not(.js) .bc .ctitle{display:none}
 @keyframes discpulse{0%,100%{box-shadow:0 0 0 4px rgba(242,183,5,.18)}50%{box-shadow:0 0 0 10px rgba(242,183,5,.35)}}
 @media (prefers-color-scheme:dark){.ibody .disc{background:#3a2f0e;border-color:#f2b705}.ibody .disc p{color:#ffe9a8}}
 :root[data-theme="dark"] .ibody .disc{background:#3a2f0e;border-color:#f2b705}:root[data-theme="dark"] .ibody .disc p{color:#ffe9a8}
+/* ---- Good News (guest section): night sky gives way to sunrise ---- */
+.gnf{display:flex;gap:6px;overflow-x:auto;padding:6px 0 4px;scrollbar-width:none}.gnf[hidden]{display:none}
+.gnc{flex:none;font:600 13px/1 -apple-system,"Helvetica Neue",Arial,sans-serif;padding:7px 11px;border-radius:999px;border:1.5px solid #1a7fd4;background:#fff;color:#145fa0;cursor:pointer}
+.gnc[aria-pressed="true"]{background:#1a7fd4;color:#fff}
+.ibody > .gn{overflow:hidden;padding-top:0!important;position:relative}
+.ibody > .gn .gw{display:none}
+.gn > .ftab,.gn > .src,.gn > .hl,.gn > .dek,.gn > .bl,.gn > p,.gn > .st-tools,.gn > .ribbon,.gn > .more{position:relative;z-index:1}
+.ibody > .gn > .ftab{border-radius:0 0 8px 8px;margin:22px 0 8px -2px}
+.gn .sky{position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(#e6f3ff,#fff 55%,#fff8e6)}
+.gn .rays{position:absolute;left:50%;top:100%;width:900px;height:900px;margin:-450px 0 0 -450px;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s 1.6s;
+  background:repeating-conic-gradient(rgba(255,183,3,.13) 0 6deg,transparent 6deg 18deg);border-radius:50%;animation:gnspin 80s linear infinite}
+.gn.in .rays{opacity:1}
+.gn .night{position:absolute;inset:0;z-index:8;pointer-events:none;background:linear-gradient(#0b1530,#1d2f5e 60%,#3b3f78);transition:opacity 1.4s ease .9s}
+.gn.in .night{opacity:0}
+.gn .star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:gntw 1.6s ease-in-out infinite alternate}
+.gn .star:nth-child(2n){animation-delay:.8s}
+.gn .sun{position:absolute;left:50%;bottom:-70px;width:120px;height:120px;margin-left:-60px;border-radius:50%;z-index:9;pointer-events:none;
+  background:radial-gradient(circle,#ffe08a 0,#ffb703 55%,rgba(255,183,3,0) 72%);transform:translateY(80px);transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .5s,opacity .8s 2s}
+.gn.in .sun{transform:translateY(0);opacity:0}
+.gn .gtitle{position:absolute;left:0;right:0;top:42%;transform:translateY(-50%);z-index:10;text-align:center;pointer-events:none;transition:opacity .5s .6s}
+.gn .gtitle b{display:block;font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:30px;color:#ffd166;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.gn .gtitle span{display:block;font-family:MONO,monospace;font-weight:700;font-size:12px;letter-spacing:5px;color:#cfe3ff;margin-top:8px}
+.gn.in .gtitle{opacity:0}
+.gn:not(.in){min-height:220px}
+.gn .ribbon{display:flex;align-items:center;gap:8px;background:#1a7fd4;color:#fff;border-radius:999px;padding:6px 14px 6px 10px;margin:4px 0 6px;width:max-content;max-width:100%;
+  transform:translateY(-10px);opacity:0;transition:transform .6s cubic-bezier(.3,1.4,.5,1) 2.1s,opacity .4s 2.1s}
+.gn.in .ribbon{transform:none;opacity:1}
+.gn .ribbon svg{animation:gnspin 12s linear infinite}
+.gn .ribbon small{font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:2px;color:#cfe3ff}
+.gn .ribbon b{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+@keyframes gnspin{to{transform:rotate(360deg)}}
+@keyframes gntw{from{opacity:.25}to{opacity:1}}
+html:not(.js) .gn .night,html:not(.js) .gn .sun,html:not(.js) .gn .gtitle{display:none}
+html:not(.js) .gn .ribbon{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.gn,.gn *{transition:none!important;animation:none!important}.gn:not(.in){min-height:0}.gn .night,.gn .sun,.gn .gtitle{display:none}.gn .ribbon{opacity:1;transform:none}}
+@media (prefers-color-scheme:dark){.gnc{background:#16171b;color:#8cc4ff}.gn .sky{background:linear-gradient(#13233a,#1a1b20 55%,#2a2312)}.gn .rays{background:repeating-conic-gradient(rgba(255,183,3,.08) 0 6deg,transparent 6deg 18deg)}}
+/* Issue 8: cyber / fire / satire / Good News pills and the "Happy Cyber Month!" kicker */
+.tag.cy{font-family:MONO,monospace;background:#0b0f0c;color:#39ff6a;letter-spacing:1px}
+.tag.fi{background:#fff0e0;color:#b23a0a}.tag.s{background:#ececef;color:#4b4e57}.tag.gnt{background:#e3f0fc;color:#145fa0}
+.hcm{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#d52f45;margin:7px 0 -1px}.brk .hcm{color:#39ff6a;margin-top:10px}
+@media (prefers-color-scheme:dark){.tag.cy{box-shadow:inset 0 0 0 1px #2a8a45}.tag.fi{background:#3a2010;color:#ffae7a}.tag.s{background:#26272c;color:#c4c6cc}.tag.gnt{background:#13263b;color:#8cc4ff}.hcm{color:#ff6b7f}}

@@ -13,7 +13,7 @@ sources = J('sources.json')
 reactions = J('reactions.json')
 
 SEC_FILTER = {'Breaking': 'breaking', 'Foreign Affairs': 'foreign', 'Domestic': 'domestic',
-              'Markets': 'markets', 'Bread and Circuses': 'circus', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
+              'Markets': 'markets', 'Bread and Circuses': 'circus', 'Good News': 'good', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
 
 def slug(t):
     return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')[:40].strip('-')
@@ -69,6 +69,24 @@ def decorate_bc(el, title, n):
     tools = el.select_one('.st-tools')
     tools.insert_after(BeautifulSoup(bottom, 'html.parser'))
 
+GN_WRITERS = []
+
+def decorate_gn(el, title, n):
+    w = el.get('data-writer', 'Guest')
+    if w not in GN_WRITERS:
+        GN_WRITERS.append(w)
+    W = html.escape(w)
+    under = ('<div class="sky" aria-hidden="true"></div><div class="rays" aria-hidden="true"></div>'
+             '<div class="night" aria-hidden="true"><i class="star" style="left:12%;top:18%"></i><i class="star" style="left:78%;top:12%"></i>'
+             '<i class="star" style="left:30%;top:40%"></i><i class="star" style="left:88%;top:46%"></i><i class="star" style="left:58%;top:24%"></i></div>'
+             '<div class="sun" aria-hidden="true"></div>'
+             '<div class="gtitle" aria-hidden="true"><b>Good News</b><span>FOR ONCE</span></div>')
+    top = (f'<div class="ribbon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="5" fill="#ffb703"/>'
+           + ''.join(f'<rect x="11" y="1" width="2" height="4" rx="1" fill="#ffb703" transform="rotate({a} 12 12)"/>' for a in range(0, 360, 45))
+           + f'</svg><small>FILED BY</small><b>{W}</b><small>GUEST</small></div>')
+    el.insert(0, BeautifulSoup(under, 'html.parser'))
+    el.select_one('.ftab').insert_after(BeautifulSoup(top, 'html.parser'))
+
 calls_all = []
 STORYCOUNT = {}
 
@@ -100,7 +118,7 @@ def issue_block(n, week, latest):
             el['data-f'] = f
             STORYCOUNT[n] = STORYCOUNT.get(n, 0) + 1
             label = 'BREAKING' if f == 'breaking' else sec.upper()
-            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6', 'circus': '#0f8b8d'}.get(f, '#6b6e78')
+            color = {'breaking': '#141416', 'foreign': '#d97706', 'domestic': '#e5384f', 'markets': '#8e3fa6', 'circus': '#0f8b8d', 'good': '#1a7fd4'}.get(f, '#6b6e78')
             el.insert(0, BeautifulSoup(f'<span class="ftab" style="--tab:{color}" aria-hidden="true">FILE {STORYCOUNT[n]:02d}{'' if f=='breaking' else ' · '+html.escape(label)}</span>', 'html.parser'))
             el['class'] = cls + ['reveal']
             h.name = 'h3' if 'brk' in cls else 'h4'
@@ -121,6 +139,8 @@ def issue_block(n, week, latest):
             el.append(tools)
             if 'bc' in cls:
                 decorate_bc(el, title, n)
+            if 'gn' in cls:
+                decorate_gn(el, title, n)
             continue
         if 'score' in cls:
             el['data-f'] = 'calls'
@@ -225,11 +245,13 @@ nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactio
       '<button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
-                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('circus', 'Bread &amp; Circuses'), ('calls', "Last Week's Call")])
+                               ('domestic', 'Domestic'), ('markets', 'Markets'), ('circus', 'Bread &amp; Circuses'), ('good', 'Good News'), ('calls', "Last Week's Call")])
 bcchips = ''.join([f'<button type="button" class="bcc" data-w="all" aria-pressed="true">Everyone</button>'] +
                   [f'<button type="button" class="bcc" data-w="{html.escape(w)}" aria-pressed="false">{html.escape(w)}</button>' for w in WRITERS] +
                   ['<button type="button" class="bcc" data-k="sports" aria-pressed="false">Sports only</button>',
                    '<button type="button" class="bcc" data-k="media" aria-pressed="false">Media only</button>'])
+gnchips = ''.join([f'<button type="button" class="gnc" data-w="all" aria-pressed="true">Everyone</button>'] +
+                  [f'<button type="button" class="gnc" data-w="{html.escape(w)}" aria-pressed="false">{html.escape(w)}</button>' for w in GN_WRITERS])
 LOGO = '<svg class="logo" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg>'
 L = issues[0]['n']
 page = f'''<!doctype html>
@@ -274,6 +296,7 @@ page = f'''<!doctype html>
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>
   <div class="bcf" role="group" aria-label="Bread and Circuses writers" hidden>{bcchips}</div>
+  <div class="gnf" role="group" aria-label="Good News writers" hidden>{gnchips}</div>
   <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>
 </div>
 <p class="sr-only" id="announce" aria-live="polite"></p>

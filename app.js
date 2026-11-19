@@ -232,3 +232,21 @@
     mo.observe(card,{attributes:true,attributeFilter:['class']});
   });
 })();
+// ---- Good News: writer chips ----
+(function(){
+  var d=document, $$=function(q,c){return [].slice.call((c||d).querySelectorAll(q))};
+  var row=d.querySelector('.gnf');
+  $$('.fl').forEach(function(b){b.addEventListener('click',function(){
+    if(!row)return; row.hidden=b.dataset.f!=='good';
+    $$('.gnc').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.w==='all'?'true':'false')});
+  })});
+  $$('.gnc').forEach(function(c){c.addEventListener('click',function(){
+    $$('.gnc').forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false')});
+    $$('.ibody > .gn').forEach(function(card){
+      var ok=c.dataset.w==='all'||card.dataset.writer===c.dataset.w;
+      card.classList.toggle('is-hidden',!ok); if(ok)card.classList.add('in');
+    });
+    $$('.issue').forEach(function(a){a.classList.toggle('is-hidden',!$$('.ibody > .gn:not(.is-hidden)',a).length)});
+    if(window.ScrollTrigger)ScrollTrigger.refresh();
+  })});
+})();
