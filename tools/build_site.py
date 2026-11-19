@@ -274,6 +274,7 @@ if issues[0].get('special') == 'cyber':
              f'<pre class="rain" aria-hidden="true"></pre><div class="scan" aria-hidden="true"></div>'
              f'<div class="box"><p class="p" aria-hidden="true">root@off-the-record:~$ ./issue{L}</p>'
              f'<h2 class="big" data-text="HAPPY CYBER MONTH!">HAPPY CYBER MONTH!</h2>'
+             f'<p class="oct">(technically it was Oct)</p>'
              f'<p class="sub">A special edition of Off the Record</p>'
              f'<p class="go" aria-hidden="true">SCROLL FOR ISSUE NO. {L} ↓</p></div></section>\n')
 page = f'''<!doctype html>
