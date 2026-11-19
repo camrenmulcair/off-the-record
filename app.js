@@ -254,3 +254,20 @@
     if(window.ScrollTrigger)ScrollTrigger.refresh();
   })});
 })();
+// ---- Special edition intro: code rain + "HAPPY CYBER MONTH!" types out once it scrolls into view ----
+(function(){
+  var sec=document.getElementById('cyintro'); if(!sec)return;
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ch='01ABCDEF#$%&*<>/\\=+', r='', sd=7, rnd=function(){sd=(sd*9301+49297)%233280;return sd/233280};
+  for(var y=0;y<110;y++){var l='';for(var x=0;x<70;x++)l+=rnd()<.55?ch[Math.floor(rnd()*ch.length)]:' ';r+=l+'\n'}
+  sec.querySelector('.rain').textContent=r;
+  var big=sec.querySelector('.big'), txt=big.getAttribute('data-text');
+  if(reduce){sec.classList.add('done');return}
+  big.innerHTML='<span class="cur"></span>';
+  function type(){var i=0;var t=setInterval(function(){i++;big.innerHTML='';big.appendChild(document.createTextNode(txt.slice(0,i)));
+      var c=document.createElement('span');c.className='cur';big.appendChild(c);
+      if(i>=txt.length){clearInterval(t);setTimeout(function(){big.classList.add('glitch');sec.classList.add('done')},250)}},75)}
+  if(!('IntersectionObserver' in window)){type();return}
+  var io=new IntersectionObserver(function(en){if(en[0].isIntersecting&&en[0].intersectionRatio>.45){io.disconnect();setTimeout(type,300)}},{threshold:[0,.45,.6]});
+  io.observe(sec);
+})();

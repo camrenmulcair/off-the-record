@@ -267,6 +267,15 @@ gnchips = ''.join([f'<button type="button" class="gnc" data-w="all" aria-pressed
                   [f'<button type="button" class="gnc" data-w="{html.escape(w)}" aria-pressed="false">{html.escape(w)}</button>' for w in GN_WRITERS])
 LOGO = '<svg class="logo" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg>'
 L = issues[0]['n']
+# special-edition intro for the latest issue only (e.g. "special": "cyber" in issues.json)
+intro = ''
+if issues[0].get('special') == 'cyber':
+    intro = (f'<section class="cyintro" id="cyintro" aria-label="Special edition: Happy Cyber Month">'
+             f'<pre class="rain" aria-hidden="true"></pre><div class="scan" aria-hidden="true"></div>'
+             f'<div class="box"><p class="p" aria-hidden="true">root@off-the-record:~$ ./issue{L}</p>'
+             f'<h2 class="big" data-text="HAPPY CYBER MONTH!">HAPPY CYBER MONTH!</h2>'
+             f'<p class="sub">A special edition of Off the Record</p>'
+             f'<p class="go" aria-hidden="true">SCROLL FOR ISSUE NO. {L} ↓</p></div></section>\n')
 page = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -303,7 +312,7 @@ page = f'''<!doctype html>
     <p class="hint" id="hint" aria-hidden="true">SCROLL TO OPEN THE FILE ↓</p>
   </div>
 </section>
-<div class="col">
+{intro}<div class="col">
 <nav class="jump" aria-label="Jump to a section">{nav}</nav>
 {reacts}
 <div class="controls">

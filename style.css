@@ -493,3 +493,20 @@ html:not(.js) .gn .ribbon{opacity:1;transform:none}
 @keyframes gnspark{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:.9;transform:scale(1.3) rotate(45deg)}}
 @media (prefers-color-scheme:dark){.gn .rainbow{opacity:.22}.gn .cloud,.gn .cloud:before,.gn .cloud:after{background:#2a3a55}.gn .birds path{stroke:#9fb4d6}}
 @media (prefers-reduced-motion:reduce){.gn .sunlit,.gn .cloud{opacity:1}.gn .rainbow{clip-path:none}.gn .birds,.gn .spark{display:none}}
+/* ---- Special edition intro: Happy Cyber Month (only when the latest issue has "special": "cyber") ---- */
+.cyintro{position:relative;height:100vh;height:100svh;min-height:560px;background:#050806;overflow:hidden;color:#39ff6a}
+.cyintro .rain{position:absolute;left:0;right:0;top:-50%;margin:0;font:700 15px/18px MONO,ui-monospace,Menlo,monospace;color:#1f8f3c;opacity:.45;white-space:pre;animation:cyrain 22s linear infinite}
+.cyintro .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 2px,transparent 2px 4px)}
+.cyintro .box{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);max-width:520px;margin:0 auto;padding:0 24px}
+.cyintro .p{font:700 15px/1.3 MONO,ui-monospace,Menlo,monospace;color:#7dffa0;letter-spacing:1px;margin:0}
+.cyintro .big{font:700 clamp(40px,12vw,64px)/1.05 MONO,ui-monospace,Menlo,monospace;letter-spacing:1px;margin:14px 0 0;min-height:2.1em;color:#39ff6a;text-shadow:0 0 18px rgba(57,255,106,.6)}
+.cyintro .big.glitch{animation:cyglitch .45s steps(2) 1}
+.cyintro .big .cur{display:inline-block;width:.55em;height:.9em;background:#39ff6a;vertical-align:-.08em;margin-left:4px;animation:cyblink .8s steps(2) infinite}
+.cyintro .sub{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:22px;color:#e8ffe9;margin:20px 0 0;opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+.cyintro .go{font:700 12px/1 MONO,ui-monospace,Menlo,monospace;letter-spacing:3px;color:#7dffa0;margin:34px 0 0;opacity:0;transition:opacity .6s .4s}
+.cyintro.done .sub{opacity:1;transform:none}.cyintro.done .go{opacity:.8;animation:cyblink 1.6s steps(2) infinite 1s}
+@keyframes cyrain{to{transform:translateY(50%)}}
+@keyframes cyblink{50%{opacity:0}}
+@keyframes cyglitch{0%{transform:translateX(6px);text-shadow:-4px 0 #ff2d55,4px 0 #00e5ff}50%{transform:translateX(-5px);text-shadow:4px 0 #ff2d55,-4px 0 #00e5ff}100%{transform:none}}
+html:not(.js) .cyintro .sub,html:not(.js) .cyintro .go{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.cyintro .rain,.cyintro .big,.cyintro .go{animation:none!important}.cyintro .sub,.cyintro .go{opacity:1;transform:none;transition:none}}
