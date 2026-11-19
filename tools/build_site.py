@@ -79,6 +79,11 @@ def decorate_gn(el, title, n):
     under = ('<div class="sky" aria-hidden="true"></div><div class="rays" aria-hidden="true"></div>'
              '<div class="night" aria-hidden="true"><i class="star" style="left:12%;top:18%"></i><i class="star" style="left:78%;top:12%"></i>'
              '<i class="star" style="left:30%;top:40%"></i><i class="star" style="left:88%;top:46%"></i><i class="star" style="left:58%;top:24%"></i></div>'
+             '<div class="rainbow" aria-hidden="true"></div>'
+             '<div class="sunlit" aria-hidden="true"></div>'
+             '<div class="cloud c1" aria-hidden="true"></div><div class="cloud c2" aria-hidden="true"></div><div class="cloud c3" aria-hidden="true"></div>'
+             '<svg class="birds" viewBox="0 0 60 20" aria-hidden="true"><path d="M2 10q5-6 10 0q5-6 10 0M30 6q4-5 8 0q4-5 8 0M44 14q3-4 6 0q3-4 6 0" fill="none" stroke="#3a4a63" stroke-width="1.6" stroke-linecap="round"/></svg>'
+             '<i class="spark" style="left:14%;top:30%"></i><i class="spark" style="left:72%;top:58%;animation-delay:1.1s"></i><i class="spark" style="left:40%;top:82%;animation-delay:2.2s"></i>'
              '<div class="sun" aria-hidden="true"></div>'
              '<div class="gtitle" aria-hidden="true"><b>Good News</b><span>FOR ONCE</span></div>')
     top = (f'<div class="ribbon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="5" fill="#ffb703"/>'
@@ -160,12 +165,20 @@ def issue_block(n, week, latest):
     # split: the sticky stack of stories, then the tail (scorecard, chat...) so the stack
     # closes as one pile before the tail scrolls in
     tops = [x for x in soup.children if getattr(x, 'name', None)]
+    # the scorecard leads the issue (above Breaking), with its heading
+    lead = []
+    for i, x in enumerate(tops):
+        if 'score' in x.get('class', []):
+            if i and tops[i - 1].name == 'h3' and tops[i - 1].get('data-f') == 'calls':
+                lead.append(tops[i - 1])
+            lead.append(x)
+    tops = [x for x in tops if x not in lead]
     last = max([i for i, x in enumerate(tops) if set(x.get('class', [])) & {'story', 'brk'}], default=len(tops) - 1)
-    stack = ''.join(str(x) for x in tops[:last + 1])
+    stack = ''.join(str(x) for x in lead) + ''.join(str(x) for x in tops[:last + 1])
     # the folder cover slides over the pile at the end of the stories, then everything leaves together
     stack += (f'<div class="closer" aria-hidden="true"><span class="ctab">OFF THE RECORD</span>'
               f'<span class="cno">ISSUE NO. {n}</span><span class="cfile">END OF FILE</span>'
-              f'<span class="cstamp2">FILE CLOSED</span><span class="cnext">Scorecard and group chat below &darr;</span></div>')
+              f'<span class="cstamp2">FILE CLOSED</span><span class="cnext">Group chat below &darr;</span></div>')
     tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
     content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')

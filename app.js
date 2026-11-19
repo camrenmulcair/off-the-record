@@ -97,7 +97,10 @@
   var clamp=function(x){return Math.max(0,Math.min(1,x))}, ease=function(t){return 1-Math.pow(1-t,3)};
   // Stick each card so its whole text has scrolled into view before the next one slides over it
   function placeCards(){
-    var vh=innerHeight, groups={};
+    var vh=Math.min(innerHeight,(window.visualViewport&&visualViewport.height)||innerHeight), groups={};
+    // the folder cover waits a beat so the last story can be read all the way down
+    [].slice.call(d.querySelectorAll('.ibody > .closer')).forEach(function(cl){cl.style.marginTop=Math.round(vh*0.4)+'px'});
+
     cards.forEach(function(c){var k=c.parentNode;groups[k.parentNode.id]=(groups[k.parentNode.id]||0)+1;var i=groups[k.parentNode.id];
       c.style.top=Math.min(64+i*6, vh-c.offsetHeight-12)+'px';});
   }
@@ -111,6 +114,7 @@
   var tick=false;
   addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){frame();tick=false})}},{passive:true});
   addEventListener('resize',function(){placeCards();frame()});
+  addEventListener('load',placeCards);
   // re-measure when compact mode or filters change card heights
   d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
   if(d.fonts&&d.fonts.ready)d.fonts.ready.then(placeCards);
