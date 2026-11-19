@@ -463,7 +463,7 @@ html:not(.js) .gn .ribbon{opacity:1;transform:none}
 /* Issue 8: cyber / fire / satire / Good News pills and the "Happy Cyber Month!" kicker */
 .tag.cy{font-family:MONO,monospace;background:#0b0f0c;color:#39ff6a;letter-spacing:1px;white-space:nowrap;display:inline-block}
 .tag.fi{background:#fff0e0;color:#b23a0a}.tag.s{background:#ececef;color:#4b4e57}.tag.gnt{background:#e3f0fc;color:#145fa0}
-.hcm{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#39ff6a;text-shadow:0 0 1px #0a4d1f,0 0 1px #0a4d1f,0 0 1px #0a4d1f;margin:7px 0 -1px}.brk .hcm{color:#39ff6a;text-shadow:none;margin-top:10px}
+.hcm{font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#39ff6a;text-shadow:0 0 8px rgba(57,255,106,.6);margin:7px 0 -1px}.brk .hcm{color:#39ff6a;text-shadow:none;margin-top:10px}
 @media (prefers-color-scheme:dark){.tag.cy{box-shadow:inset 0 0 0 1px #2a8a45}.tag.fi{background:#3a2010;color:#ffae7a}.tag.s{background:#26272c;color:#c4c6cc}.tag.gnt{background:#13263b;color:#8cc4ff}.hcm{color:#39ff6a;text-shadow:none}}
 
 /* Good News v2: the sun stays up in the corner, a rainbow, drifting clouds, birds, sparkles */
