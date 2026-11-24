@@ -1,0 +1,148 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:PF;font-weight:900;src:url(../fonts/playfair-display-latin-900-normal.woff2)}
+@font-face{font-family:PF;font-weight:700;font-style:italic;src:url(../fonts/playfair-display-latin-700-italic.woff2)}
+@font-face{font-family:MONO;font-weight:700;src:url(../fonts/ibm-plex-mono-latin-700-normal.woff2)}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;padding:18px;width:480px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#111216}
+.page{background:#fff;border-radius:26px;padding:22px 20px 14px}
+.m2{position:relative;text-align:center;margin-bottom:16px}
+.m2 .lg{display:flex;justify-content:center;margin-bottom:8px}
+.m2 .box{border-top:3px double #111;border-bottom:1px solid #111;padding:8px 0 9px}
+.m2 .t{font-family:PF;font-weight:900;font-size:42px;letter-spacing:-1px;line-height:1}
+.m2 .tg{font-family:PF;font-style:italic;font-weight:700;font-size:15px;color:#555;margin-top:5px}
+.m2 .il{font-size:12.5px;font-weight:700;color:#8a8a8e;letter-spacing:1px;margin-top:8px}
+.stamp{position:absolute;right:-6px;top:30px;transform:rotate(-9deg);border:2.5px solid #c8243b;color:#c8243b;font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:2px;padding:3px 8px;background:rgba(255,255,255,.55);mix-blend-mode:multiply;border-radius:3px}
+.brk{background:#141416;border-radius:16px;padding:12px 14px 14px;color:#fff;margin-bottom:16px}
+.brk .lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.2px;background:#e5384f;color:#fff;padding:3px 8px;border-radius:5px}
+.brk .tag{margin-left:6px;background:#3b1a20;color:#ff9aa8}
+.sec{font-size:24px;font-weight:700;margin:4px 0 2px}
+.story{padding:11px 0;border-top:1px solid #e2e4ea}
+.sec+.story{border-top:0}
+.src{display:flex;gap:6px;align-items:center}
+.tag,.pick{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#b0283c}
+.tag.a{background:#f3e6f7;color:#6e2a85}
+.pick{background:#fff4d1;color:#7a5400}
+.story h3{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14px;color:#6b6e78;margin:6px 0 0;line-height:1.4}
+.brk .dek{color:#e8e8ec}.brk .bl{color:#a9a9b0}
+.score{border:1.5px solid #cfe6d9;background:#f2faf5;border-radius:16px;padding:4px 14px;margin:6px 0 4px}
+.row{display:flex;gap:10px;padding:10px 0;border-top:1px solid #dcefe3}.row:first-child{border-top:0}
+.ck{flex:none;width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.row b{display:block;font-size:15.5px}.row span{font-size:13.5px;color:#4b5a51;line-height:1.4;display:block;margin-top:2px}
+.foot{font-size:12px;color:#8a8a8e;text-align:center;padding:12px 0 2px;border-top:1px solid #e2e4ea;margin-top:10px}
+.k{font-weight:700;color:#111216}.brk .k{color:#fff}.row .k{color:#17241c}.bl em,.row em{font-style:italic}
+.brk h3{font-family:PF;font-style:italic;font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.2px;margin:10px 0 0}
+.brk .dek{margin-top:9px}
+.dl{font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+.bub{max-width:82%;padding:7px 10px;border-radius:10px;font-size:14.5px;line-height:1.3;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.l{background:#fff;align-self:flex-start}.bub.l .nm{display:block;font-size:12.5px;font-weight:700;color:#b5532f;margin-bottom:2px}
+.bub.r{background:#d9fdd3;align-self:flex-end}
+.sig{font-family:PF;font-style:italic;font-weight:700;font-size:28px;text-align:right;margin-top:14px}
+.burn{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#c8243b;text-align:center;border-top:1px dashed #c8243b;padding:8px 0 2px;margin-top:6px}
+.tag.g{background:#e3f4f4;color:#0b6366}
+.tag.c{background:#e3f3ea;color:#1f7a4d}.brk .tag.c{background:#163a28;color:#7fe0ad}
+.gw{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#0f8b8d;margin:5px 0 0}
+.more{margin-top:6px}.more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;letter-spacing:.3px;color:#0b6366;background:#e3f4f4;border-radius:999px;padding:4px 11px}.more summary::-webkit-details-marker{display:none}.more summary::after{content:"\25BE";font-size:11px}.more[open] summary::after{content:"\25B4"}.more .mc,.more[open] .mo{display:none}.more[open] .mc{display:inline}.more[open] summary{margin-bottom:2px}
+.disc{background:#f2f3f5;border:1.5px solid #d5d7dd;border-radius:14px;padding:10px 13px 12px;margin:10px 0 2px}
+.disc .lb{display:inline-block;font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#fff;background:#4b4e57;padding:2px 7px;border-radius:4px}
+.disc p{font-size:13.5px;line-height:1.4;color:#4b4e57;margin:7px 0 0}
+.disc strong{color:#111216}
+.hcm{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#39ff6a;text-shadow:0 0 8px rgba(57,255,106,.6);margin:8px 0 -1px;display:inline-block;background:#0b0f0c;padding:3px 7px;border-radius:4px}.brk .hcm{color:#39ff6a;text-shadow:none;margin-top:10px}
+.tag.cy{font-family:MONO;background:#0b0f0c;color:#39ff6a;letter-spacing:1px}.brk .tag.cy{background:#0b0f0c;color:#39ff6a;box-shadow:inset 0 0 0 1px #2a8a45}
+.tag.fi{background:#fff0e0;color:#c2410c}
+.tag.s{background:#ececef;color:#4b4e57}
+.tag.gnt{background:#e3f0fc;color:#145fa0}
+.gw.gnw{color:#1a7fd4}
+</style></head><body>
+<div class="page">
+
+<div class="m2">
+  <div class="lg"><svg width="44" height="44" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="MONO" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg></div>
+  <div class="box"><div class="t">Off the Record</div><div class="tg">What your feed won't tell you</div></div>
+  <div class="il">ISSUE NO. 9 · TUE, NOV 24, 2026</div>
+  <div class="stamp">NOT FOR DISTRIBUTION</div>
+</div>
+
+<div class="brk">
+  <span class="lab">BREAKING</span><span class="tag">Opinion</span>
+  <h3>Blockade, Meet the Jerry Can: The US Navy vs. Iran's Pakistan Back Door</h3>
+  <p class="dek">14 tankers are massing at Kharg Island, and Tehran says the first shot puts the Gulf's oil in play.</p>
+  <p class="bl"><span class="dl">TEHRAN —</span> CENTCOM's new <strong class="k">Task Force Iron Gate</strong> is going after Iran's <strong class="k">land borders and Caspian routes</strong>, on top of the <strong class="k">naval blockade</strong> of Iranian ports in place since <strong class="k">April 13</strong>. Iran's back door is already open: traders told RFE/RL that <strong class="k">at least 6 million litres a day</strong> of Iranian fuel crosses into <strong class="k">Pakistan</strong> in canisters on pickups and motorcycles, with boats running more to <strong class="k">Gwadar</strong>. That's about <strong class="k">38,000 barrels a day</strong>, millions of barrels since the war began. Now <strong class="k">14+ tankers</strong> are massing at <strong class="k">Kharg Island</strong>, Deputy FM <strong class="k">Kazem Gharibabadi</strong> calls the blockade an <strong class="k">"act of war,"</strong> Iranian TV is floating putting <strong class="k">journalists and civilians</strong> aboard, and an Iranian official warns that <strong class="k">"if a single shot is fired,"</strong> Gulf oil facilities become targets. <em>Iran is betting the US won't sink a tanker full of civilians on live TV, and that the jerry cans keep flowing to world markets while Washington makes up its mind. I think it's right on both.</em></p>
+</div>
+
+<div class="sec" style="color:#d97706">Foreign Affairs</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>Great Timing: America's Cyber Chief Walks as the FBI and USDA Get Breached</h3>
+  <p class="dek">Meanwhile, the man running DHS's terrorism-prevention office got the job at 22.</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> National Cyber Director <strong class="k">Sean Cairncross</strong> is leaving the White House, confirmed on <strong class="k">Nov. 19</strong>, and Trump has named <strong class="k">Kirsten Davies</strong> to replace him. The same week, hackers got into the FBI's <strong class="k">National Crime Information Center</strong> and a <strong class="k">USDA</strong> system used for <strong class="k">farmer payments</strong>. USDA says <strong class="k">no data was taken</strong>, Trump confirmed the hack on Fox News, and nobody has been blamed. Over at DHS, the <strong class="k">Center for Prevention Programs and Partnerships</strong>, its terrorism-prevention office, is run by <strong class="k">Thomas Fugate</strong>, who ProPublica reported got the job at <strong class="k">22</strong>. <em>Great fkn timing. The cyber chief walks mid-breach, and terrorism prevention is in the hands of a kid who just graduated.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>Britain Says the Quiet Part Out Loud: We're Hacking Russia, China, Iran and North Korea</h3>
+  <p class="dek">Asked if it's really happening, Britain's top cyber general said: "Absolutely."</p>
+  <p class="bl"><span class="dl">LONDON —</span> <strong class="k">Gen. Sir Rob Magowan</strong>, head of the UK's <strong class="k">Cyber and Specialist Operations Command</strong>, told Sky News on <strong class="k">Nov. 20</strong> that the <strong class="k">National Cyber Force</strong> is running <strong class="k">offensive operations</strong> against <strong class="k">Russia, China, Iran and North Korea</strong>, "below the threshold of open conflict," in the <strong class="k">grey zone</strong>. He added: <strong class="k">"I wouldn't say we're at war."</strong> Under the <strong class="k">UN Charter</strong>, which UN experts agreed in <strong class="k">2013, 2015 and 2021</strong> applies to cyberspace, a cyber operation can be an illegal <strong class="k">use of force</strong>, and an <strong class="k">armed attack</strong> if its damage matches a conventional strike. <em>Everyone knew Britain hacked back. Naming four countries on TV is a declaration. You don't announce attacks on Russia, China, Iran and North Korea and call it peace.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Ukraine Drops Putin's Bridge, Cuts Crimea's Lifeline</h3>
+  <p class="dek">About 900 feet of road gone on the Kerch Bridge, the main link to Crimea.</p>
+  <p class="bl"><span class="dl">KYIV —</span> Over <strong class="k">Nov. 16–19</strong>, Ukraine hit the <strong class="k">Kerch Bridge</strong>, Russia's road and rail link to <strong class="k">Crimea</strong>, with a <strong class="k">Flamingo cruise missile</strong> and <strong class="k">kamikaze drones</strong>. The bridge operator says about <strong class="k">900 feet of road surface</strong> was destroyed and an arch collapsed. Rail was <strong class="k">suspended</strong> before service resumed, and the <strong class="k">M-14 highway</strong> into Crimea was hit too. The Kremlin says it will <strong class="k">rebuild</strong>. <em>Putin opened this bridge by driving a truck across it himself. Now every shell for Crimea takes the long way round.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>Russian Missiles Land in Poland. NATO Schedules a Meeting. Paper Tiger?</h3>
+  <p class="dek">Warsaw calls it deliberate. Nobody has invoked Article 4, never mind Article 5.</p>
+  <p class="bl"><span class="dl">WARSAW —</span> On <strong class="k">Nov. 20</strong>, <strong class="k">two Kh-101 cruise missiles</strong> and a jet-powered drone came down in <strong class="k">southeast Poland</strong> during a Russian mass strike on Ukraine. <strong class="k">No one was hurt</strong>. PM <strong class="k">Donald Tusk</strong> called it an <strong class="k">"intentional provocation."</strong> NATO chief <strong class="k">Mark Rutte</strong> called it a <strong class="k">"grave violation"</strong> and promised to defend <strong class="k">"every inch,"</strong> and NATO held an <strong class="k">urgent meeting</strong> on <strong class="k">Nov. 23</strong>. Poland has <strong class="k">not invoked Article 4</strong>, and analysts told Al Jazeera an Article 5 response is <strong class="k">"probably not"</strong> coming. <em>Russian missiles land in a NATO country and the answer is a meeting. If this triggers nothing, NATO may be a paper tiger, and Moscow just found out.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>58 Reapers and Two Patriots, Says Iran. Silence, Says Washington.</h3>
+  <p class="dek">The Pentagon denies one claim and says nothing about the rest.</p>
+  <p class="bl"><span class="dl">MANAMA, BAHRAIN —</span> On <strong class="k">Nov. 21</strong>, the <strong class="k">IRGC</strong> claimed it shot down its <strong class="k">58th</strong> US <strong class="k">MQ-9 Reaper</strong> over the Strait of Hormuz and destroyed <strong class="k">two US Patriot radars</strong> at bases in <strong class="k">Bahrain</strong>. Bahrain says a <strong class="k">civilian site</strong> was hit, and the Pentagon hasn't commented. Iran's army also says a missile exploded next to a US <strong class="k">F-16</strong> over the Gulf on <strong class="k">Nov. 20</strong>, forcing an emergency landing; CENTCOM called that <strong class="k">"FALSE."</strong> Back in <strong class="k">March</strong>, an <strong class="k">F-35</strong> made an emergency landing after what sources told CNN was likely <strong class="k">Iranian fire</strong>. A new Patriot battery costs about <strong class="k">$1.1 billion</strong>, per the Congressional Research Service. <em>I suspect Iran has locked onto an F-35 since, too. Washington denies the F-16 and goes quiet on the rest. When the Pentagon stops talking, I start counting.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>The Oil War Goes Global: From the Baltic to Hormuz, One Fleet, Two Wars</h3>
+  <p class="dek">Ukraine's drones reach Libya and the Baltic. Mines reach Hormuz. Same oil, same ships.</p>
+  <p class="bl"><span class="dl">BENGHAZI, LIBYA —</span> On <strong class="k">Nov. 21–22</strong>, Ukraine hit the Russian corvette <strong class="k">Merkury</strong> and the sanctioned cargo ship <strong class="k">Angara</strong> off <strong class="k">Benghazi</strong>, and the Defence Ministry-owned <strong class="k">Sparta II</strong> in the <strong class="k">Gulf of Finland</strong>. <strong class="k">301 ships</strong> sit on both the US <strong class="k">Russia and Iran</strong> sanctions lists. The tanker <strong class="k">Louise 1</strong> shows how it works: it hauled Russian crude, took on <strong class="k">4.65 million barrels</strong> of Iranian oil in 2024, got hit by Ukrainian drones in the <strong class="k">Black Sea</strong> in July, then by <strong class="k">limpet mines</strong> near <strong class="k">Hormuz</strong> on <strong class="k">Oct. 29</strong>. Iran now says <strong class="k">three more tankers</strong> hit mines, yet <strong class="k">Brent</strong> sits near a <strong class="k">three-month low</strong> around <strong class="k">$89</strong>. <em>Russia and Iran sell the same oil on the same ships. It's one war over one global commodity, fought on every ocean, and Ukraine has figured that out.</em></p>
+</div>
+
+<div class="sec" style="color:#8e3fa6;margin-top:12px">Markets</div>
+<div class="story">
+<div class="src"><span class="pick">&#9733; Editor's Pick</span><span class="tag c">Called it</span><span class="tag o">Opinion</span></div>
+  <h3>The Founders Sold at $83. You Bought at $97. It's $80 Today (Nov 24).</h3>
+  <p class="dek">Four trading days from a record IPO to below the offer price.</p>
+  <p class="bl"><span class="dl">NEW YORK —</span> Anthropic priced its IPO at <strong class="k">$83</strong> on <strong class="k">Nov. 18</strong>, raised a record <strong class="k">$93.5 billion</strong>, and closed its first day on Nasdaq at <strong class="k">$97.17</strong>. On <strong class="k">Tuesday, Nov. 24</strong>, <strong class="k">ANT</strong> traded around <strong class="k">$80.46</strong> at midday, down <strong class="k">8%</strong> on the day after touching <strong class="k">$75.61</strong>, below the IPO price. <strong class="k">Dario and Daniela Amodei</strong> each sold about <strong class="k">$280 million</strong> of stock at <strong class="k">$83</strong> in the offering. More insider shares unlock in stages tied to <strong class="k">earnings dates that haven't been set</strong>, and <strong class="k">MSCI</strong> adds the stock after <strong class="k">Nov. 30</strong>, which could have index funds buying up to <strong class="k">30%</strong> of the shares offered. <em>The founders got $83. Retail paid $97. Your index fund buys whatever's left. The real selling hasn't even started.</em></p>
+</div>
+
+<div class="sec" style="color:#0f8b8d;margin-top:12px">Bread and Circuses</div>
+<div class="story bc" data-kind="media" data-writer="Camren">
+<div class="src"><span class="tag g">Editor</span><span class="tag o">Opinion</span></div>
+  <h3>Ebenezer Begins: Paramount Skydance Finds the Real Villains of Christmas, Charity and the Homeless</h3>
+  <p class="dek">In Johnny Depp's new Scrooge, the men collecting for the poor are crooks and a beggar is a killer.</p>
+  <p class="gw">Written by: Camren</p>
+  <p class="bl"><span class="dl">LOS ANGELES —</span> <strong class="k">Ebenezer</strong>, Paramount Skydance's new take on <em>A Christmas Carol</em>, directed by <strong class="k">Ti West</strong> and starring <strong class="k">Johnny Depp</strong>, opened <strong class="k">No. 1 worldwide</strong> with <strong class="k">$42 million</strong> after its <strong class="k">Nov. 13</strong> release. In this version, the two gentlemen collecting <strong class="k">for the poor</strong> turn out to be <strong class="k">embezzlers</strong> in a forged-will plot, a beggar in the prologue is a <strong class="k">con artist</strong>, and Scrooge's mentor <strong class="k">Fezziwig</strong> is <strong class="k">stabbed to death by a street beggar</strong>: a Batman origin story, with the mentor in place of the parents. The LA Times called it <strong class="k">"mean-spirited"</strong> and <strong class="k">"very Ye Olde Fox News."</strong> The studio is run by <strong class="k">David Ellison</strong>, son of one of the richest men on Earth. <em>Dickens wrote the most famous story ever about a rich man learning to help the poor. A billionaire's studio rewrote it so the poor are the villains. Wink wink.</em></p>
+</div>
+
+<div class="sec" style="color:#1f7a4d;margin-top:12px">Last Week's Call</div>
+<div class="score">
+  <div class="row"><div class="ck">&#10003;</div><div><b>Anthropic's IPO would be a liquidation event</b><span>In Issue 4 I said mega-IPOs get funnelled into index funds at peak prices. The Amodeis sold about <strong class="k">$560 million</strong> combined at $83, the stock is <strong class="k">below its IPO price</strong> four trading days in, and <strong class="k">MSCI</strong> adds it after Nov. 30. <em>The billionaires are out. Your retirement is the bag.</em></span></div></div>
+</div>
+
+<ul class="tnotes" hidden>
+  <li data-tag="NEW">Bread and Circuses: Camren takes the stage</li>
+  <li data-tag="CALLED IT">Anthropic broke its IPO price</li>
+</ul>
+<div class="sig">— C.</div>
+<div class="burn">BURN AFTER READING · ISSUE NO. 9</div>
+</div>
+</body>
+</html>
