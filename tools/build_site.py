@@ -313,8 +313,6 @@ if PREVIEW:
               '<div class="doomorder" role="group" aria-label="Order" hidden>'
               '<button type="button" data-order="new" aria-pressed="true">Newest first</button>'
               '<button type="button" data-order="old" aria-pressed="false">Oldest first</button></div>')
-    newsprint = ' · '.join(html.escape(t) for t in HEADLINES)
-    newsprint = ' · '.join([newsprint] * 3)
     dossiers = ''
     for k, i in enumerate(issues):
         n = i['n']
@@ -330,13 +328,22 @@ if PREVIEW:
                      f'<span class="d-n">{STORYCOUNT.get(n, 0)} stories</span>'
                      f'<span class="d-st" aria-hidden="true">{"NEW" if k == 0 else "NOT FOR DISTRIBUTION"}</span>'
                      '</button>')
+    stacks = ''.join(f'<span class="stack"><b>{html.escape(breaking_title(i["n"]))}</b></span>'
+                     for i in issues[:3])
     STAND = ('<section class="stand" id="stand" aria-labelledby="h-stand" hidden>\n'
-             f'  <div class="newsprint" aria-hidden="true">{"<p>" + newsprint + "</p>"}</div>\n'
-             '  <div class="stand-in">\n'
-             '    <h2 id="h-stand">Back issues</h2>\n'
-             '    <p class="sub">Every file on the rack. Pick one.</p>\n'
-             f'    <div class="rack">{dossiers}</div>\n'
+             '  <div class="kiosk">\n'
+             '    <div class="roof" aria-hidden="true"><span class="frieze"></span><span class="sign">NEWS · OFF THE RECORD · ALL EDITIONS</span><span class="bulbs"></span></div>\n'
+             '    <div class="booth">\n'
+             '      <div class="stand-in">\n'
+             '        <h2 id="h-stand">Back issues</h2>\n'
+             '        <p class="sub">Every file on the rack. Pick one.</p>\n'
+             '        <span class="card c1" aria-hidden="true">ALL FILES<br><b>FREE</b></span>\n'
+             f'        <div class="rack">{dossiers}</div>\n'
+             '      </div>\n'
+             '    </div>\n'
+             f'    <div class="counter" aria-hidden="true">{stacks}</div>\n'
              '  </div>\n'
+             '  <div class="street" aria-hidden="true"><span class="crate"></span><span class="box"></span><span class="card c2">EXTRA!<br>EXTRA!</span></div>\n'
              '</section>\n')
 page = f'''<!doctype html>
 <html lang="en">

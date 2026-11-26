@@ -30,18 +30,62 @@ body.v-one .to-stand{display:inline-flex}
 .nu-b button{font:700 14px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:9px 14px;border-radius:999px;border:1px solid #3a3b42;background:#23242b;color:#fff;cursor:pointer}
 .nu-b button[data-view="doom"]{background:#e5384f;border-color:#e5384f}
 
-/* ---- back-issues newsstand ---- */
-.stand{position:relative;overflow:hidden;margin:0 -14px 18px;border-radius:24px;background:#efe9dc;padding:22px 16px 26px}
+/* ---- back-issues: newsstand kiosk ---- */
 .stand[hidden]{display:none}
-.newsprint{position:absolute;inset:-40px;z-index:0;font-family:PF,Georgia,serif;font-weight:900;font-size:30px;line-height:1.05;color:#111;opacity:.08;columns:3;column-rule:1px solid rgba(0,0,0,.5);transform:rotate(-4deg);text-transform:uppercase;overflow:hidden;pointer-events:none}
-.newsprint p{margin:0}
-.stand-in{position:relative;z-index:1}
-.stand h2{font-family:PF,Georgia,serif;font-weight:900;font-size:32px;line-height:1.1;margin:0}
-.stand .sub{font-size:14px;color:#555;margin:4px 0 14px}
-.rack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px}
+.stand{position:relative;margin:0 -14px 18px;padding:22px 10px 0;border-radius:24px;overflow:hidden;
+  background-color:#cfc8bb;
+  background-image:linear-gradient(#b5ad9f 2px,transparent 2px),linear-gradient(90deg,#b5ad9f 2px,transparent 2px),linear-gradient(90deg,#b5ad9f 2px,transparent 2px);
+  background-size:100% 56px,120px 112px,120px 112px;background-position:0 0,0 0,60px 56px}
+.kiosk{position:relative;z-index:1;filter:drop-shadow(0 10px 14px rgba(0,0,0,.35))}
+.roof{position:relative;display:block;margin:0 -6px;height:64px;background:#173326;
+  clip-path:polygon(4% 0,96% 0,100% 100%,0 100%);border-bottom:5px solid #0e2218}
+.roof .frieze{position:absolute;left:8%;right:8%;top:8px;height:12px;
+  background:linear-gradient(135deg,#2e5a44 25%,transparent 25%) -6px 0/12px 12px,linear-gradient(225deg,#2e5a44 25%,transparent 25%) -6px 0/12px 12px;opacity:.9}
+.roof .sign{position:absolute;left:0;right:0;top:26px;text-align:center;font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:15px;letter-spacing:2px;color:#f3e6c4;text-shadow:0 0 6px rgba(255,214,140,.55)}
+.roof .bulbs{position:absolute;left:6%;right:6%;bottom:-3px;height:8px;
+  background:radial-gradient(circle,#ffe7a8 0 2.5px,rgba(255,200,90,.45) 3px,transparent 4.5px) 0 0/22px 8px repeat-x}
+.booth{position:relative;background:#1f3a2c;padding:0 9px 9px;border-radius:0 0 4px 4px}
+.stand-in{position:relative;padding:14px 10px 12px;border-radius:2px;
+  background:radial-gradient(ellipse at 50% 0,rgba(255,214,140,.38),transparent 60%),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 2px,transparent 2px 44px),
+    linear-gradient(#8a5a2b,#6a421e)}
+.stand h2{display:inline-block;margin:0 0 6px;padding:6px 12px 4px;background:#e8dcc3;color:#1a1a1a;font-family:PF,Georgia,serif;font-weight:900;font-size:28px;line-height:1;transform:rotate(-2deg);box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.stand .sub{display:block;width:max-content;max-width:62%;margin:2px 0 16px;padding:4px 8px;background:#fffbe6;color:#333;font-size:13px;transform:rotate(1.2deg);box-shadow:0 1px 3px rgba(0,0,0,.3);position:relative}
+.stand .sub::before{content:"";position:absolute;left:50%;top:-6px;width:34px;height:12px;margin-left:-17px;background:rgba(255,255,255,.55);transform:rotate(-3deg)}
+.card{position:absolute;font-family:"Marker Felt","Bradley Hand","Segoe Print","Comic Sans MS",cursive;font-weight:700;line-height:1.05;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.card.c1{right:12px;top:12px;background:#fff;color:#1d3fa8;font-size:14px;padding:6px 9px;transform:rotate(6deg);border:1px solid #ddd}
+.card.c1 b{font-size:20px;color:#c8243b}
+.rack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 12px;padding-top:10px}
+.rack .dossier{box-shadow:0 12px 0 -2px #c4904f,0 16px 10px -6px rgba(0,0,0,.55);transform:rotate(-1.2deg)}
+.rack .dossier:nth-child(even){transform:rotate(1deg)}
+.rack .dossier:hover,.rack .dossier:focus-visible{transform:translateY(-4px) rotate(0)}
+.rack .dossier::before{content:"";position:absolute;left:50%;top:-12px;width:10px;height:24px;margin-left:-5px;z-index:3;border-radius:2px;
+  background:linear-gradient(90deg,#c9a46e,#e6c999 45%,#b98f57);box-shadow:0 1px 2px rgba(0,0,0,.45)}
+.counter{display:flex;gap:6px;align-items:flex-end;justify-content:center;margin:0 -6px;padding:10px 8px 0;height:64px;background:#173326;border-top:6px solid #0e2218}
+.stack{position:relative;flex:1;max-width:32%;height:40px;padding:3px 5px 0;overflow:hidden;
+  background:repeating-linear-gradient(#f4f1ea 0 3px,#d6d0c2 3px 4px);border-radius:2px 2px 0 0;transform:rotate(-1deg)}
+.stack:nth-child(2){height:48px;transform:rotate(1deg)}
+.stack b{display:block;background:#f4f1ea;font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:9px;line-height:1.15;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:2px 3px}
+.street{position:relative;height:64px;margin:0 -10px;background:#9c9891;
+  background-image:repeating-linear-gradient(90deg,transparent 0 46%,#7d7a74 46% 46.4%,transparent 46.4% 100%)}
+.street::after{content:"";position:absolute;right:16px;bottom:10px;width:90px;height:22px;background:repeating-linear-gradient(90deg,#4a4844 0 3px,#6e6b66 3px 7px);border-radius:2px;opacity:.8}
+.crate{position:absolute;left:16px;bottom:10px;width:92px;height:40px;border-radius:3px;background:#b8322a;
+  background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.28) 6px 8px),repeating-linear-gradient(-45deg,transparent 0 6px,rgba(0,0,0,.28) 6px 8px)}
+.crate::before{content:"";position:absolute;left:6px;right:6px;top:-9px;height:12px;background:repeating-linear-gradient(#f4f1ea 0 2px,#cfc9bc 2px 3px);transform:rotate(-3deg)}
+.box{position:absolute;left:112px;bottom:10px;width:70px;height:34px;background:#c89b62;border-radius:2px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.box::before{content:"";position:absolute;left:4px;right:4px;top:-8px;height:10px;background:repeating-linear-gradient(#f4f1ea 0 2px,#cfc9bc 2px 3px);transform:rotate(2deg)}
+.card.c2{left:196px;bottom:14px;background:#d8b98a;color:#b0283c;font-size:13px;padding:4px 7px;transform:rotate(-5deg)}
+@media (max-width:360px){.rack{grid-template-columns:1fr}.card.c2{display:none}}
+@media (prefers-color-scheme:dark){
+  .stand{background-color:#3a3732;background-image:linear-gradient(#2e2b27 2px,transparent 2px),linear-gradient(90deg,#2e2b27 2px,transparent 2px),linear-gradient(90deg,#2e2b27 2px,transparent 2px)}
+  .stand-in{background:radial-gradient(ellipse at 50% 0,rgba(255,200,110,.5),transparent 65%),repeating-linear-gradient(90deg,rgba(0,0,0,.2) 0 2px,transparent 2px 44px),linear-gradient(#7a4e24,#4f3116)}
+  .roof .sign{text-shadow:0 0 10px rgba(255,214,140,.9)}
+  .street{background-color:#2b2a28}
+}
+@media (prefers-reduced-motion:reduce){.rack .dossier{transition:none}}
 
 /* manila folder */
-.dossier{position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;font:inherit;cursor:pointer;border:0;padding:40px 12px 14px;min-height:210px;border-radius:4px 12px 12px 12px;background:linear-gradient(160deg,#e9cf95,#dcbc7c);color:#2b2210;box-shadow:0 10px 0 -4px #b89d6b,0 14px 14px -8px rgba(0,0,0,.35);transition:transform .2s}
+.dossier{position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;font:inherit;cursor:pointer;border:0;padding:40px 12px 14px;min-height:210px;border-radius:4px 12px 12px 12px;background:linear-gradient(160deg,#e9cf95,#dcbc7c);color:#2b2210;transition:transform .2s}
 .dossier:hover,.dossier:focus-visible{transform:translateY(-4px) rotate(-1deg)}
 .dossier:focus-visible{outline:2px solid #2b2210;outline-offset:3px}
 .d-tab{position:absolute;top:-14px;left:0;background:#dcbc7c;border-radius:8px 8px 0 0;padding:3px 10px;font-family:MONO,monospace;font-weight:700;font-size:10.5px;letter-spacing:1.5px}
@@ -65,19 +109,18 @@ body.v-one .to-stand{display:inline-flex}
 .th-war .d-n{font-family:MONO,monospace}
 .th-war::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:repeating-linear-gradient(45deg,#f2c230 0 8px,#1b1b1b 8px 16px);border-radius:0 0 12px 12px}
 
-@media (max-width:420px){.newsprint{columns:2}}
-@media (max-width:359px){.rack{grid-template-columns:minmax(0,1fr)}}
-
 @media (prefers-color-scheme:dark){
   .views,.doomorder{background:#1a1b20;border-color:#2c2e36}
   .views button,.doomorder button{color:#eceef2}
   .views button[aria-pressed="true"]{background:#eceef2;color:#111}
-  .stand{background:#1c1a15}
-  .newsprint{color:#fff;opacity:.07}
-  .stand .sub{color:#9a9da8}
   .to-stand{background:#23242b;border-color:#2c2e36;color:#eceef2}
 }
 
 @media (prefers-reduced-motion:reduce){.dossier{transition:none}}
 /* newsstand and doomscroll start right under the switcher */
 body.v-stand #reactions,body.v-stand .controls,body.v-doom #reactions,body.v-one #reactions{display:none!important}
+/* kiosk tweaks: clip off the file number, roof sign fits, note on one line */
+.rack .dossier::before{left:74%}
+.roof .sign{font-size:12.5px;letter-spacing:1px;top:28px}
+.stand .sub{max-width:68%}
+.stand{padding-left:16px;padding-right:16px}
