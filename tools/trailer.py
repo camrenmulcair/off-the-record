@@ -1,6 +1,6 @@
 """Make the ~14 s vertical trailer (1080x1920 MP4) for one issue.
 Usage: python3 tools/trailer.py N [out.mp4] [--promo PATH]
---promo splices a clip (e.g. from tools/site_promo.py) in just before the end card.
+--promo plays a clip (e.g. from tools/site_promo.py) before the issue trailer.
 Needs playwright (pre-installed) and ffmpeg."""
 import os, sys, subprocess, shutil, tempfile
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,16 +50,11 @@ await b.close();}})();""")
 subprocess.run(['node',js],check=True,cwd='/tmp')
 subprocess.run(['ffmpeg','-y','-loglevel','error','-framerate','30','-i',f'{frames}/f%04d.jpg','-vf','scale=1080:1920:flags=lanczos,format=yuv420p','-c:v','libx264','-preset','veryfast','-crf','20','-movflags','+faststart',out],check=True)
 if PROMO:
-    # the end card starts fading in at TE (same timing as setT in JSCODE: warp + intro/more holds)
-    TE=12.2+(4.6 if nm else 0)+(4.4 if m else 0)+(2.6 if intro else 0)+(2.5 if has_more else 1.5)
-    assert TE<DUR, f'end card start {TE} is past the trailer end {DUR}'
+    # the "new on the site" tour plays first, then the issue trailer runs in full
     spl=os.path.join(tmp,'spliced.mp4')
-    fc=(f'[0:v]split=2[v0][v1];'
-        f'[v0]trim=end={TE:.3f},setpts=PTS-STARTPTS,fps=30,format=yuv420p,setsar=1[a];'
-        f'[1:v]fps=30,scale=1080:1920:flags=lanczos,format=yuv420p,setsar=1,setpts=PTS-STARTPTS[p];'
-        f'[v1]trim=start={TE:.3f},setpts=PTS-STARTPTS,fps=30,format=yuv420p,setsar=1[b];'
-        f'[a][p][b]concat=n=3:v=1:a=0[v]')
-    subprocess.run(['ffmpeg','-y','-loglevel','error','-i',out,'-i',PROMO,'-filter_complex',fc,'-map','[v]',
+    fc=('[0:v]fps=30,scale=1080:1920:flags=lanczos,format=yuv420p,setsar=1,setpts=PTS-STARTPTS[p];'
+        '[1:v]fps=30,format=yuv420p,setsar=1,setpts=PTS-STARTPTS[t];[p][t]concat=n=2:v=1:a=0[v]')
+    subprocess.run(['ffmpeg','-y','-loglevel','error','-i',PROMO,'-i',out,'-filter_complex',fc,'-map','[v]',
                     '-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p','-movflags','+faststart',spl],check=True)
-    shutil.move(spl,out); print(f'promo spliced at {TE:.1f}s')
+    shutil.move(spl,out); print('promo plays first')
 os.remove(html); shutil.rmtree(tmp); print('ok',out)

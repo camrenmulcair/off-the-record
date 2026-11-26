@@ -1,21 +1,19 @@
 """Record the live site's three reading views as a 1080x1920, 30 fps, no-sound clip
-(about 17.8 s) for splicing into the trailer with tools/trailer.py --promo.
+(about 17.8 s) that plays before the issue trailer (tools/trailer.py --promo).\nCaptions sit in their own band under the page, never on top of it.
 Usage: python3 tools/site_promo.py OUT.mp4
 Needs playwright (node) and ffmpeg."""
 import os, sys, socket, subprocess, shutil, tempfile, time, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-CSS = r'''#pc{position:fixed;left:14px;right:14px;bottom:22px;z-index:99999;background:#141416;color:#fff;border-radius:16px;padding:12px 14px;font:600 16px/1.25 -apple-system,Helvetica,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transition:none}
-#pc b{display:block;font-family:MONO,monospace;font-size:11px;letter-spacing:2px;color:#ff5a70;margin-bottom:3px}
-#tap{position:fixed;z-index:99999;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:4px solid #e5384f;opacity:0;pointer-events:none}
+CSS = r'''#tap{position:fixed;z-index:99999;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:4px solid #e5384f;opacity:0;pointer-events:none}
 #tc{position:fixed;inset:0;z-index:99999;background:#141416;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;text-align:center;padding:30px}
 #tc .st{font-family:MONO,monospace;font-weight:700;font-size:15px;letter-spacing:4px;color:#ff5a70;border:3px solid #ff5a70;padding:5px 12px;border-radius:4px;transform:rotate(-4deg)}
 #tc h2{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:34px;line-height:1.1;margin:6px 0 4px}
 #tc .ch{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #tc .ch span{font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;background:#23242b;border:1px solid #3a3b42;opacity:0}'''
 
-HTML = ('<div id="pc"><b></b><span></span></div><div id="tap"></div>'
+HTML = ('<div id="tap"></div>'
         '<div id="tc"><div class="st">NEW ON THE SITE</div><h2>Three ways to read<br>Off the Record</h2>'
         '<div class="ch"><span>Latest</span><span>Back issues</span><span>Doomscroll</span></div></div>')
 
@@ -29,10 +27,10 @@ E:x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,
 nat:el=>{const o=el.style.position;el.style.position='static';const y=el.getBoundingClientRect().top+scrollY;el.style.position=o;return y},
 go:y=>window.scrollTo(0,Math.max(0,y)),
 vt:()=>F.nat(F.$('.views')),
-cap:(lbl,txt,op)=>{const pc=F.$('#pc');pc.querySelector('b').textContent=lbl;pc.querySelector('span').textContent=txt;pc.style.opacity=op},
+cap:(lbl,txt)=>{window.CAP=[lbl,txt]},
 ring:(sel,q)=>{const r=F.$(sel).getBoundingClientRect(),tap=F.$('#tap');tap.style.left=(r.left+r.width/2)+'px';tap.style.top=(r.top+r.height/2)+'px';tap.style.transform='scale('+(0.4+q)+')';tap.style.opacity=1-q},
 hideRing:()=>{F.$('#tap').style.opacity=0},
-title:t=>{const tc=F.$('#tc'),st=tc.querySelector('.st'),p=F.seg(t,0,.3);
+title:t=>{window.CAP=['',''];const tc=F.$('#tc'),st=tc.querySelector('.st'),p=F.seg(t,0,.3);
   st.style.opacity=1;st.style.transform='rotate(-4deg) scale('+(p<1?2.2-1.2*F.eo(p):1)+')';
   tc.querySelectorAll('.ch span').forEach((c,i)=>{c.style.opacity=F.seg(t,.6+.3*i,.8+.3*i)});
   tc.style.opacity=1-F.seg(t,2.1,2.4)},
@@ -50,7 +48,7 @@ calledA:t=>{F.cap('4 · CALLED IT','Every prediction that came true.',F.seg(t,0,
   if(t>=.2&&t<.6)F.ring('.fab',F.seg(t,.2,.6));else F.hideRing()},
 calledB:t=>{t+=.6;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1)},
 calledC:t=>{t+=2.2;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1);F.ring('a[href="#call-6-1"]',F.seg(t,2.2,2.6))},
-prepCalled:()=>{F.hideRing();F.prepLatest();const pc=F.$('#pc');pc.style.left='14px';pc.style.right='110px'},
+prepCalled:()=>{F.hideRing();F.prepLatest()},
 prepLatest:()=>{F.$('.views [data-view="latest"]').click();window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0)},
 prepStand:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0);const st=F.$('.street');F.YE=F.nat(st)+st.getBoundingClientRect().height-innerHeight},
 prepDoom:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();document.querySelectorAll('.reveal').forEach(r=>r.classList.add('in'));
@@ -66,16 +64,16 @@ const BASE=process.argv[2],FR=process.argv[3],CSS=process.env.SP_CSS,HTML=proces
 (async()=>{
   const b=await chromium.launch();
   try{
-    const ctx=await b.newContext({viewport:{width:360,height:640},deviceScaleFactor:3,isMobile:true,hasTouch:true,colorScheme:'light',reducedMotion:'no-preference'});
+    const ctx=await b.newContext({viewport:{width:360,height:540},deviceScaleFactor:3,isMobile:true,hasTouch:true,colorScheme:'light',reducedMotion:'no-preference'});
     const p=await ctx.newPage();
     await p.goto(BASE+'/index.html');
     await p.waitForTimeout(1000);
     await p.evaluate(([css,html])=>{const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
       const d=document.createElement('div');d.innerHTML=html;while(d.firstChild)document.body.appendChild(d.firstChild)},[CSS,HTML]);
     await p.evaluate(PAGE);
-    let n=0;
+    let n=0;const caps=[];
     const run=async(name,frames)=>{for(let i=0;i<frames;i++){
-      await p.evaluate(([f,t])=>F[f](t),[name,i/30]);
+      caps[n]=await p.evaluate(([f,t])=>{F[f](t);return window.CAP||['','']},[name,i/30]);
       await p.screenshot({path:`${FR}/f${String(n++).padStart(4,'0')}.jpg`,type:'jpeg',quality:90});}};
     const wait=ms=>p.waitForTimeout(ms);
 
@@ -105,12 +103,39 @@ const BASE=process.argv[2],FR=process.argv[3],CSS=process.env.SP_CSS,HTML=proces
     // 2.2 s: ring on the row link for 0.4 s, click it, then shoot in real time (the site scrolls and flashes)
     await run('calledC',12);
     await p.evaluate(()=>{F.hideRing();F.$('a[href="#call-6-1"]').click()});
-    for(let i=0;i<42;i++){await wait(33);
+    for(let i=0;i<42;i++){await wait(33);caps[n]=caps[n-1];
       await p.screenshot({path:`${FR}/f${String(n++).padStart(4,'0')}.jpg`,type:'jpeg',quality:90});}
+    // caption band: one picture per distinct caption, 360x100 css px at 3x = 1080x300
+    const bp=await (await b.newContext({viewport:{width:360,height:100},deviceScaleFactor:3})).newPage();
+    const keys=[...new Set(caps.map(c=>JSON.stringify(c)))];
+    for(let k=0;k<keys.length;k++){const [lbl,txt]=JSON.parse(keys[k]);
+      await bp.setContent(`<style>@font-face{font-family:MONO;font-weight:700;src:url(${BASE}/fonts/ibm-plex-mono-latin-700-normal.woff2)}
+        html,body{margin:0;height:100%;background:#141416}
+        body{box-sizing:border-box;border-top:3px solid #e5384f;padding:14px 18px;color:#fff;font:600 17px/1.28 -apple-system,Helvetica,Arial,sans-serif}
+        b{display:block;font-family:MONO,monospace;font-size:11.5px;letter-spacing:2px;color:#ff5a70;margin-bottom:5px}</style>
+        ${lbl?`<b>${lbl}</b><span>${txt}</span>`:''}`);
+      await bp.evaluate(()=>document.fonts.ready);
+      await bp.screenshot({path:`${FR}/cap${k}.png`});}
+    require('fs').writeFileSync(`${FR}/caps.json`,JSON.stringify(caps.map(c=>keys.indexOf(JSON.stringify(c)))));
     console.log('frames',n);
   }finally{await b.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
 '''
+
+
+def compose(frames):
+    import json
+    from PIL import Image
+    caps = json.load(open(os.path.join(frames, 'caps.json')))
+    bands = {}
+    for i, k in enumerate(caps):
+        if k not in bands:
+            bands[k] = Image.open(os.path.join(frames, f'cap{k}.png')).convert('RGB').resize((1080, 300))
+        pg = Image.open(os.path.join(frames, f'f{i:04d}.jpg')).convert('RGB').resize((1080, 1620))
+        out = Image.new('RGB', (1080, 1920), (20, 20, 22))
+        out.paste(pg, (0, 0))
+        out.paste(bands[k], (0, 1620))
+        out.save(os.path.join(frames, f'c{i:04d}.jpg'), quality=92)
 
 
 def free_port():
@@ -145,7 +170,8 @@ def main():
         # the Node script takes its CSS/HTML/page JS from env vars to keep quoting simple
         env = dict(os.environ, SP_CSS=CSS, SP_HTML=HTML, SP_PAGE=PAGE_JS)
         subprocess.run(['node', js, base, frames], check=True, cwd=tmp, env=env)
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', '30', '-i', f'{frames}/f%04d.jpg',
+        compose(frames)
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', '30', '-i', f'{frames}/c%04d.jpg',
                         '-vf', 'scale=1080:1920:flags=lanczos,format=yuv420p', '-c:v', 'libx264',
                         '-preset', 'veryfast', '-crf', '20', '-movflags', '+faststart', out], check=True)
         print('ok', out)
