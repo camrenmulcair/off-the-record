@@ -319,14 +319,15 @@ if PREVIEW:
         theme = i.get('theme') or i.get('special') or 'manila'
         week = i['week']
         wd = datetime.datetime.strptime(week, '%b %d, %Y').strftime('%A')
-        kick = '<span class="d-kick">HAPPY CYBER MONTH!</span>' if theme == 'cyber' else ''
+        kick = {'cyber': '<span class="d-kick">HAPPY CYBER MONTH!</span>',
+                'war': '<span class="d-kick">&#9876; WAR FILE</span><span class="d-holes" aria-hidden="true"></span>'}.get(theme, '')
         dossiers += (f'<button type="button" class="dossier th-{theme}" data-open="{n}">'
                      f'<span class="d-tab">FILE NO. {n}</span>'
                      f'<span class="d-date">{wd}, {week}</span>{kick}'
                      '<span class="d-brk">BREAKING</span>'
                      f'<span class="d-h">{html.escape(breaking_title(n))}</span>'
                      f'<span class="d-n">{STORYCOUNT.get(n, 0)} stories</span>'
-                     f'<span class="d-st" aria-hidden="true">{"NEW" if k == 0 else "NOT FOR DISTRIBUTION"}</span>'
+                     f'<span class="d-st" aria-hidden="true">{"NEW" if k == 0 else ("TOP SECRET" if theme == "war" else "NOT FOR DISTRIBUTION")}</span>'
                      '</button>')
     stacks = ''.join(f'<span class="stack"><b>{html.escape(breaking_title(i["n"]))}</b></span>'
                      for i in issues[:3])

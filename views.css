@@ -103,11 +103,18 @@ body.v-one .to-stand{display:inline-flex}
 .th-cyber .d-st{border-color:#39ff6a;color:#39ff6a;background:transparent}
 
 /* Theme: war */
-.th-war{background:linear-gradient(160deg,#5b6340,#474e31);color:#f1ecd8}
-.th-war .d-tab{background:#474e31;color:#f1ecd8;font-family:MONO,monospace}
-.th-war .d-h{color:#fff}
-.th-war .d-n{font-family:MONO,monospace}
-.th-war::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:repeating-linear-gradient(45deg,#f2c230 0 8px,#1b1b1b 8px 16px);border-radius:0 0 12px 12px}
+.th-war{color:#f4efd9;background-color:#4b5530;
+  background-image:radial-gradient(ellipse 62px 34px at 18% 22%,#2f3a1d 60%,transparent 62%),radial-gradient(ellipse 52px 28px at 78% 14%,#6b5a3a 60%,transparent 62%),
+    radial-gradient(ellipse 70px 38px at 70% 58%,#2f3a1d 60%,transparent 62%),radial-gradient(ellipse 58px 30px at 22% 70%,#6b5a3a 60%,transparent 62%),
+    radial-gradient(ellipse 46px 26px at 48% 40%,#7c7449 60%,transparent 62%),radial-gradient(ellipse 60px 30px at 40% 92%,#2f3a1d 60%,transparent 62%)}
+.th-war .d-tab{background:#3a4224;color:#f4efd9;font-family:MONO,monospace}
+.th-war .d-date,.th-war .d-n{font-family:MONO,monospace;color:#f4efd9;opacity:.9;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.th-war .d-h{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85)}
+.th-war .d-kick{align-self:flex-start;font-family:MONO,monospace;font-weight:700;font-size:11px;letter-spacing:3px;color:#fff;background:#b3121f;padding:3px 7px;border:1.5px dashed rgba(255,255,255,.7);border-radius:2px;transform:rotate(-2deg)}
+.th-war .d-st{border-color:#ff3b4e;color:#ff3b4e;background:rgba(0,0,0,.35);font-size:10px;letter-spacing:2px}
+.th-war .d-holes{position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(circle at 84% 46%,#111 0 3px,#d8cfae 3.5px 5px,transparent 6px),radial-gradient(circle at 4% 50%,#111 0 2.5px,#d8cfae 3px 4.5px,transparent 5.5px),radial-gradient(circle at 90% 80%,#111 0 2px,#d8cfae 2.5px 4px,transparent 5px)}
+.th-war::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(45deg,#f2c230 0 8px,#1b1b1b 8px 16px);border-radius:0 0 12px 12px}
 
 @media (prefers-color-scheme:dark){
   .views,.doomorder{background:#1a1b20;border-color:#2c2e36}
