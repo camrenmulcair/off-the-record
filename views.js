@@ -116,12 +116,14 @@
 
   // Issue links in the jump nav and the covers: capture on window so this fires before app.js.
   window.addEventListener('click', function (e) {
+    var bk = e.target && e.target.closest ? e.target.closest('a[href="#back"]') : null;
+    if (bk) { e.preventDefault(); e.stopPropagation(); setView('stand', null, { scroll: true }); return; }
     var a = e.target && e.target.closest ? e.target.closest('a[href^="#issue-"]') : null;
     if (!a) return;
     if (body.classList.contains('v-doom')) return;
     var n = parseInt(a.getAttribute('href').replace('#issue-', ''), 10);
     if (!n) return;
-    setView('one', n);
+    if (n === latestN()) setView('latest'); else setView('one', n);
   }, true);
 
   function latestN() {

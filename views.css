@@ -79,3 +79,5 @@ body.v-one .to-stand{display:inline-flex}
 }
 
 @media (prefers-reduced-motion:reduce){.dossier{transition:none}}
+/* newsstand and doomscroll start right under the switcher */
+body.v-stand #reactions,body.v-stand .controls,body.v-doom #reactions,body.v-one #reactions{display:none!important}
