@@ -10,6 +10,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _ap = argparse.ArgumentParser()
 _ap.add_argument('--preview', metavar='OUT', default=None)
 PREVIEW = _ap.parse_args().preview
+VIEWS = True  # three reading views (Latest / Back issues / Doomscroll) are the live design
 BASE = 'https://camrenmulcair.github.io/off-the-record/'
 J = lambda f: json.load(open(os.path.join(ROOT, f)))
 issues = J('issues.json')
@@ -188,10 +189,10 @@ def issue_block(n, week, latest):
     tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
     content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')
-    dn = f'data-n="{n}" ' if PREVIEW else ''
-    to_stand = '<button type="button" class="to-stand" data-view="stand">← Back to the newsstand</button>\n  ' if PREVIEW else ''
+    dn = f'data-n="{n}" ' if VIEWS else ''
+    to_stand = '<button type="button" class="to-stand" data-view="stand">← Back to the newsstand</button>\n  ' if VIEWS else ''
     nextup = ''
-    if PREVIEW:
+    if VIEWS:
         prev = (f'<button type="button" data-open="{n-1}">← Issue No. {n-1}</button>'
                 if any(x['n'] == n - 1 for x in issues) else '')
         nextup = ('\n  <nav class="next-up" aria-label="Keep reading">'
@@ -237,7 +238,7 @@ back = f'''<section class="back" id="back" aria-labelledby="h-back">
   <div class="pin"><div class="bhead"><h2 id="h-back">Back issues</h2><p>Tap a cover to read it.</p></div>
   <div class="strip" id="strip">{covers}</div></div>
 </section>'''
-if not PREVIEW:
+if not VIEWS:
     arts.insert(1, back)
 
 # Prediction tracker
@@ -301,10 +302,9 @@ VIEWS_JS = ''
 SWITCH = ''
 STAND = ''
 TOGGLE = f'  <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>\n'
-if PREVIEW:
-    TITLE = 'Off the Record · Views preview'
+if VIEWS:
     TOGGLE = ''
-    HEAD_EXTRA = '<link rel="stylesheet" href="views.css">\n<meta name="robots" content="noindex">\n'
+    HEAD_EXTRA = '<link rel="stylesheet" href="views.css">\n' + ('<meta name="robots" content="noindex">\n' if PREVIEW else '')
     VIEWS_JS = '<script src="views.js" defer></script>\n'
     SWITCH = ('\n<div class="views" role="group" aria-label="How to read">'
               '<button type="button" data-view="latest" aria-pressed="true">Latest</button>'
@@ -411,7 +411,7 @@ import hashlib
 def ver(f):
     return hashlib.md5(open(os.path.join(ROOT, f), 'rb').read()).hexdigest()[:8]
 assets = ['style.css', 'app.js', 'vendor/lenis.min.js', 'vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js']
-if PREVIEW:
+if VIEWS:
     assets += ['views.css', 'views.js']
 for f in assets:
     page = page.replace(f'"{f}"', f'"{f}?v={ver(f)}"')
