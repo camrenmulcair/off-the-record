@@ -6,14 +6,15 @@ import os, sys, socket, subprocess, shutil, tempfile, time, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-CSS = r'''#tap{position:fixed;z-index:99999;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:4px solid #e5384f;opacity:0;pointer-events:none}
+CSS = r'''#cur{position:fixed;z-index:100000;width:30px;height:30px;margin:-3px 0 0 -5px;pointer-events:none;opacity:0;transform-origin:5px 3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
+#tap{position:fixed;z-index:99999;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:4px solid #e5384f;opacity:0;pointer-events:none}
 #tc{position:fixed;inset:0;z-index:99999;background:#141416;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;text-align:center;padding:30px}
 #tc .st{font-family:MONO,monospace;font-weight:700;font-size:15px;letter-spacing:4px;color:#ff5a70;border:3px solid #ff5a70;padding:5px 12px;border-radius:4px;transform:rotate(-4deg)}
 #tc h2{font-family:PF,Georgia,serif;font-style:italic;font-weight:700;font-size:34px;line-height:1.1;margin:6px 0 4px}
 #tc .ch{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 #tc .ch span{font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;background:#23242b;border:1px solid #3a3b42;opacity:0}'''
 
-HTML = ('<div id="tap"></div>'
+HTML = ('<svg id="cur" viewBox="0 0 24 24"><path d="M4 2l15 11.5-6.6.9 3.9 7.6-2.9 1.4-3.8-7.7L4 20z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg><div id="tap"></div>'
         '<div id="tc"><div class="st">NEW ON THE SITE</div><h2>Three ways to read<br>Off the Record</h2>'
         '<div class="ch"><span>Latest</span><span>Back issues</span><span>Doomscroll</span></div></div>')
 
@@ -44,11 +45,23 @@ doomRing:t=>F.ring('.views [data-view="doom"]',F.seg(t,0,.4)),
 doom:t=>{const late=t>=2.0;
   F.cap(late?'A FOLDER CLOSES':'3 · DOOMSCROLL',late?'between every issue, then the next one opens.':'Every story ever, back to back. Oldest or newest first.',late?1:F.seg(t,0,.2));
   F.go(t<2.6?F.Y0+(F.A-F.Y0)*F.E(F.seg(t,0,2.6)):F.A+1.2*innerHeight*F.E(F.seg(t,2.6,4.4)))},
-calledA:t=>{F.cap('4 · CALLED IT','Every prediction that came true.',F.seg(t,0,.2));
-  if(t>=.2&&t<.6)F.ring('.fab',F.seg(t,.2,.6));else F.hideRing()},
-calledB:t=>{t+=.6;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1)},
-calledC:t=>{t+=2.2;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1);F.ring('a[href="#call-6-1"]',F.seg(t,2.2,2.6))},
-prepCalled:()=>{F.hideRing();F.prepLatest()},
+pt:sel=>{const r=F.$(sel).getBoundingClientRect();return [r.left+Math.min(r.width*.5,60),r.top+r.height*.55]},
+cur:(x,y,sc,op)=>{const c=F.$('#cur');c.style.left=x+'px';c.style.top=y+'px';c.style.transform='scale('+sc+')';c.style.opacity=op},
+mv:(from,to,q)=>{const e=F.E(q);return [from[0]+(to[0]-from[0])*e,from[1]+(to[1]-from[1])*e]},
+click:(q)=>q<=0||q>=1?1:(q<.5?1-.36*q:.82+.36*(q-.5)),
+ringAt:(x,y,q)=>{const tap=F.$('#tap');tap.style.left=x+'px';tap.style.top=y+'px';tap.style.transform='scale('+(0.4+q)+')';tap.style.opacity=q>0&&q<1?1-q:0},
+calledA:t=>{F.cap('4 · CALLED IT','Every prediction that came true.');
+  const to=F.pt('.fab'),p=F.mv(F.C0,to,F.seg(t,0,.5));F.cur(p[0],p[1],F.click(F.seg(t,.5,.75)),1);F.ringAt(to[0],to[1],F.seg(t,.55,.9))},
+calledB:t=>{if(t<.7)F.cap('4 · CALLED IT','Every prediction that came true.');else F.cap('4 · CALLED IT','Each one links to where I called it.');
+  (F.DR||[]).forEach(a=>{try{a.currentTime=Math.max(0,t*1000)}catch(e){}});
+  const fab=F.pt('.fab'),to=F.pt(F.ORIG),p=F.mv(fab,to,F.seg(t,.7,1.5));F.cur(p[0],p[1],F.click(F.seg(t,1.6,1.85)),1);F.ringAt(to[0],to[1],F.seg(t,1.65,2.0))},
+calledD:t=>{F.cap('THE ORIGINAL CALL','Issue 4, two weeks before the IPO. Straight to it, highlighted.');
+  F.go(F.YF-200+200*F.E(F.seg(t,0,.7)));(F.FL||[]).forEach(a=>{try{a.currentTime=Math.max(0,(t-.25)*1000)}catch(e){}})},
+grabDrawer:()=>{F.DR=F.$('#calls').getAnimations();F.DR.forEach(a=>a.pause())},
+prepOrig:()=>{F.DR&&F.DR.forEach(a=>{try{a.finish()}catch(e){}});F.$('#cur').style.opacity=0;F.ringAt(0,0,0);
+  window.otrLenis&&otrLenis.stop();const el=F.$(F.TARGET);F.YF=window.scrollY;
+  el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');F.FL=el.getAnimations().filter(a=>a.animationName==='storyflash');F.FL.forEach(a=>a.pause());F.go(F.YF-200)},
+prepCalled:()=>{F.hideRing();F.prepLatest();F.ORIG='a.c-orig[href="#i4-your-401-k-s-are-citadel-s-exit-liquidit"]';F.TARGET='#i4-your-401-k-s-are-citadel-s-exit-liquidit';F.C0=[230,330]},
 prepLatest:()=>{F.$('.views [data-view="latest"]').click();window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0)},
 inStand:a=>{const e=a.effect,st=F.$('#stand');return !!(e&&e.target&&st&&st.contains(e.target))},
 grab:()=>{F.DA=document.getAnimations().filter(F.inStand);F.DA.forEach(a=>{a.pause();a._t0=0})},
@@ -99,16 +112,19 @@ const BASE=process.argv[2],FR=process.argv[3],CSS=process.env.SP_CSS,HTML=proces
     // 4. Doomscroll, 4.4 s
     await p.evaluate(()=>F.prepDoom());
     await run('doom',132);
-    // 5. Called it, 4.0 s: 0-0.6 s caption + ring on the fab, then open it at 0.6 s
+    // 5. Called it: cursor clicks the stamp, the pop-up slams in, cursor clicks "Called in Issue 4",
+    //    the page jumps to that article and the green highlight pulses around it
     await p.evaluate(()=>F.prepCalled());
-    await run('calledA',18);
-    await p.evaluate(()=>{F.hideRing();F.$('.fab').click()});
-    await run('calledB',48);
-    // 2.2 s: ring on the row link for 0.4 s, click it, then shoot in real time (the site scrolls and flashes)
-    await run('calledC',12);
-    await p.evaluate(()=>{F.hideRing();F.$('a[href="#call-6-1"]').click()});
-    for(let i=0;i<42;i++){await wait(33);caps[n]=caps[n-1];
-      await p.screenshot({path:`${FR}/f${String(n++).padStart(4,'0')}.jpg`,type:'jpeg',quality:90});}
+    await run('calledA',24);
+    await p.evaluate(()=>{F.$('.fab').click()});
+    await wait(30);
+    await p.evaluate(()=>F.grabDrawer());
+    await run('calledB',62);
+    await p.evaluate(()=>{F.$(F.ORIG).click()});
+    // let the site switch to Issue 4, scroll there and finish its own flash, then replay the flash on the video clock
+    await wait(2800);
+    await p.evaluate(()=>F.prepOrig());
+    await run('calledD',78);
     // caption band: one picture per distinct caption, 360x100 css px at 3x = 1080x300
     const bp=await (await b.newContext({viewport:{width:360,height:100},deviceScaleFactor:3})).newPage();
     const keys=[...new Set(caps.map(c=>JSON.stringify(c)))];
