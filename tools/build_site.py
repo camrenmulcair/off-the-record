@@ -1,11 +1,15 @@
 """Rebuild index.html from src/issueN.html + issues.json + sources.json + reactions.json.
 Usage: python3 tools/build_site.py
+       python3 tools/build_site.py --preview views.html   (three-views preview, noindex)
 """
-import datetime, json, os, re, html
+import argparse, datetime, json, os, re, html
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_ap = argparse.ArgumentParser()
+_ap.add_argument('--preview', metavar='OUT', default=None)
+PREVIEW = _ap.parse_args().preview
 BASE = 'https://camrenmulcair.github.io/off-the-record/'
 J = lambda f: json.load(open(os.path.join(ROOT, f)))
 issues = J('issues.json')
@@ -94,6 +98,7 @@ def decorate_gn(el, title, n):
 
 calls_all = []
 STORYCOUNT = {}
+HEADLINES = []
 
 def issue_block(n, week, latest):
     raw = open(os.path.join(ROOT, 'src', f'issue{n}.html')).read()
@@ -118,6 +123,7 @@ def issue_block(n, week, latest):
             f = 'breaking' if 'brk' in cls else SEC_FILTER.get(sec, 'other')
             h = el.find('h3')
             title = h.get_text(' ', strip=True)
+            HEADLINES.append(title)
             sid = f'i{n}-{slug(title)}'
             el['id'] = sid
             el['data-f'] = f
@@ -182,8 +188,18 @@ def issue_block(n, week, latest):
     tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
     content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')
-    return f'''<article class="issue{' latest' if latest else ''}" id="issue-{n}" aria-labelledby="h-issue-{n}">
-  <header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">{datetime.datetime.strptime(week, "%b %d, %Y").strftime("%A")}, {week}</span></header>
+    dn = f'data-n="{n}" ' if PREVIEW else ''
+    to_stand = '<button type="button" class="to-stand" data-view="stand">← Back to the newsstand</button>\n  ' if PREVIEW else ''
+    nextup = ''
+    if PREVIEW:
+        prev = (f'<button type="button" data-open="{n-1}">← Issue No. {n-1}</button>'
+                if any(x['n'] == n - 1 for x in issues) else '')
+        nextup = ('\n  <nav class="next-up" aria-label="Keep reading">'
+                  f'<p class="nu-k">END OF ISSUE NO. {n}</p><p class="nu-h">Keep reading</p>'
+                  f'<div class="nu-b">{prev}<button type="button" data-view="stand">Back issues</button>'
+                  '<button type="button" data-view="doom">Doomscroll everything</button></div></nav>')
+    return f'''<article class="issue{' latest' if latest else ''}" id="issue-{n}" {dn}aria-labelledby="h-issue-{n}">
+  {to_stand}<header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">{datetime.datetime.strptime(week, "%b %d, %Y").strftime("%A")}, {week}</span></header>
   <div class="iactions">
     <button class="listen" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> Listen</button>
     <a class="reply" href="{wa}" target="_blank" rel="noopener">Reply on WhatsApp</a>
@@ -192,7 +208,7 @@ def issue_block(n, week, latest):
   <div class="ibody">
   {content}
   </div>
-  <button class="expand" type="button">Show the full issue</button>
+  <button class="expand" type="button">Show the full issue</button>{nextup}
 </article>'''
 
 arts = [issue_block(i['n'], i['week'], k == 0) for k, i in enumerate(issues)]
@@ -221,7 +237,8 @@ back = f'''<section class="back" id="back" aria-labelledby="h-back">
   <div class="pin"><div class="bhead"><h2 id="h-back">Back issues</h2><p>Tap a cover to read it.</p></div>
   <div class="strip" id="strip">{covers}</div></div>
 </section>'''
-arts.insert(1, back)
+if not PREVIEW:
+    arts.insert(1, back)
 
 # Prediction tracker
 hits = sum(1 for c in calls_all if c[2]); total = len(calls_all)
@@ -277,12 +294,56 @@ if issues[0].get('special') == 'cyber':
              f'<p class="oct">(technically it was Oct)</p>'
              f'<p class="sub">A special edition of Off the Record</p>'
              f'<p class="go" aria-hidden="true">SCROLL FOR ISSUE NO. {L} ↓</p></div></section>\n')
+# preview-only pieces: view switcher, back-issues newsstand, and their head/script additions
+TITLE = "Off the Record · What your feed won't tell you"
+HEAD_EXTRA = ''
+VIEWS_JS = ''
+SWITCH = ''
+STAND = ''
+TOGGLE = f'  <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>\n'
+if PREVIEW:
+    TITLE = 'Off the Record · Views preview'
+    TOGGLE = ''
+    HEAD_EXTRA = '<link rel="stylesheet" href="views.css">\n<meta name="robots" content="noindex">\n'
+    VIEWS_JS = '<script src="views.js" defer></script>\n'
+    SWITCH = ('\n<div class="views" role="group" aria-label="How to read">'
+              '<button type="button" data-view="latest" aria-pressed="true">Latest</button>'
+              '<button type="button" data-view="stand" aria-pressed="false">Back issues</button>'
+              '<button type="button" data-view="doom" aria-pressed="false">Doomscroll</button></div>\n'
+              '<div class="doomorder" role="group" aria-label="Order" hidden>'
+              '<button type="button" data-order="new" aria-pressed="true">Newest first</button>'
+              '<button type="button" data-order="old" aria-pressed="false">Oldest first</button></div>')
+    newsprint = ' · '.join(html.escape(t) for t in HEADLINES)
+    newsprint = ' · '.join([newsprint] * 3)
+    dossiers = ''
+    for k, i in enumerate(issues):
+        n = i['n']
+        theme = i.get('theme') or i.get('special') or 'manila'
+        week = i['week']
+        wd = datetime.datetime.strptime(week, '%b %d, %Y').strftime('%A')
+        kick = '<span class="d-kick">HAPPY CYBER MONTH!</span>' if theme == 'cyber' else ''
+        dossiers += (f'<button type="button" class="dossier th-{theme}" data-open="{n}">'
+                     f'<span class="d-tab">FILE NO. {n}</span>'
+                     f'<span class="d-date">{wd}, {week}</span>{kick}'
+                     '<span class="d-brk">BREAKING</span>'
+                     f'<span class="d-h">{html.escape(breaking_title(n))}</span>'
+                     f'<span class="d-n">{STORYCOUNT.get(n, 0)} stories</span>'
+                     f'<span class="d-st" aria-hidden="true">{"NEW" if k == 0 else "NOT FOR DISTRIBUTION"}</span>'
+                     '</button>')
+    STAND = ('<section class="stand" id="stand" aria-labelledby="h-stand" hidden>\n'
+             f'  <div class="newsprint" aria-hidden="true">{"<p>" + newsprint + "</p>"}</div>\n'
+             '  <div class="stand-in">\n'
+             '    <h2 id="h-stand">Back issues</h2>\n'
+             '    <p class="sub">Every file on the rack. Pick one.</p>\n'
+             f'    <div class="rack">{dossiers}</div>\n'
+             '  </div>\n'
+             '</section>\n')
 page = f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Off the Record · What your feed won't tell you</title>
+<title>{TITLE}</title>
 <meta name="description" content="Off the Record: a weekly newsletter. Every issue, newest first.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
@@ -297,7 +358,7 @@ page = f'''<!doctype html>
 <meta name="theme-color" content="#0e0f12" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="media/icon.png">
 <link rel="stylesheet" href="style.css">
-<script>document.documentElement.classList.add('js')</script>
+{HEAD_EXTRA}<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#issue-{L}">Skip to the latest issue</a>
@@ -314,16 +375,15 @@ page = f'''<!doctype html>
   </div>
 </section>
 {intro}<div class="col">
-<nav class="jump" aria-label="Jump to a section">{nav}</nav>
+<nav class="jump" aria-label="Jump to a section">{nav}</nav>{SWITCH}
 {reacts}
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>
   <div class="bcf" role="group" aria-label="Bread and Circuses writers" hidden>{bcchips}</div>
   <div class="gnf" role="group" aria-label="Good News writers" hidden>{gnchips}</div>
-  <label class="toggle"><input type="checkbox" id="showall"> <span>Show all issues</span><small>Off: latest issue plus the back-issue strip. On: every issue in full.</small></label>
-</div>
+{TOGGLE}</div>
 <p class="sr-only" id="announce" aria-live="polite"></p>
-<main>
+{STAND}<main>
 {chr(10).join(arts)}
 </main>
 <footer class="signoff">
@@ -337,12 +397,16 @@ page = f'''<!doctype html>
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="app.js" defer></script>
-</body>
+{VIEWS_JS}</body>
 </html>'''
 import hashlib
 def ver(f):
     return hashlib.md5(open(os.path.join(ROOT, f), 'rb').read()).hexdigest()[:8]
-for f in ['style.css', 'app.js', 'vendor/lenis.min.js', 'vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js']:
+assets = ['style.css', 'app.js', 'vendor/lenis.min.js', 'vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js']
+if PREVIEW:
+    assets += ['views.css', 'views.js']
+for f in assets:
     page = page.replace(f'"{f}"', f'"{f}?v={ver(f)}"')
-open(os.path.join(ROOT, 'index.html'), 'w').write(page)
+out = os.path.join(ROOT, PREVIEW) if PREVIEW else os.path.join(ROOT, 'index.html')
+open(out, 'w').write(page)
 print('built', len(arts), 'issues,', total, 'calls')
