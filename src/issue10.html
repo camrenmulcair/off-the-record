@@ -1,0 +1,134 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:PF;font-weight:900;src:url(../fonts/playfair-display-latin-900-normal.woff2)}
+@font-face{font-family:PF;font-weight:700;font-style:italic;src:url(../fonts/playfair-display-latin-700-italic.woff2)}
+@font-face{font-family:MONO;font-weight:700;src:url(../fonts/ibm-plex-mono-latin-700-normal.woff2)}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;padding:18px;width:480px;font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;color:#111216}
+.page{background:#fff;border-radius:26px;padding:22px 20px 14px}
+.m2{position:relative;text-align:center;margin-bottom:16px}
+.m2 .lg{display:flex;justify-content:center;margin-bottom:8px}
+.m2 .box{border-top:3px double #111;border-bottom:1px solid #111;padding:8px 0 9px}
+.m2 .t{font-family:PF;font-weight:900;font-size:42px;letter-spacing:-1px;line-height:1}
+.m2 .tg{font-family:PF;font-style:italic;font-weight:700;font-size:15px;color:#555;margin-top:5px}
+.m2 .il{font-size:12.5px;font-weight:700;color:#8a8a8e;letter-spacing:1px;margin-top:8px}
+.stamp{position:absolute;right:-6px;top:30px;transform:rotate(-9deg);border:2.5px solid #c8243b;color:#c8243b;font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:2px;padding:3px 8px;background:rgba(255,255,255,.55);mix-blend-mode:multiply;border-radius:3px}
+.brk{background:#141416;border-radius:16px;padding:12px 14px 14px;color:#fff;margin-bottom:16px}
+.brk .lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:1.2px;background:#e5384f;color:#fff;padding:3px 8px;border-radius:5px}
+.brk .tag{margin-left:6px;background:#3b1a20;color:#ff9aa8}
+.sec{font-size:24px;font-weight:700;margin:4px 0 2px}
+.story{padding:11px 0;border-top:1px solid #e2e4ea}
+.sec+.story{border-top:0}
+.src{display:flex;gap:6px;align-items:center}
+.tag,.pick{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px}
+.tag.o{background:#fde7ea;color:#b0283c}
+.tag.a{background:#f3e6f7;color:#6e2a85}
+.pick{background:#fff4d1;color:#7a5400}
+.story h3{font-size:19px;line-height:1.2;margin:5px 0 0}
+.dek{font-size:15.5px;font-weight:600;color:#33353c;margin:4px 0 0;line-height:1.3}
+.bl{font-size:14px;color:#6b6e78;margin:6px 0 0;line-height:1.4}
+.brk .dek{color:#e8e8ec}.brk .bl{color:#a9a9b0}
+.score{border:1.5px solid #cfe6d9;background:#f2faf5;border-radius:16px;padding:4px 14px;margin:6px 0 4px}
+.row{display:flex;gap:10px;padding:10px 0;border-top:1px solid #dcefe3}.row:first-child{border-top:0}
+.ck{flex:none;width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.row b{display:block;font-size:15.5px}.row span{font-size:13.5px;color:#4b5a51;line-height:1.4;display:block;margin-top:2px}
+.foot{font-size:12px;color:#8a8a8e;text-align:center;padding:12px 0 2px;border-top:1px solid #e2e4ea;margin-top:10px}
+.k{font-weight:700;color:#111216}.brk .k{color:#fff}.row .k{color:#17241c}.bl em,.row em{font-style:italic}
+.brk h3{font-family:PF;font-style:italic;font-weight:700;font-size:26px;line-height:1.15;letter-spacing:-.2px;margin:10px 0 0}
+.brk .dek{margin-top:9px}
+.dl{font-family:MONO;font-weight:700;font-size:11.5px;letter-spacing:1px;color:#e5384f;font-style:normal}.brk .dl{color:#ff5a70}
+.chat{background:#efeae2;border-radius:16px;padding:10px 12px 12px;margin:14px 0 4px;display:flex;flex-direction:column;gap:6px}
+.chat .lb{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#6b6e78}
+.bub{max-width:82%;padding:7px 10px;border-radius:10px;font-size:14.5px;line-height:1.3;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.l{background:#fff;align-self:flex-start}.bub.l .nm{display:block;font-size:12.5px;font-weight:700;color:#b5532f;margin-bottom:2px}
+.bub.r{background:#d9fdd3;align-self:flex-end}
+.sig{font-family:PF;font-style:italic;font-weight:700;font-size:28px;text-align:right;margin-top:14px}
+.burn{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#c8243b;text-align:center;border-top:1px dashed #c8243b;padding:8px 0 2px;margin-top:6px}
+.tag.g{background:#e3f4f4;color:#0b6366}
+.tag.c{background:#e3f3ea;color:#1f7a4d}.brk .tag.c{background:#163a28;color:#7fe0ad}
+.gw{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:1px;color:#0f8b8d;margin:5px 0 0}
+.more{margin-top:6px}.more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;letter-spacing:.3px;color:#0b6366;background:#e3f4f4;border-radius:999px;padding:4px 11px}.more summary::-webkit-details-marker{display:none}.more summary::after{content:"\25BE";font-size:11px}.more[open] summary::after{content:"\25B4"}.more .mc,.more[open] .mo{display:none}.more[open] .mc{display:inline}.more[open] summary{margin-bottom:2px}
+.disc{background:#f2f3f5;border:1.5px solid #d5d7dd;border-radius:14px;padding:10px 13px 12px;margin:10px 0 2px}
+.disc .lb{display:inline-block;font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#fff;background:#4b4e57;padding:2px 7px;border-radius:4px}
+.disc p{font-size:13.5px;line-height:1.4;color:#4b4e57;margin:7px 0 0}
+.disc strong{color:#111216}
+.hcm{font-family:MONO;font-weight:700;font-size:11px;letter-spacing:2px;color:#39ff6a;text-shadow:0 0 8px rgba(57,255,106,.6);margin:8px 0 -1px;display:inline-block;background:#0b0f0c;padding:3px 7px;border-radius:4px}.brk .hcm{color:#39ff6a;text-shadow:none;margin-top:10px}
+.tag.cy{font-family:MONO;background:#0b0f0c;color:#39ff6a;letter-spacing:1px}.brk .tag.cy{background:#0b0f0c;color:#39ff6a;box-shadow:inset 0 0 0 1px #2a8a45}
+.tag.fi{background:#fff0e0;color:#c2410c}
+.tag.s{background:#ececef;color:#4b4e57}
+.tag.gnt{background:#e3f0fc;color:#145fa0}
+.gw.gnw{color:#1a7fd4}
+</style></head><body>
+<div class="page">
+
+<div class="m2">
+  <div class="lg"><svg width="44" height="44" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="20" fill="#fff" stroke="#111" stroke-width="4"/><rect x="16" y="22" width="56" height="13" rx="1.5" fill="#111"/><rect x="16" y="41" width="68" height="18" rx="1.5" fill="#e5384f"/><text x="22" y="55" font-family="MONO" font-weight="700" font-size="14" fill="#fff" letter-spacing="2">OTR</text><rect x="16" y="65" width="46" height="13" rx="1.5" fill="#111"/></svg></div>
+  <div class="box"><div class="t">Off the Record</div><div class="tg">What your feed won't tell you</div></div>
+  <div class="il">ISSUE NO. 10 · THU, NOV 26, 2026</div>
+  <div class="stamp">NOT FOR DISTRIBUTION</div>
+</div>
+
+<div class="brk">
+  <span class="lab">BREAKING</span><span class="tag">Opinion</span>
+  <h3>CNN Warned You About Iran's Dirty Bomb. Then the Army Set One Off in Iowa.</h3>
+  <p class="dek">Five tons of toxic explosive, a town evacuated, and a cold snap that forced the Army's hand.</p>
+  <p class="bl"><span class="dl">MIDDLETOWN, IOWA —</span> On <strong class="k">Nov. 16</strong>, CNN reported that US intelligence says Iran is developing plans to set off a <strong class="k">"dirty bomb or a chemical weapon"</strong> in <strong class="k">Washington</strong>. Nine days later, at about <strong class="k">9 a.m. on Nov. 25</strong>, the Army blew up <strong class="k">about 5 tons of degraded lead azide</strong>, a toxic, lead-based explosive, at the <strong class="k">Iowa Army Ammunition Plant</strong>. Middletown and a <strong class="k">5-mile zone</strong> were told to evacuate, people within <strong class="k">20 miles</strong> who stayed were told to <strong class="k">shelter in place</strong>, and the governor declared a <strong class="k">disaster in 3 counties</strong>. The Army says the stockpile had turned <strong class="k">unstable</strong>, and the Justice Department told a court that <strong class="k">cold weather "dramatically increases the risk of an uncontrolled explosion."</strong> Acting Army Secretary <strong class="k">Adam Telle</strong> called it a <strong class="k">"huge success."</strong> <em>They let it sit until winter turned it into a bomb, then set off a dirty explosion in the heartland while CNN had everyone looking at Iran. Who cares if Tehran's plot is "imminent"? The one that actually went off was ours.</em></p>
+</div>
+
+<div class="sec" style="color:#e5384f">Domestic</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>The Password Manager Lost Its Keys: One GitHub Account to Breach Them All</h3>
+  <p class="dek">Your vault is safe, 1Password says. Your name, your email and its source code aren't.</p>
+  <p class="bl"><span class="dl">TORONTO —</span> On <strong class="k">Nov. 25</strong>, Toronto-based <strong class="k">1Password</strong> said an attacker used a <strong class="k">compromised employee GitHub account</strong> to get into its <strong class="k">internal backend systems</strong> and export customer <strong class="k">names, email addresses, account and user IDs and security tokens</strong>, plus the company's <strong class="k">source code</strong>. 1Password says <strong class="k">vaults, private keys and recovery keys weren't touched</strong>, and it has found <strong class="k">no account takeovers</strong>. Login codes sent by email are now <strong class="k">nine characters instead of six</strong>. <em>The company that sells you one key to everything got opened with one employee's login. Change your master password and expect some very convincing phishing.</em></p>
+</div>
+
+<div class="sec" style="color:#d97706;margin-top:12px">Foreign Affairs</div>
+<div class="story">
+<div class="src"><span class="pick">&#9733; Editor's Pick</span><span class="tag o">Opinion</span></div>
+  <h3>The DNC Discovers Money in Politics</h3>
+  <p class="dek">Want on the 2028 debate stage? Denounce your super PAC first. Whatcha gonna do, Gavin?</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> On <strong class="k">Nov. 23</strong>, the DNC announced <strong class="k">12 primary debates</strong> for 2028, starting in <strong class="k">June 2027</strong>, and a <strong class="k">"Fair Campaign Practices Pledge"</strong>: to get on stage, candidates must <strong class="k">denounce super PAC and dark-money spending</strong> on their behalf. The DNC admits it has <strong class="k">no legal power to ban super PACs</strong>, so it will publish a <strong class="k">tracker</strong> of complaints and denunciations. <strong class="k">Bernie Sanders</strong> called it "excellent." A spokesman for Maryland Gov. <strong class="k">Wes Moore</strong> called it <strong class="k">"virtue signal[ing]"</strong> that could <strong class="k">"cost us elections."</strong> <strong class="k">Gavin Newsom</strong> says he'll decide on a run in <strong class="k">January</strong>. <em>Whatcha gonna do, Gavin? Every big-money Democrat just got told to pick between the donors and the debate stage.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag cy">Cyber attack</span><span class="tag o">Opinion</span></div>
+  <p class="hcm">HAPPY CYBER MONTH!</p>
+  <h3>FBI, USDA, CIA, Now Treasury: The Agency That Tracks Dirty Money Just Got Hacked</h3>
+  <p class="dek">FinCEN pulled systems offline. Nobody's saying who did it.</p>
+  <p class="bl"><span class="dl">WASHINGTON —</span> On <strong class="k">Nov. 25</strong>, <strong class="k">FinCEN</strong>, the Treasury bureau that tracks money laundering, said it's investigating <strong class="k">"unauthorized access to a limited subset of its systems"</strong> and took some of them <strong class="k">offline</strong>. The <strong class="k">FBI and CISA</strong> are helping, and officials haven't said who did it or what was taken. A day earlier, the <strong class="k">CIA</strong> and the <strong class="k">Office of the Director of National Intelligence</strong> reported a breach of an open-source analysis system, a week after hackers hit the <strong class="k">FBI's crime database</strong> and the <strong class="k">USDA</strong>. <em>That's four federal agencies in two weeks. At this point it's easier to list who hasn't been hacked.</em></p>
+</div>
+<div class="story">
+<div class="src"><span class="tag o">Opinion</span></div>
+  <h3>False Flag Rehearsal Over Flushing Bay? LaGuardia's Second Shoulder-Fired Missile (MANPADS) Scare</h3>
+  <p class="dek">The tower warned pilots of a missile launcher by the runway. Police found nothing. Again.</p>
+  <p class="bl"><span class="dl">NEW YORK —</span> Around <strong class="k">6:30 p.m. on Nov. 25</strong>, LaGuardia's tower warned pilots of a possible <strong class="k">MANPADS</strong>, a shoulder-fired anti-aircraft missile launcher, <strong class="k">just east of the airport</strong> near <strong class="k">Flushing Bay</strong>, and told them to <strong class="k">"exercise extreme caution."</strong> Port Authority police searched and <strong class="k">found nothing</strong>, and the alert was called <strong class="k">not credible</strong>. It's the <strong class="k">second</strong> such alert since <strong class="k">July 22</strong>, when a phoned-in tip set off a warning to a Delta flight on final approach. The FAA listed <strong class="k">no ground stop</strong>, and no agency has said a word publicly. <em>Two phantom missile launchers at the same airport in four months, the same day as Iowa and the week CNN is selling an Iranian plot. Somebody is testing how fast New York panics.</em></p>
+</div>
+
+<div class="sec" style="color:#0f8b8d;margin-top:12px">Bread and Circuses</div>
+<div class="story bc" data-kind="sports" data-writer="Camren">
+<div class="src"><span class="tag g">Editor</span><span class="tag o">Opinion</span></div>
+  <h3>One, Two, Three, Packers: Rodgers Burns Pittsburgh Down on His Way Out</h3>
+  <p class="dek">He got McCarthy the job. Then he told Pat McAfee the man snores through meetings.</p>
+  <p class="gw">Written by: Camren</p>
+  <p class="bl"><span class="dl">PITTSBURGH —</span> On <strong class="k">The Pat McAfee Show</strong> on <strong class="k">Nov. 25</strong>, <strong class="k">Aaron Rodgers</strong> said Mike McCarthy came into a leadership council meeting late and <strong class="k">"within 10 minutes began snoring,"</strong> that he <strong class="k">"doesn't watch film,"</strong> and that he broke the huddle at halftime against the Eagles with <strong class="k">"one, two, three, Packers."</strong> On ever playing for Pittsburgh again: <strong class="k">"That ship has sailed."</strong> The Steelers (<strong class="k">6-4</strong>) cut him <strong class="k">the same day</strong>. Rodgers says he <strong class="k">vouched</strong> for McCarthy to GM <strong class="k">Omar Khan</strong>; owner <strong class="k">Art Rooney II</strong> says he has <strong class="k">"100% confidence"</strong> in his coach. <em>Thirteen years in Green Bay and they're still the same divorced couple. Rodgers didn't leave Pittsburgh, he salted the earth on the way out.</em></p>
+</div>
+
+<div class="sec" style="color:#1a7fd4;margin-top:12px">Good News</div>
+<div class="story gn" data-writer="Yuri">
+<div class="src"><span class="tag gnt">Guest</span><span class="tag o">Opinion</span></div>
+  <h3>Gone for Half a Century: 130 Orphans Later, Argentina Gets Its Giant Anteaters Back</h3>
+  <p class="dek">Hunted out of Corrientes last century, now settled for good in Iberá.</p>
+  <p class="gw gnw">Guest writer: Yuri</p>
+  <p class="bl"><span class="dl">CORRIENTES, ARGENTINA —</span> The <strong class="k">giant anteater</strong> disappeared from <strong class="k">Corrientes</strong> province by the <strong class="k">mid-20th century</strong>, wiped out by <strong class="k">poaching, road deaths and land cleared for farms</strong>. Since <strong class="k">2007</strong>, <strong class="k">Fundación Rewilding Argentina</strong> and the provincial government have rescued <strong class="k">more than 130 orphans</strong> whose mothers were hunted in the north, raised them, fitted them with <strong class="k">satellite collars</strong> and released them in <strong class="k">Iberá National Park</strong>. Researchers now say the animals have <strong class="k">adapted and settled for good</strong>, and Iberá's anteaters number about <strong class="k">200</strong>, descendants included. <em>An animal people erased from a whole province is back, raised one orphan at a time. That's what good news looks like.</em></p>
+</div>
+
+<ul class="tnotes" hidden>
+  <li data-tag="NEW">Bread and Circuses goes sports: Camren on Rodgers</li>
+  <li data-tag="THANKS">Yuri joins Good News</li>
+</ul>
+<div class="sig">— C.</div>
+<div class="burn">BURN AFTER READING · ISSUE NO. 10</div>
+</div>
+</body>
+</html>
