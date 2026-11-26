@@ -1,5 +1,5 @@
 """Record the live site's three reading views as a 1080x1920, 30 fps, no-sound clip
-(about 13.8 s) for splicing into the trailer with tools/trailer.py --promo.
+(about 17.8 s) for splicing into the trailer with tools/trailer.py --promo.
 Usage: python3 tools/site_promo.py OUT.mp4
 Needs playwright (node) and ffmpeg."""
 import os, sys, socket, subprocess, shutil, tempfile, time, urllib.request
@@ -28,7 +28,7 @@ eo:x=>1-Math.pow(1-x,3),
 E:x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,
 nat:el=>{const o=el.style.position;el.style.position='static';const y=el.getBoundingClientRect().top+scrollY;el.style.position=o;return y},
 go:y=>window.scrollTo(0,Math.max(0,y)),
-vt:()=>F.nat(F.$('.views'))-70,
+vt:()=>F.nat(F.$('.views')),
 cap:(lbl,txt,op)=>{const pc=F.$('#pc');pc.querySelector('b').textContent=lbl;pc.querySelector('span').textContent=txt;pc.style.opacity=op},
 ring:(sel,q)=>{const r=F.$(sel).getBoundingClientRect(),tap=F.$('#tap');tap.style.left=(r.left+r.width/2)+'px';tap.style.top=(r.top+r.height/2)+'px';tap.style.transform='scale('+(0.4+q)+')';tap.style.opacity=1-q},
 hideRing:()=>{F.$('#tap').style.opacity=0},
@@ -46,6 +46,11 @@ doomRing:t=>F.ring('.views [data-view="doom"]',F.seg(t,0,.4)),
 doom:t=>{const late=t>=2.0;
   F.cap(late?'A FOLDER CLOSES':'3 · DOOMSCROLL',late?'between every issue, then the next one opens.':'Every story ever, back to back. Oldest or newest first.',late?1:F.seg(t,0,.2));
   F.go(t<2.6?F.Y0+(F.A-F.Y0)*F.E(F.seg(t,0,2.6)):F.A+1.2*innerHeight*F.E(F.seg(t,2.6,4.4)))},
+calledA:t=>{F.cap('4 · CALLED IT','Every prediction that came true.',F.seg(t,0,.2));
+  if(t>=.2&&t<.6)F.ring('.fab',F.seg(t,.2,.6));else F.hideRing()},
+calledB:t=>{t+=.6;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1)},
+calledC:t=>{t+=2.2;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1);F.ring('a[href="#call-6-1"]',F.seg(t,2.2,2.6))},
+prepCalled:()=>{F.hideRing();F.prepLatest();const pc=F.$('#pc');pc.style.left='14px';pc.style.right='110px'},
 prepLatest:()=>{F.$('.views [data-view="latest"]').click();window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0)},
 prepStand:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0);const st=F.$('.street');F.YE=F.nat(st)+st.getBoundingClientRect().height-innerHeight},
 prepDoom:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();document.querySelectorAll('.reveal').forEach(r=>r.classList.add('in'));
@@ -92,6 +97,16 @@ const BASE=process.argv[2],FR=process.argv[3],CSS=process.env.SP_CSS,HTML=proces
     // 4. Doomscroll, 4.4 s
     await p.evaluate(()=>F.prepDoom());
     await run('doom',132);
+    // 5. Called it, 4.0 s: 0-0.6 s caption + ring on the fab, then open it at 0.6 s
+    await p.evaluate(()=>F.prepCalled());
+    await run('calledA',18);
+    await p.evaluate(()=>{F.hideRing();F.$('.fab').click()});
+    await run('calledB',48);
+    // 2.2 s: ring on the row link for 0.4 s, click it, then shoot in real time (the site scrolls and flashes)
+    await run('calledC',12);
+    await p.evaluate(()=>{F.hideRing();F.$('a[href="#call-6-1"]').click()});
+    for(let i=0;i<42;i++){await wait(33);
+      await p.screenshot({path:`${FR}/f${String(n++).padStart(4,'0')}.jpg`,type:'jpeg',quality:90});}
     console.log('frames',n);
   }finally{await b.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
