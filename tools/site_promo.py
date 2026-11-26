@@ -37,7 +37,7 @@ title:t=>{window.CAP=['',''];const tc=F.$('#tc'),st=tc.querySelector('.st'),p=F.
 latest:t=>{F.cap('1 · LATEST',"This week's file, top to bottom.",F.seg(t,0,.2));
   F.go(t<1.2?F.Y0+250*F.E(F.seg(t,0,1.2)):F.Y0+250*(1-F.E(F.seg(t,1.2,1.6))));
   if(t>=1.6)F.ring('.views [data-view="stand"]',F.seg(t,1.6,2.0));else F.hideRing()},
-back:t=>{const late=t>=2.2;
+back:t=>{F.scrub(t);const late=t>=2.2;
   F.cap(late?'FOLDERS MATCH THE ISSUE':'2 · BACK ISSUES',late?'War files. Cyber files. Classified.':'Every issue on the newsstand. Tap a folder to open it.',late?1:F.seg(t,0,.2));
   F.go(F.Y0+(F.YE-F.Y0)*F.E(F.seg(t,0,4.0)))},
 doomRing:t=>F.ring('.views [data-view="doom"]',F.seg(t,0,.4)),
@@ -50,6 +50,10 @@ calledB:t=>{t+=.6;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1)},
 calledC:t=>{t+=2.2;F.cap('4 · CALLED IT','Tap one to jump straight to it.',1);F.ring('a[href="#call-6-1"]',F.seg(t,2.2,2.6))},
 prepCalled:()=>{F.hideRing();F.prepLatest()},
 prepLatest:()=>{F.$('.views [data-view="latest"]').click();window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0)},
+inStand:a=>{const e=a.effect,st=F.$('#stand');return !!(e&&e.target&&st&&st.contains(e.target))},
+grab:()=>{F.DA=document.getAnimations().filter(F.inStand);F.DA.forEach(a=>{a.pause();a._t0=0})},
+scrub:t=>{document.getAnimations().filter(F.inStand).forEach(a=>{if(F.DA.indexOf(a)<0){a.pause();a._t0=t;F.DA.push(a)}try{a.currentTime=Math.max(0,(t-a._t0)*1000)}catch(e){}})},
+release:()=>{(F.DA||[]).forEach(a=>{try{a.finish()}catch(e){try{a.play()}catch(_){}}})},
 prepStand:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();F.Y0=F.vt();F.go(F.Y0);const st=F.$('.street');F.YE=F.nat(st)+st.getBoundingClientRect().height-innerHeight},
 prepDoom:()=>{window.ScrollTrigger&&ScrollTrigger.refresh();document.querySelectorAll('.reveal').forEach(r=>r.classList.add('in'));
   const cs=[...document.querySelectorAll('main .issue .closer')].filter(c=>getComputedStyle(c.closest('.issue')).display!=='none');
@@ -85,10 +89,10 @@ const BASE=process.argv[2],FR=process.argv[3],CSS=process.env.SP_CSS,HTML=proces
     await run('latest',60);
     // 3. Back issues, 4.6 s, then the Doomscroll tap ring, 0.4 s
     await p.evaluate(()=>{F.hideRing();F.$('.views [data-view="stand"]').click()});
-    await wait(400);
-    await p.evaluate(()=>F.prepStand());
+    await wait(80);
+    await p.evaluate(()=>{F.grab();F.prepStand()});
     await run('back',138);
-    await p.evaluate(()=>F.go(F.Y0));
+    await p.evaluate(()=>{F.release();F.go(F.Y0)});
     await run('doomRing',12);
     await p.evaluate(()=>{F.hideRing();F.$('.views [data-view="doom"]').click();F.$('[data-order="old"]').click()});
     await wait(500);

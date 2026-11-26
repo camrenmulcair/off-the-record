@@ -185,3 +185,8 @@ body.v-stand #reactions,body.v-stand .controls,body.v-doom #reactions,body.v-one
   .calls li .c-note{background:#3a2f0e;color:#ffd978}.c-back{color:#7fe0ad}.c-back.c-note{color:#ffd978}
   @keyframes storyflash{0%,35%{box-shadow:0 0 0 4px #4fc08a}100%{box-shadow:0 0 0 4px transparent}}}
 @media (prefers-reduced-motion:reduce){.ibody > .story.flash,.ibody > .brk.flash{animation:none;box-shadow:0 0 0 4px #1f7a4d}}
+.calls li .cls a,.calls li .cls .c-note{width:auto;flex:none}
+/* dust that puffs out when a file lands on the shelf */
+.rack .dossier .dust{position:absolute;bottom:-4px;border-radius:50%;background:#e9dcc0;pointer-events:none;z-index:4;opacity:0}
+@media (prefers-color-scheme:dark){.rack .dossier .dust{background:#8d7d5c}}
+.rack .dossier.waiting{opacity:0}

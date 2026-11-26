@@ -138,7 +138,136 @@
 
     refresh();
     if (doScroll) scrollToSwitcher();
+    // entering the newsstand: the files fall onto the shelves
+    if (v === 'stand' && prevView !== 'stand') {
+      requestAnimationFrame(function () { requestAnimationFrame(dropIn); });
+    }
+    prevView = v;
   }
+
+  // ---- Back issues: the kiosk lights up and the files fall into place ----
+  // Everything is a Web Animation (no timers), so it can be paused or scrubbed, and
+  // every animation ends on the element's resting CSS so nothing jumps when it finishes.
+  var prevView = null, drops = [];
+  var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function anim(el, kf, o) {
+    if (!el || !el.animate) return null;
+    try { var a = el.animate(kf, o); drops.push(a); return a; } catch (e) { return null; }
+  }
+  function dust(d, at) {
+    var w = d.offsetWidth;
+    for (var k = 0; k < 8; k++) {
+      var left = k < 4, s = 4 + Math.random() * 7;
+      var p = document.createElement('i');
+      p.className = 'dust'; p.setAttribute('aria-hidden', 'true');
+      p.style.width = p.style.height = s + 'px';
+      p.style.left = (left ? 4 + Math.random() * 22 : w - 26 + Math.random() * 22) + 'px';
+      d.appendChild(p);
+      var dx = (left ? -1 : 1) * (16 + Math.random() * 38), dy = -(8 + Math.random() * 18);
+      var a = anim(p, [
+        { transform: 'translate(0,0) scale(.4)', opacity: 0.9 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1.7)', opacity: 0 }
+      ], { duration: 520 + Math.random() * 220, delay: at, easing: 'cubic-bezier(.1,.8,.3,1)', fill: 'both' });
+      if (a) a.onfinish = (function (el) { return function () { el.remove(); }; })(p);
+      else p.remove();
+    }
+  }
+  var dropIO = null;
+  function dropOne(d, idx, delay, fall, fade, shelf) {
+    var tilt = idx % 2 ? 1 : -1.2;  // matches .rack .dossier / :nth-child(even)
+    var spin = (idx % 3 === 0 ? -1 : 1) * (5 + Math.random() * 7);
+    var dur = 950, impact = 0.55, land = delay + dur * impact;
+    anim(d, [
+      { transform: 'translateY(' + -fall + 'px) rotate(' + (tilt + spin) + 'deg)', opacity: fade ? 0 : 1, easing: 'cubic-bezier(.55,0,1,.55)' },
+      { opacity: 1, offset: fade ? 0.18 : 0.01 },
+      { transform: 'translateY(0) rotate(' + tilt + 'deg) scale(1.04,.93)', offset: impact, easing: 'cubic-bezier(.2,.7,.4,1)' },
+      { transform: 'translateY(-16px) rotate(' + (tilt - spin * 0.25) + 'deg) scale(.99,1.02)', offset: 0.72, easing: 'cubic-bezier(.6,0,.9,.5)' },
+      { transform: 'translateY(0) rotate(' + tilt + 'deg) scale(1.02,.97)', offset: 0.86, easing: 'ease-out' },
+      { transform: 'translateY(-3px) rotate(' + tilt + 'deg)', offset: 0.93 },
+      { transform: 'translateY(0) rotate(' + tilt + 'deg)', opacity: 1 }
+    ], { duration: dur, delay: delay, fill: 'backwards' });
+    // thud: dust puffs out from under the folder and the shelf jolts
+    dust(d, land);
+    anim(shelf, [{ transform: 'translateY(0)' }, { transform: 'translateY(2.5px)' }, { transform: 'translateY(0)' }],
+      { duration: 150, delay: land, easing: 'ease-out' });
+    // the clip snaps down, then the stamp slams on
+    anim(d, [{ transform: 'translateY(-28px)', opacity: 0 }, { transform: 'translateY(2px)', opacity: 1, offset: 0.7 },
+      { transform: 'translateY(0)', opacity: 1 }], { duration: 220, delay: land + 70, easing: 'ease-in', fill: 'backwards', pseudoElement: '::before' });
+    anim($('.d-st', d), [{ transform: 'rotate(-9deg) scale(2.6)', opacity: 0 },
+      { transform: 'rotate(-9deg) scale(.92)', opacity: 1, offset: 0.7 }, { transform: 'rotate(-9deg) scale(1)', opacity: 1 }],
+      { duration: 280, delay: land + 200, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' });
+    if (d.classList.contains('th-war')) {
+      anim($('.d-holes', d), [{ opacity: 0 }, { opacity: 1 }], { duration: 60, delay: land + 420, easing: 'steps(1,end)', fill: 'backwards' });
+    }
+  }
+  function dropIn() {
+    var stand = $('#stand');
+    if (REDUCE || !stand || stand.hidden || !stand.animate) return;
+    drops.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+    drops = [];
+    $$('.dust', stand).forEach(function (x) { x.remove(); });
+    var vh = window.innerHeight;
+
+    // the kiosk wakes up: sign flickers on, bulbs light left to right, placard drops, card swings in
+    anim($('.roof .sign', stand), [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 0.15, offset: 0.25 },
+      { opacity: 1, offset: 0.4 }, { opacity: 0.4, offset: 0.5 }, { opacity: 1 }], { duration: 900, fill: 'backwards' });
+    anim($('.roof .bulbs', stand), [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
+      { duration: 700, delay: 120, easing: 'steps(12,end)', fill: 'backwards' });
+    anim($('h2', stand), [
+      { transform: 'translateY(-90px) rotate(-14deg)', opacity: 0, easing: 'cubic-bezier(.5,0,.9,.5)' },
+      { transform: 'translateY(0) rotate(-2deg)', opacity: 1, offset: 0.6, easing: 'ease-out' },
+      { transform: 'translateY(-7px) rotate(-3deg)', offset: 0.8, easing: 'ease-in' },
+      { transform: 'translateY(0) rotate(-2deg)' }], { duration: 700, delay: 80, fill: 'backwards' });
+    anim($('.sub', stand), [{ transform: 'scale(.6) rotate(8deg)', opacity: 0 },
+      { transform: 'scale(1.06) rotate(0deg)', opacity: 1, offset: 0.7 }, { transform: 'scale(1) rotate(1.2deg)', opacity: 1 }],
+      { duration: 420, delay: 420, easing: 'ease-out', fill: 'backwards' });
+    anim($('.card.c1', stand), [{ transform: 'rotate(75deg) scale(.8)', opacity: 0 },
+      { transform: 'rotate(-10deg) scale(1)', opacity: 1, offset: 0.5 }, { transform: 'rotate(14deg)', offset: 0.72 },
+      { transform: 'rotate(3deg)', offset: 0.88 }, { transform: 'rotate(6deg)' }],
+      { duration: 1100, delay: 320, easing: 'ease-out', fill: 'backwards' });
+
+    // the files: drop from above, squash on the shelf, bounce, settle at their tilt.
+    // Files on screen fall from above the top edge; the rest wait out of sight and
+    // drop in when you scroll down to them.
+    var shelf = $('.stand-in', stand);
+    var ds = $$('.rack .dossier', stand), t0 = 520, gap = 115;
+    if (dropIO) { dropIO.disconnect(); dropIO = null; }
+    ds.forEach(function (d) { d.classList.remove('waiting'); });
+    var onscreen = ds.filter(function (d) { return d.getBoundingClientRect().top < vh - 40; });
+    onscreen.forEach(function (d, i) {
+      dropOne(d, ds.indexOf(d), t0 + i * gap, d.getBoundingClientRect().bottom + 60, false, shelf);
+    });
+    var later = ds.filter(function (d) { return onscreen.indexOf(d) === -1; });
+    if (later.length && 'IntersectionObserver' in window) {
+      var k = 0;
+      later.forEach(function (d) { d.classList.add('waiting'); });
+      dropIO = new IntersectionObserver(function (en) {
+        en.forEach(function (x) {
+          if (!x.isIntersecting) return;
+          dropIO.unobserve(x.target);
+          x.target.classList.remove('waiting');
+          dropOne(x.target, ds.indexOf(x.target), (k++ % 2) * gap, 340, true, shelf);
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+      later.forEach(function (d) { dropIO.observe(d); });
+    } else {
+      later.forEach(function (d, i) { dropOne(d, ds.indexOf(d), t0 + (onscreen.length + i) * gap, 340, true, shelf); });
+    }
+
+    // below the booth: papers stack up on the counter, the crate and box slide in from the curb
+    var after = t0 + onscreen.length * gap + 250;
+    $$('.counter .stack', stand).forEach(function (s, i) {
+      var rest = i === 1 ? 'rotate(1deg)' : 'rotate(-1deg)';
+      anim(s, [{ transform: 'translateY(70px) ' + rest }, { transform: 'translateY(-6px) ' + rest, offset: 0.7 }, { transform: 'translateY(0) ' + rest }],
+        { duration: 500, delay: after + i * 90, easing: 'ease-out', fill: 'backwards' });
+    });
+    [['.street .crate', 'none'], ['.street .box', 'none'], ['.street .card.c2', 'rotate(-5deg)']].forEach(function (p, i) {
+      anim($(p[0], stand), [{ transform: 'translateX(-260px) ' + (p[1] === 'none' ? '' : p[1]) },
+        { transform: 'translateX(8px) ' + (p[1] === 'none' ? '' : p[1]), offset: 0.8 }, { transform: p[1] }],
+        { duration: 600, delay: after + 200 + i * 110, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' });
+    });
+  }
+  window.otrDropIn = dropIn;
 
   function setOrder(o) {
     if (o !== 'old') o = 'new';
