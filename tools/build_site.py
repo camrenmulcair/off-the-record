@@ -16,6 +16,8 @@ J = lambda f: json.load(open(os.path.join(ROOT, f)))
 issues = J('issues.json')
 sources = J('sources.json')
 reactions = J('reactions.json')
+# where each "Called it" call was first made: call-N-K -> story id ("iN-slug"), or {"note": ...} for calls made outside an issue
+CALLS = J('calls.json') if os.path.exists(os.path.join(ROOT, 'calls.json')) else {}
 
 SEC_FILTER = {'Breaking': 'breaking', 'Foreign Affairs': 'foreign', 'Domestic': 'domestic',
               'Markets': 'markets', 'Bread and Circuses': 'circus', 'Good News': 'good', 'Monetary Policy': 'markets', "Last Week's Call": 'calls'}
@@ -100,6 +102,18 @@ def decorate_gn(el, title, n):
 calls_all = []
 STORYCOUNT = {}
 HEADLINES = []
+STORY_IDS = set()
+
+def origin_of(cid):
+    v = CALLS.get(cid)
+    return v if isinstance(v, str) else None
+
+def note_of(cid):
+    v = CALLS.get(cid)
+    return v.get('note') if isinstance(v, dict) else None
+
+def issue_of(sid):
+    return int(re.match(r'i(\d+)-', sid).group(1))
 
 def issue_block(n, week, latest):
     raw = open(os.path.join(ROOT, 'src', f'issue{n}.html')).read()
@@ -126,6 +140,7 @@ def issue_block(n, week, latest):
             title = h.get_text(' ', strip=True)
             HEADLINES.append(title)
             sid = f'i{n}-{slug(title)}'
+            STORY_IDS.add(sid)
             el['id'] = sid
             el['data-f'] = f
             STORYCOUNT[n] = STORYCOUNT.get(n, 0) + 1
@@ -163,6 +178,17 @@ def issue_block(n, week, latest):
                 ok = '✓' in r.find(class_='ck').get_text() or True
                 r['id'] = f'call-{n}-{k}'
                 calls_all.append((n, lab, ok, f'call-{n}-{k}'))
+                # link back to where the call was first made (or show the note it was made in)
+                cid = f'call-{n}-{k}'
+                back = ''
+                if note_of(cid):
+                    back = f'<span class="c-back c-note">{html.escape(note_of(cid))}</span>'
+                elif origin_of(cid):
+                    o = origin_of(cid)
+                    back = f'<a class="c-back" href="#{o}">See the original call · Issue {issue_of(o)} ↑</a>'
+                if back:
+                    txt = [c for c in r.find_all('div', recursive=False) if 'ck' not in (c.get('class') or [])][0]
+                    txt.append(BeautifulSoup(back, 'html.parser'))
             cs = sources.get(str(n), {}).get('__calls')
             if cs:
                 el.append(BeautifulSoup(f'<div class="st-tools">{src_html(cs)}</div>', 'html.parser'))
@@ -245,11 +271,25 @@ if not VIEWS:
 # Prediction tracker
 hits = sum(1 for c in calls_all if c[2]); total = len(calls_all)
 pct = round(100 * hits / total) if total else 0
-call_rows = ''.join(
-    f'<li><a href="#{cid}"><span class="ck" aria-hidden="true">✓</span><span class="cl">{html.escape(lab)}</span>'
-    f'<span class="ci2">Issue {n} →</span></a></li>' for n, lab, ok, cid in calls_all)
+def call_row(n, lab, cid):
+    o, note = origin_of(cid), note_of(cid)
+    pills = ''
+    if note:
+        pills += f'<span class="c-note">{html.escape(note)}</span>'
+    elif o:
+        pills += f'<a class="c-orig" href="#{o}">Called in Issue {issue_of(o)} →</a>'
+    pills += f'<a class="c-conf" href="#{cid}">Came true · Issue {n} ✓</a>'
+    return (f'<li><span class="ck" aria-hidden="true">✓</span><div class="cw"><span class="cl">{html.escape(lab)}</span>'
+            f'<span class="cls">{pills}</span></div></li>')
+
+call_rows = ''.join(call_row(n, lab, cid) for n, lab, ok, cid in calls_all)
+# every origin must point at a real story, or its link would go nowhere
+for cid in CALLS:
+    o = origin_of(cid)
+    if o and o not in STORY_IDS:
+        print(f'WARNING: calls.json: {cid} -> {o} is not a story id')
 tracker = f'''<div class="drawer-bg" id="drawer-bg" hidden></div>
-<aside class="drawer" id="calls" aria-labelledby="h-calls" aria-hidden="true">
+<aside class="drawer" id="calls" aria-labelledby="h-calls" aria-hidden="true" data-lenis-prevent>
   <button type="button" class="drawer-x" aria-label="Close">✕</button>
   <h2 id="h-calls">Called it</h2>
   <p class="sub">Every prediction that came true. Tap one to see it.</p>

@@ -45,25 +45,53 @@
     scrollToY(Math.max(0, y));
   }
 
-  // Jump to one "Called it" row: after the drawer closes and the view has switched,
-  // scroll the row under the bar, flash it green, and keep the hash in sync.
-  function goToCall(n, k, delay) {
+  // Document-top offset of an element, from offsetTop up the offsetParent chain.
+  // Stories are position:sticky, so getBoundingClientRect is wrong for them once stuck.
+  function absTop(el) {
+    var y = 0;
+    while (el) { y += el.offsetTop; el = el.offsetParent; }
+    return y;
+  }
+
+  // Hash targets we handle: a "Called it" row (call-N-K) or a story (iN-slug), if it exists.
+  function jumpable(hash) {
+    var id = (hash || '').replace(/^#/, '');
+    if (!(/^call-\d+-\d+$/.test(id) || /^i\d+-/.test(id))) return null;
+    return document.getElementById(id) ? id : null;
+  }
+
+  function issueOf(id) {
+    var m = id.match(/^(?:call-(\d+)-\d+|i(\d+)-)/);
+    return parseInt(m[1] || m[2], 10);
+  }
+
+  // Jump to a call row or a story: show its issue, close the pop-up, then after the
+  // drawer has closed scroll the target under the bar, unredact it, flash it green and
+  // keep the hash in sync.
+  function jumpTo(id, delay) {
+    if (window.otrCloseDrawer) window.otrCloseDrawer();
+    if (!body.classList.contains('v-doom')) {
+      var n = issueOf(id);
+      setView(n === latestN() ? 'latest' : 'one', n);
+    }
     setTimeout(function () {
-      var row = document.getElementById('call-' + n + '-' + k);
-      var el = row || document.getElementById('issue-' + n);
+      var el = document.getElementById(id);
       if (!el) return;
       var reveal = el.closest ? el.closest('.reveal') : null;
-      if (reveal) reveal.classList.add('in');
-      var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - barH() - 24);
+      [el, reveal].forEach(function (x) {
+        if (!x) return;
+        x.classList.add('in');
+        x.classList.add('revealed');
+        $$('.rbar', x).forEach(function (b) { b.remove(); }); // redaction bars: show the text now
+      });
+      var y = Math.max(0, absTop(el) - barH() - 24);
       if (window.otrLenis) window.otrLenis.scrollTo(y, { duration: 0.9 });
       else window.scrollTo({ top: y, behavior: 'smooth' });
-      if (row) {
-        row.classList.remove('flash');
-        void row.offsetWidth; // restart the animation if it is already playing
-        row.classList.add('flash');
-        setTimeout(function () { row.classList.remove('flash'); }, 1900);
-      }
-      history.replaceState(null, '', '#call-' + n + '-' + k);
+      el.classList.remove('flash');
+      void el.offsetWidth; // restart the animation if it is already playing
+      el.classList.add('flash');
+      setTimeout(function () { el.classList.remove('flash'); }, 2100);
+      history.replaceState(null, '', '#' + id);
     }, delay == null ? 350 : delay);
   }
 
@@ -144,16 +172,12 @@
   window.addEventListener('click', function (e) {
     var bk = e.target && e.target.closest ? e.target.closest('a[href="#back"]') : null;
     if (bk) { e.preventDefault(); e.stopPropagation(); setView('stand', null, { scroll: true }); return; }
-    // rows in the "Called it" drawer: close it, show the row's issue, jump to the row
-    var cl = e.target && e.target.closest ? e.target.closest('a[href^="#call-"]') : null;
-    if (cl) {
+    // "Called it" rows and story links (#call-N-K, #iN-slug): jump to the target
+    var jl = e.target && e.target.closest ? e.target.closest('a[href^="#call-"], a[href^="#i"]') : null;
+    var jid = jl ? jumpable(jl.getAttribute('href')) : null;
+    if (jid) {
       e.preventDefault(); e.stopPropagation();
-      var cm = cl.getAttribute('href').match(/^#call-(\d+)-(\d+)$/);
-      if (!cm) return;
-      if (window.otrCloseDrawer) window.otrCloseDrawer();
-      var cn = parseInt(cm[1], 10);
-      if (!body.classList.contains('v-doom')) setView(cn === latestN() ? 'latest' : 'one', cn);
-      goToCall(cm[1], cm[2]);
+      jumpTo(jid);
       return;
     }
     var a = e.target && e.target.closest ? e.target.closest('a[href^="#issue-"]') : null;
@@ -173,7 +197,7 @@
     var hash = window.location.hash || '';
     var m = hash.match(/^#issue-(\d+)$/);
     var s = hash.match(/^#i(\d+)-/);
-    var cm = hash.match(/^#call-(\d+)-(\d+)$/);
+    var jid = jumpable(hash);
     var saved = store.get(KEY_VIEW);
     var order = store.get(KEY_ORDER) || 'new';
 
@@ -183,12 +207,10 @@
       var n = parseInt(m[1], 10);
       if (n === latestN()) setView('latest');
       else setView('one', n);
-    } else if (cm) {
-      // a shared "Called it" link: show its issue, then jump to the row once the page has settled
-      var cn = parseInt(cm[1], 10);
+    } else if (jid) {
+      // a shared "Called it" or story link: show its issue, then jump to it once the page has settled
       if (saved === 'doom') setView('doom');
-      else setView(cn === latestN() ? 'latest' : 'one', cn);
-      goToCall(cm[1], cm[2], 600);
+      jumpTo(jid, 600);
     } else if (s) {
       setView('one', parseInt(s[1], 10));
     } else {
