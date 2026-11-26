@@ -210,9 +210,7 @@ def issue_block(n, week, latest):
     last = max([i for i, x in enumerate(tops) if set(x.get('class', [])) & {'story', 'brk'}], default=len(tops) - 1)
     stack = ''.join(str(x) for x in lead) + ''.join(str(x) for x in tops[:last + 1])
     # the folder cover slides over the pile at the end of the stories, then everything leaves together
-    stack += (f'<div class="closer" aria-hidden="true"><span class="ctab">OFF THE RECORD</span>'
-              f'<span class="cno">ISSUE NO. {n}</span><span class="cfile">END OF FILE</span>'
-              f'<span class="cstamp2">FILE CLOSED</span><span class="cnext">Group chat below &darr;</span></div>')
+    stack += '<!--CLOSER-->'
     tail = ''.join(str(x) for x in tops[last + 1:]).replace('</div></body></html>', '')
     content = stack + ('\n  </div>\n  <div class="ibody itail">\n  ' + tail if tail.strip() else '')
     wa = 'https://wa.me/?text=' + quote(f'Re: Off the Record, Issue {n} — ')
@@ -226,6 +224,11 @@ def issue_block(n, week, latest):
                   f'<p class="nu-k">END OF ISSUE NO. {n}</p><p class="nu-h">Keep reading</p>'
                   f'<div class="nu-b">{prev}<button type="button" data-view="stand">Back issues</button>'
                   '<button type="button" data-view="doom">Doomscroll everything</button></div></nav>')
+    # the folder cover slides over the pile at the end of the stories; its empty space holds Keep reading
+    content = content.replace('<!--CLOSER-->', f'<div class="closer"><span class="ctab" aria-hidden="true">OFF THE RECORD</span>'
+              f'<span class="cno" aria-hidden="true">ISSUE NO. {n}</span><span class="cfile" aria-hidden="true">END OF FILE</span>'
+              f'<span class="cstamp2" aria-hidden="true">FILE CLOSED</span>{nextup}</div>', 1)
+    nextup = ''
     return f'''<article class="issue{' latest' if latest else ''}" id="issue-{n}" {dn}aria-labelledby="h-issue-{n}">
   {to_stand}<header class="ihead"><h2 id="h-issue-{n}">Issue No. {n}</h2><span class="idate">{datetime.datetime.strptime(week, "%b %d, %Y").strftime("%A")}, {week}</span></header>
   <div class="iactions">

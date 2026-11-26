@@ -91,7 +91,7 @@
 (function(){
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce) return;
-  var d=document, cover=d.getElementById('cover'), folder=d.getElementById('folder'), stamp=d.getElementById('cstamp'), hint=d.getElementById('hint');
+  var d=document;
   var cards=[].slice.call(d.querySelectorAll('.ibody > .story, .ibody > .brk'));
   var rows=[].slice.call(d.querySelectorAll('.score .row'));
   var clamp=function(x){return Math.max(0,Math.min(1,x))}, ease=function(t){return 1-Math.pow(1-t,3)};
@@ -104,21 +104,22 @@
     cards.forEach(function(c){var k=c.parentNode;groups[k.parentNode.id]=(groups[k.parentNode.id]||0)+1;var i=groups[k.parentNode.id];
       c.style.top=Math.min(64+i*6, vh-c.offsetHeight-12)+'px';});
   }
-  var closers=[].slice.call(d.querySelectorAll('.ibody > .closer'));
-  function frame(){
-    var vh=innerHeight;
-    closers.forEach(function(c){var b=c.getBoundingClientRect(),s=c.querySelector('.cstamp2');var t=clamp((vh*0.45-b.top)/(vh*0.2));var e=t<1?2.6-1.6*ease(t):1;s.style.setProperty('--s',e);s.style.setProperty('--o',t>0?1:0)});
-    rows.forEach(function(row){var b=row.getBoundingClientRect();var t=clamp((vh*0.8-b.top)/(vh*0.2));
-      var e=t<1?2.4-1.4*ease(t):1;var st=row.querySelector('.ci');if(st){st.style.setProperty('--s',e);st.style.setProperty('--o',t>0?1:0)}});
-  }
-  var tick=false;
-  addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){frame();tick=false})}},{passive:true});
-  addEventListener('resize',function(){placeCards();frame()});
+  // stamps slam once when they come into view (scrubbing them by scroll made them jitter)
+  if('IntersectionObserver' in window){
+    var slam=function(margin){return new IntersectionObserver(function(en,io){en.forEach(function(x){if(!x.isIntersecting)return;io.unobserve(x.target);
+      var s=x.target.querySelector('.ci,.cstamp2');if(s)s.classList.add('slammed')})},{rootMargin:'0px 0px '+margin+' 0px'})};
+    var ioR=slam('-20%'),ioC=slam('-55%');
+    rows.forEach(function(r){ioR.observe(r)});
+    [].slice.call(d.querySelectorAll('.ibody > .closer')).forEach(function(c){ioC.observe(c)});
+  } else [].slice.call(d.querySelectorAll('.ci,.cstamp2')).forEach(function(s){s.classList.add('slammed')});
+  // iPhone fires resize as the toolbar hides mid-scroll: only re-place on real width changes or our own refresh
+  var lastW=innerWidth;
+  addEventListener('resize',function(e){if(e.isTrusted&&innerWidth===lastW)return;lastW=innerWidth;placeCards()});
   addEventListener('load',placeCards);
   // re-measure when compact mode or filters change card heights
-  d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(function(){placeCards();frame()},60)});
+  d.addEventListener('click',function(e){if(e.target.closest('.fl,.expand,#showall,.toggle,summary'))setTimeout(placeCards,60)});
   if(d.fonts&&d.fonts.ready)d.fonts.ready.then(placeCards);
-  placeCards(); frame();
+  placeCards();
 })();
 
 // ---- v4: Lenis smooth scrolling + GSAP cover and sideways issue strip ----
@@ -270,4 +271,14 @@
   if(!('IntersectionObserver' in window)){type();return}
   var io=new IntersectionObserver(function(en){if(en[0].isIntersecting&&en[0].intersectionRatio>.45){io.disconnect();setTimeout(type,300)}},{threshold:[0,.45,.6]});
   io.observe(sec);
+})();
+
+// ---- the stamp button hides on the cover and sign-off; looping scenes pause off screen ----
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var d=document,fab=d.querySelector('.fab'),hide=[d.getElementById('cover'),d.querySelector('.signoff')].filter(Boolean),on={};
+  if(fab&&hide.length){var io=new IntersectionObserver(function(en){en.forEach(function(x){on[hide.indexOf(x.target)]=x.isIntersecting});
+    fab.classList.toggle('away',Object.keys(on).some(function(k){return on[k]}))});hide.forEach(function(el){io.observe(el)})}
+  var pio=new IntersectionObserver(function(en){en.forEach(function(x){x.target.classList.toggle('paused',!x.isIntersecting)})},{rootMargin:'200px 0px'});
+  [].slice.call(d.querySelectorAll('.bc,.gn,.cyintro')).forEach(function(el){pio.observe(el)});
 })();

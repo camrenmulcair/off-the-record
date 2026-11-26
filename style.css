@@ -198,7 +198,9 @@ em{font-style:italic}
 .row{position:relative}
 .row b{padding-right:104px}
 .ci{position:absolute;right:0;top:9px;font-family:MONO,monospace;font-weight:700;font-size:12px;letter-spacing:2px;color:#1f7a4d;border:2.5px solid #1f7a4d;padding:2px 8px;border-radius:4px;background:rgba(242,250,245,.9);transform:rotate(-8deg) scale(var(--s,1));opacity:var(--o,1);pointer-events:none}
-.js .ci{--o:0}
+@media (prefers-reduced-motion:no-preference){.js .ci:not(.slammed),.js .closer .cstamp2:not(.slammed){opacity:0}
+  .ci.slammed,.closer .cstamp2.slammed{animation:stampin .45s cubic-bezier(.2,.8,.3,1) both}}
+@keyframes stampin{0%{opacity:0;transform:rotate(-8deg) scale(2.4)}60%{opacity:1;transform:rotate(-8deg) scale(.94)}100%{opacity:1;transform:rotate(-8deg) scale(1)}}
 .row div{padding-right:4px}
 
 @media (prefers-reduced-motion:reduce){
@@ -409,7 +411,7 @@ html:not(.js) .bc .drape,html:not(.js) .bc .ctitle{display:none}
 .closer .cno{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:13px;letter-spacing:3px;opacity:.75}
 .closer .cfile{font-family:PF,Georgia,serif;font-weight:900;font-size:40px;letter-spacing:-1px;line-height:1}
 .closer .cstamp2{margin-top:8px;border:3px solid #c8243b;color:#c8243b;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:20px;letter-spacing:4px;padding:6px 14px;border-radius:4px;
-  transform:rotate(-8deg) scale(var(--s,1));opacity:var(--o,1);mix-blend-mode:multiply;background:rgba(255,255,255,.25)}
+  transform:rotate(-8deg) scale(var(--s,1));opacity:var(--o,1);background:rgba(255,255,255,.25)}
 .closer .cnext{position:absolute;bottom:18px;font-size:13px;font-weight:700;opacity:.6}
 @media (prefers-color-scheme:dark){.ibody > .closer{background:linear-gradient(160deg,#6b5a35,#55462a);color:#f3e6c4}.closer .ctab{background:#55462a}.closer .cstamp2{color:#ff6a7e;border-color:#ff6a7e;mix-blend-mode:normal;background:transparent}}
 @media (prefers-reduced-motion:reduce){.ibody > .closer{position:relative;top:auto;height:auto;padding:30px 0}}

@@ -186,10 +186,8 @@
       { transform: 'translateY(-3px) rotate(' + tilt + 'deg)', offset: 0.93 },
       { transform: 'translateY(0) rotate(' + tilt + 'deg)', opacity: 1 }
     ], { duration: dur, delay: delay, fill: 'backwards' });
-    // thud: dust puffs out from under the folder and the shelf jolts
+    // thud: dust puffs out from under the folder
     dust(d, land);
-    anim(shelf, [{ transform: 'translateY(0)' }, { transform: 'translateY(2.5px)' }, { transform: 'translateY(0)' }],
-      { duration: 150, delay: land, easing: 'ease-out' });
     // the clip snaps down, then the stamp slams on
     anim(d, [{ transform: 'translateY(-28px)', opacity: 0 }, { transform: 'translateY(2px)', opacity: 1, offset: 0.7 },
       { transform: 'translateY(0)', opacity: 1 }], { duration: 220, delay: land + 70, easing: 'ease-in', fill: 'backwards', pseudoElement: '::before' });
