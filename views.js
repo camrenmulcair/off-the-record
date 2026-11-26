@@ -31,14 +31,40 @@
     window.scrollTo(0, y);
   }
 
+  // height of the pinned view switcher (the only sticky bar now)
+  function barH() {
+    var el = $('.views');
+    return el ? el.getBoundingClientRect().height : 0;
+  }
+
   function scrollToSwitcher() {
     var el = $('.views');
     if (!el) return;
-    // the sticky jump nav sits over the top of the viewport, so land below it
-    var jump = $('.jump');
-    var pad = (jump ? jump.getBoundingClientRect().height : 0) + 10;
-    var y = el.getBoundingClientRect().top + window.pageYOffset - pad;
+    // the switcher is the pinned top bar, so land it at the very top
+    var y = el.getBoundingClientRect().top + window.pageYOffset;
     scrollToY(Math.max(0, y));
+  }
+
+  // Jump to one "Called it" row: after the drawer closes and the view has switched,
+  // scroll the row under the bar, flash it green, and keep the hash in sync.
+  function goToCall(n, k, delay) {
+    setTimeout(function () {
+      var row = document.getElementById('call-' + n + '-' + k);
+      var el = row || document.getElementById('issue-' + n);
+      if (!el) return;
+      var reveal = el.closest ? el.closest('.reveal') : null;
+      if (reveal) reveal.classList.add('in');
+      var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - barH() - 24);
+      if (window.otrLenis) window.otrLenis.scrollTo(y, { duration: 0.9 });
+      else window.scrollTo({ top: y, behavior: 'smooth' });
+      if (row) {
+        row.classList.remove('flash');
+        void row.offsetWidth; // restart the animation if it is already playing
+        row.classList.add('flash');
+        setTimeout(function () { row.classList.remove('flash'); }, 1900);
+      }
+      history.replaceState(null, '', '#call-' + n + '-' + k);
+    }, delay == null ? 350 : delay);
   }
 
   function revealAll(issues) {
@@ -118,6 +144,18 @@
   window.addEventListener('click', function (e) {
     var bk = e.target && e.target.closest ? e.target.closest('a[href="#back"]') : null;
     if (bk) { e.preventDefault(); e.stopPropagation(); setView('stand', null, { scroll: true }); return; }
+    // rows in the "Called it" drawer: close it, show the row's issue, jump to the row
+    var cl = e.target && e.target.closest ? e.target.closest('a[href^="#call-"]') : null;
+    if (cl) {
+      e.preventDefault(); e.stopPropagation();
+      var cm = cl.getAttribute('href').match(/^#call-(\d+)-(\d+)$/);
+      if (!cm) return;
+      if (window.otrCloseDrawer) window.otrCloseDrawer();
+      var cn = parseInt(cm[1], 10);
+      if (!body.classList.contains('v-doom')) setView(cn === latestN() ? 'latest' : 'one', cn);
+      goToCall(cm[1], cm[2]);
+      return;
+    }
     var a = e.target && e.target.closest ? e.target.closest('a[href^="#issue-"]') : null;
     if (!a) return;
     if (body.classList.contains('v-doom')) return;
@@ -135,6 +173,7 @@
     var hash = window.location.hash || '';
     var m = hash.match(/^#issue-(\d+)$/);
     var s = hash.match(/^#i(\d+)-/);
+    var cm = hash.match(/^#call-(\d+)-(\d+)$/);
     var saved = store.get(KEY_VIEW);
     var order = store.get(KEY_ORDER) || 'new';
 
@@ -144,6 +183,12 @@
       var n = parseInt(m[1], 10);
       if (n === latestN()) setView('latest');
       else setView('one', n);
+    } else if (cm) {
+      // a shared "Called it" link: show its issue, then jump to the row once the page has settled
+      var cn = parseInt(cm[1], 10);
+      if (saved === 'doom') setView('doom');
+      else setView(cn === latestN() ? 'latest' : 'one', cn);
+      goToCall(cm[1], cm[2], 600);
     } else if (s) {
       setView('one', parseInt(s[1], 10));
     } else {

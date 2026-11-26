@@ -131,3 +131,38 @@ body.v-stand #reactions,body.v-stand .controls,body.v-doom #reactions,body.v-one
 .roof .sign{font-size:12.5px;letter-spacing:1px;top:28px}
 .stand .sub{max-width:68%}
 .stand{padding-left:16px;padding-right:16px}
+/* the view switcher is now the only bar: keep it pinned */
+.views{position:sticky;top:0;z-index:6;box-shadow:0 6px 10px -8px rgba(0,0,0,.25)}
+/* floating rubber stamp */
+.fab{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:55;width:82px;height:82px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;
+  background:rgba(255,255,255,.94);color:#1f7a4d;border:3px solid #1f7a4d;box-shadow:inset 0 0 0 4px rgba(255,255,255,.94),inset 0 0 0 5.5px #1f7a4d,0 6px 16px rgba(0,0,0,.28);
+  transform:rotate(-12deg);font:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.fab:active{transform:rotate(-12deg) scale(.9)}
+.fab-n{font-family:PF,Georgia,serif;font-weight:900;font-size:26px;line-height:1}
+.fab-t{font-family:MONO,monospace;font-weight:700;font-size:8.5px;letter-spacing:1.4px;margin-top:2px}
+.fab-ck{position:absolute;right:-2px;top:-2px;width:24px;height:24px;border-radius:50%;background:#1f7a4d;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;transform:rotate(12deg)}
+/* the drawer becomes a pop-up card that slams down like a stamp */
+.drawer{top:50%;left:50%;right:auto;height:auto;max-height:min(78vh,640px);width:min(92vw,420px);border-radius:22px;padding:22px 18px 14px;
+  transform:translate(-50%,-50%) scale(1.5) rotate(-6deg);opacity:0;visibility:hidden;
+  transition:transform .3s cubic-bezier(.2,1.5,.4,1),opacity .18s,visibility 0s linear .3s;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.drawer.open{transform:translate(-50%,-50%) scale(1) rotate(-1deg);opacity:1;visibility:visible;transition:transform .3s cubic-bezier(.2,1.5,.4,1),opacity .18s}
+.drawer h2{display:inline-block;color:#1f7a4d;border:3px solid #1f7a4d;border-radius:6px;padding:4px 12px 2px;transform:rotate(-3deg);text-transform:uppercase;letter-spacing:1px;font-size:24px}
+.calls li{padding:0}
+.calls li a{display:flex;align-items:center;gap:10px;width:100%;margin:0;padding:11px 2px;color:inherit;text-decoration:none;font-size:15px;font-weight:600;white-space:normal}
+.calls li a .cl{flex:1}
+.calls li a .ci2{font-size:12px;font-weight:700;color:#1f7a4d;white-space:nowrap}
+.calls li a:active{background:#eef8f2}
+/* the call you jumped to flashes green */
+.row.flash{animation:callflash 1.8s ease-out}
+@keyframes callflash{0%,30%{background:#c9f0d8;box-shadow:0 0 0 6px #c9f0d8}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
+@media (prefers-color-scheme:dark){
+  .views{box-shadow:0 6px 10px -8px rgba(0,0,0,.6)}
+  .fab{background:rgba(26,27,32,.95);color:#4fc08a;border-color:#4fc08a;box-shadow:inset 0 0 0 4px rgba(26,27,32,.95),inset 0 0 0 5.5px #4fc08a,0 6px 16px rgba(0,0,0,.5)}
+  .fab-ck{background:#4fc08a;color:#0e0f12}
+  .drawer h2{color:#4fc08a;border-color:#4fc08a}
+  .calls li a .ci2{color:#4fc08a}
+  .calls li a:active{background:#1f2a24}
+  @keyframes callflash{0%,30%{background:#1f3a2c;box-shadow:0 0 0 6px #1f3a2c}100%{background:transparent;box-shadow:0 0 0 6px transparent}}
+}
+@media (prefers-reduced-motion:reduce){.drawer,.drawer.open{transition:none}.row.flash{animation:none;background:#c9f0d8}}

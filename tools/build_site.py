@@ -157,11 +157,12 @@ def issue_block(n, week, latest):
         if 'score' in cls:
             el['data-f'] = 'calls'
             el['class'] = cls + ['reveal']
-            for r in el.select('.row'):
+            for k, r in enumerate(el.select('.row'), 1):
                 r.append(BeautifulSoup('<span class="ci" aria-hidden="true">CALLED IT</span>', 'html.parser'))
                 lab = r.find('b').get_text(strip=True)
                 ok = '✓' in r.find(class_='ck').get_text() or True
-                calls_all.append((n, lab, ok))
+                r['id'] = f'call-{n}-{k}'
+                calls_all.append((n, lab, ok, f'call-{n}-{k}'))
             cs = sources.get(str(n), {}).get('__calls')
             if cs:
                 el.append(BeautifulSoup(f'<div class="st-tools">{src_html(cs)}</div>', 'html.parser'))
@@ -245,15 +246,16 @@ if not VIEWS:
 hits = sum(1 for c in calls_all if c[2]); total = len(calls_all)
 pct = round(100 * hits / total) if total else 0
 call_rows = ''.join(
-    f'<li><span class="ck" aria-hidden="true">✓</span><span>{html.escape(lab)}</span>'
-    f'<a href="#issue-{n}">Issue {n}</a></li>' for n, lab, ok in calls_all)
+    f'<li><a href="#{cid}"><span class="ck" aria-hidden="true">✓</span><span class="cl">{html.escape(lab)}</span>'
+    f'<span class="ci2">Issue {n} →</span></a></li>' for n, lab, ok, cid in calls_all)
 tracker = f'''<div class="drawer-bg" id="drawer-bg" hidden></div>
 <aside class="drawer" id="calls" aria-labelledby="h-calls" aria-hidden="true">
   <button type="button" class="drawer-x" aria-label="Close">✕</button>
   <h2 id="h-calls">Called it</h2>
-  <p class="sub">Every prediction that came true, newest first.</p>
+  <p class="sub">Every prediction that came true. Tap one to see it.</p>
   <ul class="calls">{call_rows}</ul>
-</aside>'''
+</aside>
+<button type="button" class="calls-btn fab" aria-expanded="false" aria-controls="calls" aria-label="Called it: {total} predictions that came true"><span class="fab-n">{total}</span><span class="fab-t">CALLED IT</span><span class="fab-ck" aria-hidden="true">✓</span></button>'''
 
 # Best reactions
 rx = ''
@@ -272,8 +274,6 @@ reacts = f'''<section class="panel" id="reactions" aria-labelledby="h-rx">
   {'<p class="rx-more">Scroll inside the box for more ↓</p>' if len(reactions) > 1 else ''}
 </section>'''
 
-nav = f'<a href="#issue-{issues[0]["n"]}">Latest</a><a href="#reactions">Reactions</a>' + \
-      '<button type="button" class="calls-btn" aria-expanded="false" aria-controls="calls">Called it ✓</button><a href="#back">Back issues</a>'
 filters = ''.join(f'<button type="button" class="fl" data-f="{k}" aria-pressed="{"true" if k=="all" else "false"}">{v}</button>'
                   for k, v in [('all', 'All'), ('breaking', 'Breaking'), ('foreign', 'Foreign Affairs'),
                                ('domestic', 'Domestic'), ('markets', 'Markets'), ('circus', 'Bread &amp; Circuses'), ('good', 'Good News'), ('calls', "Last Week's Call")])
@@ -383,7 +383,7 @@ page = f'''<!doctype html>
   </div>
 </section>
 {intro}<div class="col">
-<nav class="jump" aria-label="Jump to a section">{nav}</nav>{SWITCH}
+{SWITCH}
 {reacts}
 <div class="controls">
   <div class="filters" role="group" aria-label="Show only one section">{filters}</div>
